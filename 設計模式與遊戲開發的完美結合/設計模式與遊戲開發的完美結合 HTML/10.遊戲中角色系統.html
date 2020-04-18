@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="VNote">
+
+    <title>10.遊戲中角色系統</title>
+    <link rel="icon" href="https://github.com/tamlok/vnote/raw/master/src/resources/icons/vnote.ico">
+
+    <style type="text/css">
+    /* STYLE_GLOBAL_PLACE_HOLDER */
+    </style>
+
+    <style type="text/css">
+    *,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.container-fluid {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.col-12 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+@media (min-width: 768px) {
+    .col-md-3 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 25%;
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+}
+
+@media (min-width: 768px) {
+    .col-md-9 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 75%;
+        flex: 0 0 75%;
+        max-width: 75%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-xl-2 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 16.666667%;
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-xl-10 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 83.333333%;
+        flex: 0 0 83.333333%;
+        max-width: 83.333333%;
+    }
+}
+
+@media (min-width: 768px) {
+    .pt-md-3, .py-md-3 {
+        padding-top: 1rem!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .pb-md-3, .py-md-3 {
+        padding-bottom: 1rem!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .pl-md-5, .px-md-5 {
+        padding-left: 3rem!important;
+    }
+}
+
+.d-none {
+    display: none!important;
+}
+
+@media (min-width: 1200px) {
+    .d-xl-block {
+        display: block!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .d-md-block {
+        display: block!important;
+    }
+}
+
+.bd-content {
+    -webkit-box-ordinal-group: 1;
+    -ms-flex-order: 0;
+    order: 0;
+}
+
+.bd-toc {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 4rem;
+    height: calc(100vh - 10rem);
+    overflow-y: auto;
+}
+
+.bd-toc {
+    -webkit-box-ordinal-group: 2;
+    -ms-flex-order: 1;
+    order: 1;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    font-size: .875rem;
+}
+
+.section-nav {
+    padding-left: 0;
+}
+
+.section-nav ul {
+    font-size: .875rem;
+    list-style-type: none;
+}
+
+.section-nav li {
+    font-size: .875rem;
+}
+
+.section-nav a {
+    color: inherit !important;
+}
+
+.row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+@media (min-width: 1200px) {
+    .flex-xl-nowrap {
+        flex-wrap: nowrap !important;
+    }
+}
+
+#floating-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: #00897B;
+    position: fixed;
+    top: .5rem;
+    right: .5rem;
+    cursor: pointer;
+    box-shadow: 0px 2px 5px #666;
+}
+
+#floating-button .more {
+    color: #F5F5F5;
+    position: absolute;
+    top: 0;
+    display: block;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    line-height: 2.5rem;
+    font-size: 2rem;
+    font-family: 'monospace';
+    font-weight: 300;
+}
+
+.hide-none {
+    display: none !important;
+}
+
+.col-expand {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    padding-right: 3rem !important;
+}
+
+.outline-bold {
+    font-weight: bolder !important;
+}
+
+@media print {
+    #floating-button {
+        display: none !important;
+    }
+}
+
+    @keyframes flash { 
+  0% { color: rgb(128, 203, 196); }
+  10% { color: rgb(0, 137, 123); }
+  40% { color: rgb(0, 137, 123); }
+  50% { color: rgb(128, 203, 196); }
+  60% { color: rgb(0, 137, 123); }
+  90% { color: rgb(0, 137, 123); }
+}
+.highlighted-anchor { animation: flash 1s; }
+div.mark-rect { background: transparent; border: 5px solid rgb(87, 104, 196); border-radius: 2px; position: absolute; }
+#vnote-footer { width: 100%; text-align: center; opacity: 0.2; margin-top: 3rem; }
+#vnote-footer p { font-size: 0.8rem; }
+#vnote-footer a { color: inherit !important; }
+x-eqs { display: flex; flex-direction: row; align-content: space-between; align-items: center; }
+x-eqs > x-eqn { width: 100%; margin-left: 3rem; }
+x-eqs > span { text-align: right; }
+.view-image, .view-svg { transition: 0.3s; }
+.modal-box { display: none; position: fixed; z-index: 1000; padding-top: 50px; left: 0px; top: 0px; width: 100%; height: 100%; overflow: hidden; background-color: rgba(68, 68, 68, 0.952941); }
+.modal-content { margin: auto; display: block; width: auto; height: auto; cursor: move; }
+.modal-content { animation-name: zoom; animation-duration: 0.6s; }
+@-webkit-keyframes zoom { 
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+@keyframes zoom { 
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+span.modal-close { position: absolute; z-index: 1000; top: 15px; right: 35px; color: rgb(218, 218, 218); font-size: 40px; font-weight: bold; transition: 0.3s; }
+span.modal-close:hover, span.modal-close:focus { color: rgb(238, 238, 238); text-decoration: none; cursor: pointer; }
+@media print {
+  pre, pre code, td.hljs-ln-code { white-space: pre-wrap !important; word-break: break-all !important; }
+  code, a { word-break: break-all !important; }
+  div.flowchart-diagram, div.mermaid-diagram, div.plantuml-diagram { overflow: hidden !important; }
+  img { max-width: 100% !important; height: auto !important; }
+  #vnote-footer { display: none !important; }
+}
+.alert { position: relative; padding: 0.75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: 0.25rem; }
+.alert-primary { color: rgb(0, 64, 133); background-color: rgb(204, 229, 255); border-color: rgb(184, 218, 255); }
+.alert-secondary { color: rgb(56, 61, 65); background-color: rgb(226, 227, 229); border-color: rgb(214, 216, 219); }
+.alert-success { color: rgb(21, 87, 36); background-color: rgb(212, 237, 218); border-color: rgb(195, 230, 203); }
+.alert-info { color: rgb(12, 84, 96); background-color: rgb(209, 236, 241); border-color: rgb(190, 229, 235); }
+.alert-warning { color: rgb(133, 100, 4); background-color: rgb(255, 243, 205); border-color: rgb(255, 238, 186); }
+.alert-danger { color: rgb(114, 28, 36); background-color: rgb(248, 215, 218); border-color: rgb(245, 198, 203); }
+.alert-light { color: rgb(129, 129, 130); background-color: rgb(254, 254, 254); border-color: rgb(253, 253, 254); }
+.alert-dark { color: rgb(27, 30, 33); background-color: rgb(214, 216, 217); border-color: rgb(198, 200, 202); }
+.vnote-anchor { font-weight: 400; color: rgba(0, 123, 255, 0.498039); transition: color 0.16s linear; padding-left: 0.375em; -webkit-font-smoothing: antialiased; text-decoration: none; opacity: 0; }
+.vnote-anchor:hover { color: rgb(0, 123, 255); text-decoration: none; opacity: 1; }
+.vnote-anchor::after { content: attr(data-anchor-icon); }
+.vnote-btn { position: relative; display: inline-block; padding: 6px 12px; font-size: 13px; font-weight: 700; line-height: 20px; white-space: nowrap; vertical-align: middle; cursor: pointer; border: none; user-select: none; -webkit-appearance: none; }
+.vnote-copy-clipboard-btn { transition: opacity 0.3s ease-in-out; opacity: 0; padding: 2px 6px; position: absolute; top: 5px; right: 5px; }
+pre:hover .vnote-copy-clipboard-btn { opacity: 1; }
+pre.vnote-snippet { position: relative; }
+body { margin: 0px auto; font-family: "Segoe UI", Helvetica, sans-serif, Tahoma, Arial, Geneva, Georgia, Palatino, "Times New Roman", "Hiragino Sans GB", 冬青黑体, "Microsoft YaHei", 微软雅黑, "Microsoft YaHei UI", "WenQuanYi Micro Hei", 文泉驿雅黑, Dengxian, 等线体, STXihei, 华文细黑, "Liberation Sans", "Droid Sans", NSimSun, 新宋体, SimSun, 宋体; color: rgb(34, 34, 34); line-height: 1.5; padding: 15px; background: rgb(238, 238, 238); font-size: 16px; }
+h1, h2, h3, h4, h5, h6 { color: rgb(34, 34, 34); font-weight: bold; margin-top: 20px; margin-bottom: 10px; padding: 0px; }
+p { padding: 0px; margin-top: 16px; margin-bottom: 16px; }
+h1 { font-size: 26px; }
+h2 { font-size: 24px; }
+h3 { font-size: 22px; }
+h4 { font-size: 20px; }
+h5 { font-size: 19px; }
+h6 { font-size: 18px; }
+a { color: rgb(0, 153, 255); margin: 0px; padding: 0px; vertical-align: baseline; text-decoration: none; word-break: break-word; }
+a:hover { text-decoration: underline; color: rgb(255, 102, 0); }
+a:visited { color: purple; }
+ul, ol { padding: 0px 0px 0px 24px; }
+li { line-height: 24px; }
+li ul, li ol { margin-left: 16px; }
+p, ul, ol { font-size: 16px; line-height: 24px; }
+pre { display: block; overflow-y: hidden; overflow-x: auto; tab-size: 4; }
+code { font-family: Consolas, Monaco, monospace, Courier; color: rgb(142, 36, 170); word-break: break-word; }
+pre code { display: block; overflow-x: auto; padding: 0.5em; color: rgb(34, 34, 34); background-color: rgb(224, 224, 224); border-left: 0.5em solid rgb(0, 137, 123); line-height: 1.5; font-family: Consolas, Monaco, monospace, Courier; white-space: pre; tab-size: 4; }
+pre code.markdown-metadata { border-left: 0.5em solid rgb(128, 203, 196); }
+aside { display: block; float: right; width: 390px; }
+blockquote { color: rgb(102, 102, 102); border-left: 0.5em solid rgb(122, 122, 122); padding: 0px 1em; margin-left: 0px; }
+blockquote p { color: rgb(102, 102, 102); }
+hr { display: block; text-align: left; margin: 1em 0px; border: none; height: 2px; background: rgb(153, 153, 153); }
+table { padding: 0px; margin: 1rem 0.5rem; border-collapse: collapse; }
+table tr { border-top: 2px solid rgb(204, 204, 204); background-color: white; margin: 0px; padding: 0px; }
+table tr:nth-child(2n) { background-color: rgb(248, 248, 248); }
+table tr th { font-weight: bold; border: 2px solid rgb(204, 204, 204); margin: 0px; padding: 6px 13px; }
+table tr td { border: 2px solid rgb(204, 204, 204); margin: 0px; padding: 6px 13px; }
+table tr th :first-child, table tr td :first-child { margin-top: 0px; }
+table tr th :last-child, table tr td :last-child { margin-bottom: 0px; }
+div.mermaid-diagram { margin: 16px 0px; overflow-y: hidden; }
+div.flowchart-diagram { padding: 0px 5px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+div.wavedrom-diagram { padding: 0px 5px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+div.plantuml-diagram { padding: 5px 5px 0px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+.img-package { text-align: center; }
+img.img-center { display: block; margin-left: auto; margin-right: auto; }
+span.img-caption { min-width: 20%; max-width: 80%; display: inline-block; padding: 10px; margin: 0px auto; border-bottom: 1px solid rgb(192, 192, 192); color: rgb(108, 108, 108); text-align: center; line-height: 1.5; }
+.emoji_zero, .emoji_one, .emoji_two, .emoji_three, .emoji_four, .emoji_five, .emoji_six, .emoji_seven, .emoji_eight, .emoji_nine { margin-left: 5px; margin-right: 8px; }
+div.preview-hint { opacity: 0.5; margin-top: 30%; margin-bottom: 30%; align-items: center; display: flex; flex-direction: column; justify-content: center; }
+table.hljs-ln tr { border: none; background-color: transparent; }
+table.hljs-ln tr td { border: none; background-color: transparent; }
+table.hljs-ln tr td.hljs-ln-numbers { user-select: none; text-align: center; color: rgb(170, 170, 170); border-right: 1px solid rgb(204, 204, 204); vertical-align: top; padding-right: 5px; white-space: nowrap; }
+table.hljs-ln tr td.hljs-ln-code { padding-left: 10px; }
+::-webkit-scrollbar { background-color: rgb(234, 234, 234); width: 14px; height: 14px; border: none; }
+::-webkit-scrollbar-corner { background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-button { height: 14px; width: 14px; background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-button:hover { background-color: rgb(208, 208, 208); }
+::-webkit-scrollbar-button:active { background-color: rgb(178, 178, 178); }
+::-webkit-scrollbar-track { background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-thumb { border: none; background-color: rgb(218, 218, 218); }
+::-webkit-scrollbar-thumb:hover { background-color: rgb(208, 208, 208); }
+::-webkit-scrollbar-thumb:active { background-color: rgb(178, 178, 178); }
+::-webkit-scrollbar-button:horizontal:increment { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(-90 256.00000000000006,256) " id="svg_1">   <polygon fill="%23333333" id="svg_2" points="128,192 256,320 384,192  "/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:horizontal:decrement { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(90 255.99999999999997,256.00000000000006) " id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:vertical:increment { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="null" id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:vertical:decrement { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(180 255.99999999999997,256) " id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::selection { background: rgb(25, 118, 210); color: rgb(238, 238, 238); }
+.modal-box { background-color: rgba(234, 234, 234, 0.952941); }
+span.modal-close { color: rgb(102, 102, 102); }
+span.modal-close:hover, span.modal-close:focus { color: rgb(34, 34, 34); }
+.hljs { display: block; overflow-x: auto; padding: 0.5em; background: rgb(224, 224, 224); }
+.hljs, .hljs-subst { color: rgb(54, 54, 54); }
+.hljs-comment { color: rgb(118, 118, 118); }
+.hljs-keyword, .hljs-attribute, .hljs-selector-tag, .hljs-meta-keyword, .hljs-doctag, .hljs-name { color: rgb(0, 0, 238); }
+.hljs-type, .hljs-string, .hljs-number, .hljs-selector-id, .hljs-selector-class, .hljs-quote, .hljs-template-tag, .hljs-deletion { color: rgb(136, 0, 0); }
+.hljs-title, .hljs-section { color: rgb(136, 0, 0); font-weight: bold; }
+.hljs-regexp, .hljs-symbol, .hljs-variable, .hljs-template-variable, .hljs-link, .hljs-selector-attr, .hljs-selector-pseudo { color: rgb(188, 96, 96); }
+.hljs-literal { color: rgb(175, 0, 215); }
+.hljs-built_in, .hljs-bullet, .hljs-code, .hljs-addition { color: rgb(0, 135, 0); }
+.hljs-meta { color: rgb(31, 113, 153); }
+.hljs-meta-string { color: rgb(77, 153, 191); }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: bold; }
+.mermaid-diagram .mermaid .label { color: rgb(51, 51, 51); }
+.mermaid-diagram .node rect, .mermaid-diagram .node circle, .mermaid-diagram .node ellipse, .mermaid-diagram .node polygon { fill: rgb(236, 236, 255); stroke: rgb(204, 204, 255); stroke-width: 1px; }
+.mermaid-diagram .edgePath .path { stroke: rgb(51, 51, 51); }
+.mermaid-diagram .edgeLabel { background-color: rgb(232, 232, 232); }
+.mermaid-diagram .cluster rect { fill: rgb(255, 255, 222) !important; rx: 4 !important; stroke: rgb(170, 170, 51) !important; stroke-width: 1px !important; }
+.mermaid-diagram .cluster text { fill: rgb(51, 51, 51); }
+.mermaid-diagram .actor { stroke: rgb(204, 204, 255); fill: rgb(236, 236, 255); }
+.mermaid-diagram text.actor { fill: black; stroke: none; }
+.mermaid-diagram .actor-line { stroke: grey; }
+.mermaid-diagram .messageLine0 { stroke-width: 1.5; stroke: rgb(51, 51, 51); }
+.mermaid-diagram .messageLine1 { stroke-width: 1.5; stroke: rgb(51, 51, 51); }
+.mermaid-diagram #arrowhead { fill: rgb(51, 51, 51); }
+.mermaid-diagram #crosshead path { fill: rgb(51, 51, 51) !important; stroke: rgb(51, 51, 51) !important; }
+.mermaid-diagram .messageText { fill: rgb(51, 51, 51); stroke: none; }
+.mermaid-diagram .labelBox { stroke: rgb(204, 204, 255); fill: rgb(236, 236, 255); }
+.mermaid-diagram .labelText { fill: black; stroke: none; }
+.mermaid-diagram .loopText { fill: black; stroke: none; }
+.mermaid-diagram .loopLine { stroke-width: 2; stroke: rgb(204, 204, 255); }
+.mermaid-diagram .note { stroke: rgb(170, 170, 51); fill: rgb(255, 245, 173); }
+.mermaid-diagram .noteText { fill: black; stroke: none; font-family: "trebuchet ms", verdana, arial; font-size: 14px; }
+.mermaid-diagram .section { stroke: none; opacity: 0.2; }
+.mermaid-diagram .section0 { fill: rgba(102, 102, 255, 0.490196); }
+.mermaid-diagram .section2 { fill: rgb(255, 244, 0); }
+.mermaid-diagram .section1, .mermaid-diagram .section3 { fill: white; opacity: 0.2; }
+.mermaid-diagram .sectionTitle0 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle1 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle2 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle3 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle { text-anchor: start; font-size: 11px; }
+.mermaid-diagram .grid .tick { stroke: lightgrey; opacity: 0.3; shape-rendering: crispEdges; }
+.mermaid-diagram .grid path { stroke-width: 0; }
+.mermaid-diagram .today { fill: none; stroke: red; stroke-width: 2px; }
+.mermaid-diagram .task { stroke-width: 2; }
+.mermaid-diagram .taskText { text-anchor: middle; font-size: 11px; }
+.mermaid-diagram .taskTextOutsideRight { fill: black; text-anchor: start; font-size: 11px; }
+.mermaid-diagram .taskTextOutsideLeft { fill: black; text-anchor: end; font-size: 11px; }
+.mermaid-diagram .taskText0, .mermaid-diagram .taskText1, .mermaid-diagram .taskText2, .mermaid-diagram .taskText3 { fill: white; }
+.mermaid-diagram .task0, .mermaid-diagram .task1, .mermaid-diagram .task2, .mermaid-diagram .task3 { fill: rgb(138, 144, 221); stroke: rgb(83, 79, 188); }
+.mermaid-diagram .taskTextOutside0, .mermaid-diagram .taskTextOutside2 { fill: black; }
+.mermaid-diagram .taskTextOutside1, .mermaid-diagram .taskTextOutside3 { fill: black; }
+.mermaid-diagram .active0, .mermaid-diagram .active1, .mermaid-diagram .active2, .mermaid-diagram .active3 { fill: rgb(191, 199, 255); stroke: rgb(83, 79, 188); }
+.mermaid-diagram .activeText0, .mermaid-diagram .activeText1, .mermaid-diagram .activeText2, .mermaid-diagram .activeText3 { fill: black !important; }
+.mermaid-diagram .done0, .mermaid-diagram .done1, .mermaid-diagram .done2, .mermaid-diagram .done3 { stroke: grey; fill: lightgrey; stroke-width: 2; }
+.mermaid-diagram .doneText0, .mermaid-diagram .doneText1, .mermaid-diagram .doneText2, .mermaid-diagram .doneText3 { fill: black !important; }
+.mermaid-diagram .crit0, .mermaid-diagram .crit1, .mermaid-diagram .crit2, .mermaid-diagram .crit3 { stroke: rgb(255, 136, 136); fill: red; stroke-width: 2; }
+.mermaid-diagram .activeCrit0, .mermaid-diagram .activeCrit1, .mermaid-diagram .activeCrit2, .mermaid-diagram .activeCrit3 { stroke: rgb(255, 136, 136); fill: rgb(191, 199, 255); stroke-width: 2; }
+.mermaid-diagram .doneCrit0, .mermaid-diagram .doneCrit1, .mermaid-diagram .doneCrit2, .mermaid-diagram .doneCrit3 { stroke: rgb(255, 136, 136); fill: lightgrey; stroke-width: 2; cursor: pointer; shape-rendering: crispEdges; }
+.mermaid-diagram .doneCritText0, .mermaid-diagram .doneCritText1, .mermaid-diagram .doneCritText2, .mermaid-diagram .doneCritText3 { fill: black !important; }
+.mermaid-diagram .activeCritText0, .mermaid-diagram .activeCritText1, .mermaid-diagram .activeCritText2, .mermaid-diagram .activeCritText3 { fill: black !important; }
+.mermaid-diagram .titleText { text-anchor: middle; font-size: 18px; fill: black; }
+.mermaid-diagram .node text { font-family: "trebuchet ms", verdana, arial; font-size: 14px; }
+.mermaid-diagram div.mermaidTooltip { position: absolute; text-align: center; max-width: 200px; padding: 2px; font-family: "trebuchet ms", verdana, arial; font-size: 12px; background: rgb(255, 255, 222); border: 1px solid rgb(170, 170, 51); border-radius: 2px; pointer-events: none; z-index: 100; }
+.hljs-ln { border-collapse: collapse; }
+.hljs-ln td { padding: 0px; }
+.hljs-ln-n::before { content: attr(data-line-number); }
+.MathJax_Hover_Frame { border-radius: 0.25em; box-shadow: rgb(136, 51, 170) 0px 0px 15px; display: inline-block; position: absolute; border: 1px solid rgb(170, 102, 221) !important; }
+.MathJax_Menu_Button .MathJax_Hover_Arrow { position: absolute; cursor: pointer; display: inline-block; border: 2px solid rgb(170, 170, 170); border-radius: 4px; font-family: "Courier New", Courier; font-size: 9px; color: rgb(240, 240, 240); }
+.MathJax_Menu_Button .MathJax_Hover_Arrow span { display: block; background-color: rgb(170, 170, 170); border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px; }
+.MathJax_Hover_Arrow:hover { color: white !important; border: 2px solid rgb(204, 204, 204) !important; }
+.MathJax_Hover_Arrow:hover span { background-color: rgb(204, 204, 204) !important; }
+#MathJax_About { position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: rgb(221, 221, 221); color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; box-shadow: rgb(128, 128, 128) 0px 10px 20px; }
+#MathJax_About.MathJax_MousePost { outline: none; }
+.MathJax_Menu { position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid rgb(204, 204, 204); margin: 0px; cursor: default; font-style: normal; font-weight: normal; font-size: 15px; font-family: "Microsoft JhengHei UI"; font-stretch: normal; font-variant: normal; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: rgb(128, 128, 128) 0px 10px 20px; }
+.MathJax_MenuItem { padding: 2px 2em; background: transparent; }
+.MathJax_MenuArrow { position: absolute; right: 0.5em; padding-top: 0.25em; color: rgb(102, 102, 102); font-size: 0.75em; }
+.MathJax_MenuActive .MathJax_MenuArrow { color: white; }
+.MathJax_MenuArrow.RTL { left: 0.5em; right: auto; }
+.MathJax_MenuCheck { position: absolute; left: 0.7em; }
+.MathJax_MenuCheck.RTL { right: 0.7em; left: auto; }
+.MathJax_MenuRadioCheck { position: absolute; left: 1em; }
+.MathJax_MenuRadioCheck.RTL { right: 1em; left: auto; }
+.MathJax_MenuLabel { padding: 2px 2em 4px 1.33em; font-style: italic; }
+.MathJax_MenuRule { border-top: 1px solid rgb(204, 204, 204); margin: 4px 1px 0px; }
+.MathJax_MenuDisabled { color: graytext; }
+.MathJax_MenuActive { background-color: highlight; color: highlighttext; }
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus { background-color: rgb(232, 232, 232); }
+.MathJax_ContextMenu:focus { outline: none; }
+.MathJax_ContextMenu .MathJax_MenuItem:focus { outline: none; }
+#MathJax_AboutClose { top: 0.2em; right: 0.2em; }
+.MathJax_Menu .MathJax_MenuClose { top: -10px; left: -10px; }
+.MathJax_MenuClose { position: absolute; cursor: pointer; display: inline-block; border: 2px solid rgb(170, 170, 170); border-radius: 18px; font-family: "Courier New", Courier; font-size: 24px; color: rgb(240, 240, 240); }
+.MathJax_MenuClose span { display: block; background-color: rgb(170, 170, 170); border: 1.5px solid; border-radius: 18px; line-height: 0; padding: 8px 0px 6px; }
+.MathJax_MenuClose:hover { color: white !important; border: 2px solid rgb(204, 204, 204) !important; }
+.MathJax_MenuClose:hover span { background-color: rgb(204, 204, 204) !important; }
+.MathJax_MenuClose:hover:focus { outline: none; }
+.MathJax_Preview .MJXf-math { color: inherit !important; }
+.MJX_Assistive_MathML { top: 0px; left: 0px; clip: rect(1px 1px 1px 1px); user-select: none; position: absolute !important; padding: 1px 0px 0px !important; border: 0px !important; height: 1px !important; width: 1px !important; overflow: hidden !important; display: block !important; }
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block { width: 100% !important; }
+#MathJax_Zoom { position: absolute; background-color: rgb(240, 240, 240); overflow: auto; display: block; z-index: 301; padding: 0.5em; border: 1px solid black; margin: 0px; font-weight: normal; font-style: normal; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; box-sizing: content-box; box-shadow: rgb(170, 170, 170) 5px 5px 15px; }
+#MathJax_ZoomOverlay { position: absolute; left: 0px; top: 0px; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0px; padding: 0px; margin: 0px; background-color: white; opacity: 0; }
+#MathJax_ZoomFrame { position: relative; display: inline-block; height: 0px; width: 0px; }
+#MathJax_ZoomEventTrap { position: absolute; left: 0px; top: 0px; z-index: 302; display: inline-block; border: 0px; padding: 0px; margin: 0px; background-color: white; opacity: 0; }
+.MathJax_Preview { color: rgb(136, 136, 136); }
+#MathJax_Message { position: fixed; left: 1px; bottom: 2px; background-color: rgb(230, 230, 230); border: 1px solid rgb(149, 149, 149); margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap; }
+#MathJax_MSIE_Frame { position: absolute; top: 0px; left: 0px; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px; }
+.MathJax_Error { color: rgb(204, 0, 0); font-style: italic; }
+.MJXp-script { font-size: 0.8em; }
+.MJXp-right { transform-origin: right center 0px; }
+.MJXp-bold { font-weight: bold; }
+.MJXp-italic { font-style: italic; }
+.MJXp-scr { font-family: MathJax_Script, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-frak { font-family: MathJax_Fraktur, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-sf { font-family: MathJax_SansSerif, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-cal { font-family: MathJax_Caligraphic, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-mono { font-family: MathJax_Typewriter, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-largeop { font-size: 150%; }
+.MJXp-largeop.MJXp-int { vertical-align: -0.2em; }
+.MJXp-math { display: inline-block; line-height: 1.2; text-indent: 0px; font-family: "Times New Roman", Times, STIXGeneral, serif; white-space: nowrap; border-collapse: collapse; }
+.MJXp-display { display: block; text-align: center; margin: 1em 0px; }
+.MJXp-math span { display: inline-block; }
+.MJXp-box { text-align: center; display: block !important; }
+.MJXp-box::after { content: " "; }
+.MJXp-rule { margin-top: 0.1em; display: block !important; }
+.MJXp-char { display: block !important; }
+.MJXp-mo { margin: 0px 0.15em; }
+.MJXp-mfrac { margin: 0px 0.125em; vertical-align: 0.25em; }
+.MJXp-denom { width: 100%; display: inline-table !important; }
+.MJXp-denom > * { display: table-row !important; }
+.MJXp-surd { vertical-align: top; }
+.MJXp-surd > * { display: block !important; }
+.MJXp-script-box > * { height: 50%; display: table !important; }
+.MJXp-script-box > * > * { vertical-align: top; display: table-cell !important; }
+.MJXp-script-box > :last-child > * { vertical-align: bottom; }
+.MJXp-script-box > * > * > * { display: block !important; }
+.MJXp-mphantom { visibility: hidden; }
+.MJXp-munderover { display: inline-table !important; }
+.MJXp-over { text-align: center; display: inline-block !important; }
+.MJXp-over > * { display: block !important; }
+.MJXp-munderover > * { display: table-row !important; }
+.MJXp-mtable { vertical-align: 0.25em; margin: 0px 0.125em; }
+.MJXp-mtable > * { vertical-align: middle; display: inline-table !important; }
+.MJXp-mtr { display: table-row !important; }
+.MJXp-mtd { text-align: center; padding: 0.5em 0px 0px 0.5em; display: table-cell !important; }
+.MJXp-mtr > .MJXp-mtd:first-child { padding-left: 0px; }
+.MJXp-mtr:first-child > .MJXp-mtd { padding-top: 0px; }
+.MJXp-mlabeledtr { display: table-row !important; }
+.MJXp-mlabeledtr > .MJXp-mtd:first-child { padding-left: 0px; }
+.MJXp-mlabeledtr:first-child > .MJXp-mtd { padding-top: 0px; }
+.MJXp-merror { background-color: rgb(255, 255, 136); color: rgb(204, 0, 0); border: 1px solid rgb(204, 0, 0); padding: 1px 3px; font-style: normal; font-size: 90%; }
+.MJXp-scale0 { transform: scaleX(0); }
+.MJXp-scale1 { transform: scaleX(0.1); }
+.MJXp-scale2 { transform: scaleX(0.2); }
+.MJXp-scale3 { transform: scaleX(0.3); }
+.MJXp-scale4 { transform: scaleX(0.4); }
+.MJXp-scale5 { transform: scaleX(0.5); }
+.MJXp-scale6 { transform: scaleX(0.6); }
+.MJXp-scale7 { transform: scaleX(0.7); }
+.MJXp-scale8 { transform: scaleX(0.8); }
+.MJXp-scale9 { transform: scaleX(0.9); }
+.MathJax_PHTML .noError { font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid; }
+
+    </style>
+
+    <script type="text/javascript">
+var toc = [];
+
+var setVisible = function(node, visible) {
+    var cl = 'hide-none';
+    if (visible) {
+        node.classList.remove(cl);
+    } else {
+        node.classList.add(cl);
+    }
+};
+
+var isVisible = function(node) {
+    var cl = 'hide-none';
+    return !node.classList.contains(cl);
+};
+
+var setPostContentExpanded = function(node, expanded) {
+    var cl = 'col-expand';
+    if (expanded) {
+        node.classList.add(cl);
+    } else {
+        node.classList.remove(cl);
+    }
+};
+
+var setOutlinePanelVisible = function(visible) {
+    var outlinePanel = document.getElementById('outline-panel');
+    var postContent = document.getElementById('post-content');
+
+    setVisible(outlinePanel, visible);
+    setPostContentExpanded(postContent, !visible);
+};
+
+var isOutlinePanelVisible = function() {
+    var outlinePanel = document.getElementById('outline-panel');
+    return isVisible(outlinePanel);
+};
+
+window.addEventListener('load', function() {
+    var outlinePanel = document.getElementById('outline-panel');
+    outlinePanel.style.display = 'initial';
+
+    var floatingContainer = document.getElementById('container-floating');
+    floatingContainer.style.display = 'initial';
+
+    var outlineContent = document.getElementById('outline-content');
+    var postContent = document.getElementById('post-content');
+
+    // Escape @text to Html.
+    var escapeHtml = function(text) {
+        var map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    // Fetch the outline.
+    var headers = postContent.querySelectorAll("h1, h2, h3, h4, h5, h6");
+    toc = [];
+    for (var i = 0; i < headers.length; ++i) {
+        var header = headers[i];
+
+        toc.push({
+            level: parseInt(header.tagName.substr(1)),
+            anchor: header.id,
+            title: escapeHtml(header.textContent)
+        });
+    }
+
+    if (toc.length == 0) {
+        setOutlinePanelVisible(false);
+        setVisible(floatingContainer, false);
+        return;
+    }
+
+    var baseLevel = baseLevelOfToc(toc);
+    var tocTree = tocToTree(toPerfectToc(toc, baseLevel), baseLevel);
+
+    outlineContent.innerHTML = tocTree;
+    setOutlinePanelVisible(true);
+    setVisible(floatingContainer, true);
+});
+
+// Return the topest level of @toc, starting from 1.
+var baseLevelOfToc = function(p_toc) {
+    var level = -1;
+    for (i in p_toc) {
+        if (level == -1) {
+            level = p_toc[i].level;
+        } else if (level > p_toc[i].level) {
+            level = p_toc[i].level;
+        }
+    }
+
+    if (level == -1) {
+        level = 1;
+    }
+
+    return level;
+};
+
+// Handle wrong title levels, such as '#' followed by '###'
+var toPerfectToc = function(p_toc, p_baseLevel) {
+    var i;
+    var curLevel = p_baseLevel - 1;
+    var perfToc = [];
+    for (i in p_toc) {
+        var item = p_toc[i];
+
+        // Insert empty header.
+        while (item.level > curLevel + 1) {
+            curLevel += 1;
+            var tmp = { level: curLevel,
+                        anchor: '',
+                        title: '[EMPTY]'
+                      };
+            perfToc.push(tmp);
+        }
+
+        perfToc.push(item);
+        curLevel = item.level;
+    }
+
+    return perfToc;
+};
+
+var itemToHtml = function(item) {
+    return '<a href="#' + item.anchor + '" data="' + item.anchor + '">' + item.title + '</a>';
+};
+
+// Turn a perfect toc to a tree using <ul>
+var tocToTree = function(p_toc, p_baseLevel) {
+    var i;
+    var front = '<li>';
+    var ending = ['</li>'];
+    var curLevel = p_baseLevel;
+    for (i in p_toc) {
+        var item = p_toc[i];
+        if (item.level == curLevel) {
+            front += '</li>';
+            front += '<li>';
+            front += itemToHtml(item);
+        } else if (item.level > curLevel) {
+            // assert(item.level - curLevel == 1)
+            front += '<ul>';
+            ending.push('</ul>');
+            front += '<li>';
+            front += itemToHtml(item);
+            ending.push('</li>');
+            curLevel = item.level;
+        } else {
+            while (item.level < curLevel) {
+                var ele = ending.pop();
+                front += ele;
+                if (ele == '</ul>') {
+                    curLevel--;
+                }
+            }
+            front += '</li>';
+            front += '<li>';
+            front += itemToHtml(item);
+        }
+    }
+    while (ending.length > 0) {
+        front += ending.pop();
+    }
+    front = front.replace("<li></li>", "");
+    front = '<ul>' + front + '</ul>';
+    return front;
+};
+
+var toggleMore = function() {
+    if (toc.length == 0) {
+        return;
+    }
+
+    var p = document.getElementById('floating-more');
+    if (isOutlinePanelVisible()) {
+        p.textContent = '<';
+        setOutlinePanelVisible(false);
+    } else {
+        p.textContent = '>';
+        setOutlinePanelVisible(true);
+    }
+};
+
+window.addEventListener('scroll', function() {
+    if (toc.length == 0 || !isOutlinePanelVisible()) {
+        return;
+    }
+
+    var postContent = document.getElementById('post-content');
+    var scrollTop = document.documentElement.scrollTop
+                    || document.body.scrollTop
+                    || window.pageYOffset;
+    var eles = postContent.querySelectorAll("h1, h2, h3, h4, h5, h6");
+
+    if (eles.length == 0) {
+        return;
+    }
+
+    var idx = -1;
+    var biaScrollTop = scrollTop + 50;
+    for (var i = 0; i < eles.length; ++i) {
+        if (biaScrollTop >= eles[i].offsetTop) {
+            idx = i;
+        } else {
+            break;
+        }
+    }
+
+    var header = '';
+    if (idx != -1) {
+        header = eles[idx].id;
+    }
+
+    highlightItemOnlyInOutline(header);
+});
+
+var highlightItemOnlyInOutline = function(id) {
+    var cl = 'outline-bold';
+    var outlineContent = document.getElementById('outline-content');
+    var eles = outlineContent.querySelectorAll("a");
+    var target = null;
+    for (var i = 0; i < eles.length; ++i) {
+        var ele = eles[i];
+        if (ele.getAttribute('data') == id) {
+            target = ele;
+            ele.classList.add(cl);
+        } else {
+            ele.classList.remove(cl);
+        }
+    }
+
+    // TODO: scroll target into view within the outline panel scroll area.
+};
+
+</script>
+
+
+<!-- HEAD_PLACE_HOLDER -->
+</head>
+<body>
+<div class="container-fluid">
+<div class="row flex-xl-nowrap">
+    <div id="outline-panel" style="display:none;" class="d-none d-md-block d-xl-block col-md-3 col-xl-2 bd-toc">
+        <div id="outline-content" class="section-nav"></div>
+    </div>
+    <div id="post-content" class="col-12 col-md-9 col-xl-10 py-md-3 pl-md-5 bd-content">
+    <h1 id="toc_0">10.遊戲中角色系統<a class="vnote-anchor" href="#toc_0" data-anchor-icon="#"></a></h1>
+<p>在書中前幾張介紹，角色系統畫出UML</p>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="580.5px" preserveAspectRatio="none" style="width:1155px;height:580px;" version="1.1" viewBox="0 0 1155 580" width="1155px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="f1fppvlestltwu" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><!--MD5=[f0216956209e8b469e223ec4564d489b]
+cluster 攻擊系統--><rect fill="#FFFFFF" filter="url(#f1fppvlestltwu)" height="327" style="stroke: #000000; stroke-width: 2.25;" width="201" x="937.5" y="237"></rect><path d="M1042.5,238.5 L1042.5,256.4106 L1027.5,271.4106 L937.5,271.4106 " fill="none" style="stroke: #000000; stroke-width: 2.25;"></path><text fill="#000000" font-family="sans-serif" font-size="21" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="90" x="942" y="263.7964">攻擊系統</text><!--MD5=[6f68c11ab24f09a417713ff3726dc5ef]
+cluster Unity系統--><rect fill="#FFFFFF" filter="url(#f1fppvlestltwu)" height="153" style="stroke: #000000; stroke-width: 2.25;" width="645" x="33" y="36"></rect><path d="M145.5,37.5 L145.5,55.4106 L130.5,70.4106 L33,70.4106 " fill="none" style="stroke: #000000; stroke-width: 2.25;"></path><text fill="#000000" font-family="sans-serif" font-size="21" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="97.5" x="37.5" y="62.7964">Unity系統</text><!--MD5=[fd6f8ce48776085e85dc2c52b3c1188d]
+cluster 武器--><rect fill="#FFFFFF" filter="url(#f1fppvlestltwu)" height="153" style="stroke: #000000; stroke-width: 2.25;" width="171" x="496.5" y="411"></rect><path d="M556.5,412.5 L556.5,430.4106 L541.5,445.4106 L496.5,445.4106 " fill="none" style="stroke: #000000; stroke-width: 2.25;"></path><text fill="#000000" font-family="sans-serif" font-size="21" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="45" x="501" y="437.7964">武器</text><!--MD5=[e140ffe9d520e7041a6e410e66d94b56]
+cluster AI--><rect fill="#FFFFFF" filter="url(#f1fppvlestltwu)" height="153" style="stroke: #000000; stroke-width: 2.25;" width="198" x="703.5" y="411"></rect><path d="M738,412.5 L738,430.4106 L723,445.4106 L703.5,445.4106 " fill="none" style="stroke: #000000; stroke-width: 2.25;"></path><text fill="#000000" font-family="sans-serif" font-size="21" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="19.5" x="708" y="437.7964">AI</text><!--MD5=[b56097c4a988ddc0dd727dae7637480e]
+cluster 角色部分--><rect fill="#FFFFFF" filter="url(#f1fppvlestltwu)" height="339" style="stroke: #000000; stroke-width: 2.25;" width="322.5" x="138" y="225"></rect><path d="M243,226.5 L243,244.4106 L228,259.4106 L138,259.4106 " fill="none" style="stroke: #000000; stroke-width: 2.25;"></path><text fill="#000000" font-family="sans-serif" font-size="21" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="90" x="142.5" y="251.7964">角色部分</text><!--MD5=[1e9e5e1ac1bd3067eb498ae700f32ebb]
+class ICharacterAtt--><rect fill="#FEFECE" filter="url(#f1fppvlestltwu)" height="72" id="ICharacterAtt" style="stroke: #A80036; stroke-width: 2.25;" width="153" x="961.5" y="294"></rect><ellipse cx="984" cy="318" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M990.1875,323.9297 Q989.6484,324.8672 988.3828,325.8281 Q986.2734,327.3516 982.1719,327.3516 Q978.8906,327.3516 976.6875,325.1484 Q974.1328,322.5938 974.1328,317.8125 Q974.1328,313.4063 976.6641,310.7109 Q978.9844,308.2734 982.3125,308.2734 Q985.125,308.2734 986.6016,308.7188 Q988.0781,309.1641 988.0781,309.1641 Q988.0781,309.1641 988.0781,308.3203 L989.6016,308.1797 L989.8359,314.2734 L987.8438,314.4609 Q986.625,309.0703 982.5234,309.0703 Q982.5234,309.0703 981.6328,309.4922 Q980.2734,310.0078 979.5,310.8281 Q977.4375,313.1484 977.4141,317.8594 Q977.3906,322.0313 979.6875,324.375 Q981.6328,326.3672 982.875,326.3672 Q985.9219,326.3672 989.2031,322.5234 L990.1875,323.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="105" x="1005" y="326.8638">ICharacterAtt</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="963" x2="1113" y1="342" y2="342"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="963" x2="1113" y1="354" y2="354"></line><!--MD5=[4cf1093bb46f15b2da7118d64d1c8f2a]
+class IAttStrategy--><rect fill="#FEFECE" filter="url(#f1fppvlestltwu)" height="72" id="IAttStrategy" style="stroke: #A80036; stroke-width: 2.25;" width="138" x="969" y="468"></rect><ellipse cx="991.5" cy="492" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M997.6875,497.9297 Q997.1484,498.8672 995.8828,499.8281 Q993.7734,501.3516 989.6719,501.3516 Q986.3906,501.3516 984.1875,499.1484 Q981.6328,496.5938 981.6328,491.8125 Q981.6328,487.4063 984.1641,484.7109 Q986.4844,482.2734 989.8125,482.2734 Q992.625,482.2734 994.1016,482.7188 Q995.5781,483.1641 995.5781,483.1641 Q995.5781,483.1641 995.5781,482.3203 L997.1016,482.1797 L997.3359,488.2734 L995.3438,488.4609 Q994.125,483.0703 990.0234,483.0703 Q990.0234,483.0703 989.1328,483.4922 Q987.7734,484.0078 987,484.8281 Q984.9375,487.1484 984.9141,491.8594 Q984.8906,496.0313 987.1875,498.375 Q989.1328,500.3672 990.375,500.3672 Q993.4219,500.3672 996.7031,496.5234 L997.6875,497.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="90" x="1012.5" y="500.8638">IAttStrategy</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="970.5" x2="1105.5" y1="516" y2="516"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="970.5" x2="1105.5" y1="528" y2="528"></line><!--MD5=[53cdd2d2d67a095ecc0fdef2cc67583f]
+class UnityGameObject--><rect fill="#FEFECE" filter="url(#f1fppvlestltwu)" height="72" id="UnityGameObject" style="stroke: #A80036; stroke-width: 2.25;" width="192" x="57" y="93"></rect><ellipse cx="79.5" cy="117" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M85.6875,122.9297 Q85.1484,123.8672 83.8828,124.8281 Q81.7734,126.3516 77.6719,126.3516 Q74.3906,126.3516 72.1875,124.1484 Q69.6328,121.5938 69.6328,116.8125 Q69.6328,112.4063 72.1641,109.7109 Q74.4844,107.2734 77.8125,107.2734 Q80.625,107.2734 82.1016,107.7188 Q83.5781,108.1641 83.5781,108.1641 Q83.5781,108.1641 83.5781,107.3203 L85.1016,107.1797 L85.3359,113.2734 L83.3438,113.4609 Q82.125,108.0703 78.0234,108.0703 Q78.0234,108.0703 77.1328,108.4922 Q75.7734,109.0078 75,109.8281 Q72.9375,112.1484 72.9141,116.8594 Q72.8906,121.0313 75.1875,123.375 Q77.1328,125.3672 78.375,125.3672 Q81.4219,125.3672 84.7031,121.5234 L85.6875,122.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="144" x="100.5" y="125.8638">UnityGameObject</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="58.5" x2="247.5" y1="141" y2="141"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="58.5" x2="247.5" y1="153" y2="153"></line><!--MD5=[de2a01917c71451e1110c1e3453b0a2d]
+class UnityAudio--><rect fill="#FEFECE" filter="url(#f1fppvlestltwu)" height="72" id="UnityAudio" style="stroke: #A80036; stroke-width: 2.25;" width="135" x="301.5" y="93"></rect><ellipse cx="324" cy="117" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M330.1875,122.9297 Q329.6484,123.8672 328.3828,124.8281 Q326.2734,126.3516 322.1719,126.3516 Q318.8906,126.3516 316.6875,124.1484 Q314.1328,121.5938 314.1328,116.8125 Q314.1328,112.4063 316.6641,109.7109 Q318.9844,107.2734 322.3125,107.2734 Q325.125,107.2734 326.6016,107.7188 Q328.0781,108.1641 328.0781,108.1641 Q328.0781,108.1641 328.0781,107.3203 L329.6016,107.1797 L329.8359,113.2734 L327.8438,113.4609 Q326.625,108.0703 322.5234,108.0703 Q322.5234,108.0703 321.6328,108.4922 Q320.2734,109.0078 319.5,109.8281 Q317.4375,112.1484 317.4141,116.8594 Q317.3906,121.0313 319.6875,123.375 Q321.6328,125.3672 322.875,125.3672 Q325.9219,125.3672 329.2031,121.5234 L330.1875,122.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="87" x="345" y="125.8638">UnityAudio</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="303" x2="435" y1="141" y2="141"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="303" x2="435" y1="153" y2="153"></line><!--MD5=[160c488ccb2dd3d7ba7e6b90123697d2]
+class UnityNavMesh--><rect fill="#FEFECE" filter="url(#f1fppvlestltwu)" height="72" id="UnityNavMesh" style="stroke: #A80036; stroke-width: 2.25;" width="165" x="489" y="93"></rect><ellipse cx="511.5" cy="117" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M517.6875,122.9297 Q517.1484,123.8672 515.8828,124.8281 Q513.7734,126.3516 509.6719,126.3516 Q506.3906,126.3516 504.1875,124.1484 Q501.6328,121.5938 501.6328,116.8125 Q501.6328,112.4063 504.1641,109.7109 Q506.4844,107.2734 509.8125,107.2734 Q512.625,107.2734 514.1016,107.7188 Q515.5781,108.1641 515.5781,108.1641 Q515.5781,108.1641 515.5781,107.3203 L517.1016,107.1797 L517.3359,113.2734 L515.3438,113.4609 Q514.125,108.0703 510.0234,108.0703 Q510.0234,108.0703 509.1328,108.4922 Q507.7734,109.0078 507,109.8281 Q504.9375,112.1484 504.9141,116.8594 Q504.8906,121.0313 507.1875,123.375 Q509.1328,125.3672 510.375,125.3672 Q513.4219,125.3672 516.7031,121.5234 L517.6875,122.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="117" x="532.5" y="125.8638">UnityNavMesh</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="490.5" x2="652.5" y1="141" y2="141"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="490.5" x2="652.5" y1="153" y2="153"></line><!--MD5=[bbfad1d37da2db032274317489871dea]
+class IWeapon--><rect fill="#FEFECE" filter="url(#f1fppvlestltwu)" height="72" id="IWeapon" style="stroke: #A80036; stroke-width: 2.25;" width="121.5" x="521.25" y="468"></rect><ellipse cx="543.75" cy="492" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M549.9375,497.9297 Q549.3984,498.8672 548.1328,499.8281 Q546.0234,501.3516 541.9219,501.3516 Q538.6406,501.3516 536.4375,499.1484 Q533.8828,496.5938 533.8828,491.8125 Q533.8828,487.4063 536.4141,484.7109 Q538.7344,482.2734 542.0625,482.2734 Q544.875,482.2734 546.3516,482.7188 Q547.8281,483.1641 547.8281,483.1641 Q547.8281,483.1641 547.8281,482.3203 L549.3516,482.1797 L549.5859,488.2734 L547.5938,488.4609 Q546.375,483.0703 542.2734,483.0703 Q542.2734,483.0703 541.3828,483.4922 Q540.0234,484.0078 539.25,484.8281 Q537.1875,487.1484 537.1641,491.8594 Q537.1406,496.0313 539.4375,498.375 Q541.3828,500.3672 542.625,500.3672 Q545.6719,500.3672 548.9531,496.5234 L549.9375,497.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="73.5" x="564.75" y="500.8638">IWeapon</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="522.75" x2="641.25" y1="516" y2="516"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="522.75" x2="641.25" y1="528" y2="528"></line><!--MD5=[82251a853253b7e188650373a1faaf87]
+class ICharacterAI--><rect fill="#FEFECE" filter="url(#f1fppvlestltwu)" height="72" id="ICharacterAI" style="stroke: #A80036; stroke-width: 2.25;" width="148.5" x="728.25" y="468"></rect><ellipse cx="750.75" cy="492" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M756.9375,497.9297 Q756.3984,498.8672 755.1328,499.8281 Q753.0234,501.3516 748.9219,501.3516 Q745.6406,501.3516 743.4375,499.1484 Q740.8828,496.5938 740.8828,491.8125 Q740.8828,487.4063 743.4141,484.7109 Q745.7344,482.2734 749.0625,482.2734 Q751.875,482.2734 753.3516,482.7188 Q754.8281,483.1641 754.8281,483.1641 Q754.8281,483.1641 754.8281,482.3203 L756.3516,482.1797 L756.5859,488.2734 L754.5938,488.4609 Q753.375,483.0703 749.2734,483.0703 Q749.2734,483.0703 748.3828,483.4922 Q747.0234,484.0078 746.25,484.8281 Q744.1875,487.1484 744.1641,491.8594 Q744.1406,496.0313 746.4375,498.375 Q748.3828,500.3672 749.625,500.3672 Q752.6719,500.3672 755.9531,496.5234 L756.9375,497.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="100.5" x="771.75" y="500.8638">ICharacterAI</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="729.75" x2="875.25" y1="516" y2="516"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="729.75" x2="875.25" y1="528" y2="528"></line><!--MD5=[6c9afd200c147b205c0a7326c0169cfa]
+class IEnemy--><rect fill="#FEFECE" filter="url(#f1fppvlestltwu)" height="72" id="IEnemy" style="stroke: #A80036; stroke-width: 2.25;" width="109.5" x="162.75" y="468"></rect><ellipse cx="185.25" cy="492" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M191.4375,497.9297 Q190.8984,498.8672 189.6328,499.8281 Q187.5234,501.3516 183.4219,501.3516 Q180.1406,501.3516 177.9375,499.1484 Q175.3828,496.5938 175.3828,491.8125 Q175.3828,487.4063 177.9141,484.7109 Q180.2344,482.2734 183.5625,482.2734 Q186.375,482.2734 187.8516,482.7188 Q189.3281,483.1641 189.3281,483.1641 Q189.3281,483.1641 189.3281,482.3203 L190.8516,482.1797 L191.0859,488.2734 L189.0938,488.4609 Q187.875,483.0703 183.7734,483.0703 Q183.7734,483.0703 182.8828,483.4922 Q181.5234,484.0078 180.75,484.8281 Q178.6875,487.1484 178.6641,491.8594 Q178.6406,496.0313 180.9375,498.375 Q182.8828,500.3672 184.125,500.3672 Q187.1719,500.3672 190.4531,496.5234 L191.4375,497.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="61.5" x="206.25" y="500.8638">IEnemy</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="164.25" x2="270.75" y1="516" y2="516"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="164.25" x2="270.75" y1="528" y2="528"></line><!--MD5=[c19000bd153798aaf6274083ab3f2832]
+class ISolider--><rect fill="#FEFECE" filter="url(#f1fppvlestltwu)" height="72" id="ISolider" style="stroke: #A80036; stroke-width: 2.25;" width="111" x="325.5" y="468"></rect><ellipse cx="348" cy="492" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M354.1875,497.9297 Q353.6484,498.8672 352.3828,499.8281 Q350.2734,501.3516 346.1719,501.3516 Q342.8906,501.3516 340.6875,499.1484 Q338.1328,496.5938 338.1328,491.8125 Q338.1328,487.4063 340.6641,484.7109 Q342.9844,482.2734 346.3125,482.2734 Q349.125,482.2734 350.6016,482.7188 Q352.0781,483.1641 352.0781,483.1641 Q352.0781,483.1641 352.0781,482.3203 L353.6016,482.1797 L353.8359,488.2734 L351.8438,488.4609 Q350.625,483.0703 346.5234,483.0703 Q346.5234,483.0703 345.6328,483.4922 Q344.2734,484.0078 343.5,484.8281 Q341.4375,487.1484 341.4141,491.8594 Q341.3906,496.0313 343.6875,498.375 Q345.6328,500.3672 346.875,500.3672 Q349.9219,500.3672 353.2031,496.5234 L354.1875,497.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="63" x="369" y="500.8638">ISolider</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="327" x2="435" y1="516" y2="516"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="327" x2="435" y1="528" y2="528"></line><!--MD5=[a1908832394178c0f507a77908d0ff4a]
+class ICharacter--><rect fill="#FEFECE" filter="url(#f1fppvlestltwu)" height="95.5012" id="ICharacter" style="stroke: #A80036; stroke-width: 2.25;" width="135" x="301.5" y="282"></rect><ellipse cx="324" cy="306" fill="#A9DCDF" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M333.3516,313.1484 L325.9688,313.1484 L325.9688,312.6563 Q326.9297,312.5859 327.3281,312.4453 Q327.9609,312.1641 327.9609,311.3906 Q327.9609,310.7813 327.5156,309.6094 L326.625,307.1484 L321.1641,307.1484 L319.9219,310.3125 Q319.7109,310.8047 319.7109,311.3906 Q319.7109,312.1875 320.3203,312.4453 Q320.5781,312.5859 321.3516,312.6563 L321.3516,313.1484 L315.3047,313.1484 L315.3047,312.6563 Q315.6328,312.5859 315.9375,312.5156 Q316.2422,312.4453 316.5234,312.0938 Q317.2266,311.2031 318.3281,308.1563 L323.3672,294.4922 L324.9609,294.4922 L330.8672,310.1953 Q331.4063,311.6953 332.0625,312.2344 Q332.4375,312.5156 333.3516,312.6563 L333.3516,313.1484 Z M326.2969,306.2109 L323.625,298.3594 L321.375,306.2109 L326.2969,306.2109 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="87" x="345" y="314.8638">ICharacter</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="303" x2="435" y1="330" y2="330"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="66" x="310.5" y="355.8757">角色數值</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="303" x2="435" y1="365.5012" y2="365.5012"></line><path d="M707.25,107.25 L707.25,150.0242 L933.75,150.0242 L933.75,122.25 L918.75,107.25 L707.25,107.25 " fill="#FBFB77" filter="url(#f1fppvlestltwu)" style="stroke: #A80036; stroke-width: 1.5;"></path><path d="M918.75,107.25 L918.75,122.25 L933.75,122.25 L918.75,107.25 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.5;"></path><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="195" x="716.25" y="138.2395">大致而已，沒按標準畫</text><!--MD5=[82f5edbb55fd784eea6bdbccc1650440]
+reverse link ICharacter to IEnemy--><path d="M297.7605,400.8135 C271.0605,430.671 255.1245,451.2029 242.586,467.946 " fill="none" id="ICharacter<-IEnemy" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="290.0745,393.66,318.0555,378.585,305.583,407.8185,290.0745,393.66" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[f11ebbd9f2b9fa00c229856f6526ff64]
+reverse link ICharacter to ISolider--><path d="M374.4045,408.522 C375.8595,429.243 377.361,450.6365 378.5625,467.7669 " fill="none" id="ICharacter<-ISolider" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="363.9045,408.888,372.279,378.2265,384.8535,407.418,363.9045,408.888" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[344ac2d815ff938c78f9f5ca115fc9f9]
+reverse link ICharacter to ICharacterAtt--><path d="M456.909,330 C624.975,330 793.041,330 961.107,330 " fill="none" id="ICharacter<-ICharacterAtt" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="436.9455,330,445.9455,336,454.9455,330,445.9455,324,436.9455,330" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[064eab02486ca0807bab172217c556e8]
+reverse link ICharacter to IWeapon--><path d="M449.274,390.2175 C453.087,393.1635 456.846,396.102 460.5,399 C488.505,421.2135 519.138,447.3208 542.6385,467.7573 " fill="none" id="ICharacter<-IWeapon" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="433.422,378.144,436.9466,388.3703,447.7419,389.05,444.2173,378.8237,433.422,378.144" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[e79646f356c0a19c42b11c62183deac6]
+reverse link ICharacter to ICharacterAI--><path d="M456.414,341.1615 C517.707,350.316 600.357,367.5345 667.5,399 C704.4045,416.295 740.751,445.0191 766.416,467.8253 " fill="none" id="ICharacter<-ICharacterAI" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="436.905,338.4105,444.9788,345.6087,454.7286,340.9245,446.6548,333.7263,436.905,338.4105" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[8a8ec5e1d2e7e35484ba97a958b126e8]
+reverse link ICharacterAtt to IAttStrategy--><path d="M1038,385.956 C1038,412.827 1038,444.4334 1038,467.9471 " fill="none" id="ICharacterAtt<-IAttStrategy" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="1038,366.105,1032,375.105,1038,384.105,1044,375.105,1038,366.105" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[1f3af1ff3a830e86c2a070b35dcda48e]
+link UnityGameObject to ICharacter--><path d="M191.1195,165.4425 C222.0945,193.8375 266.511,234.552 303.21,268.1925 " fill="none" id="UnityGameObject->ICharacter" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#FFFFFF" points="317.8845,281.6445,315.3037,271.1402,304.6148,269.4824,307.1956,279.9867,317.8845,281.6445" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[555daaf08402bcd267d2ea51d3b0cbd9]
+link UnityAudio to ICharacter--><path d="M369,165.4425 C369,191.979 369,229.275 369,261.5025 " fill="none" id="UnityAudio->ICharacter" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#FFFFFF" points="369,281.277,375,272.277,369,263.277,363,272.277,369,281.277" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[4786991acbe69b2051ca1800e84b46ec]
+link UnityNavMesh to ICharacter--><path d="M535.7625,165.4425 C506.853,193.7115 465.453,234.1905 431.1375,267.744 " fill="none" id="UnityNavMesh->ICharacter" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#FFFFFF" points="416.9205,281.6445,427.5503,279.6428,429.791,269.0608,419.1612,271.0625,416.9205,281.6445" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[07bdd944b62032033b5dd912479e66e6]
+@startuml
+skinparam classAttributeIconSize 0
+scale 1.5
+package 攻擊系統 <<Frame>> {
+  class ICharacterAtt
+   class IAttStrategy
+}
+
+package Unity系統 <<Frame>> {
+  class UnityGameObject
+   class UnityAudio
+    class UnityNavMesh
+}
+
+package 武器 <<Frame>> {
+  class IWeapon
+}
+
+package AI <<Frame>> {
+  class ICharacterAI
+}
+
+package 角色部分 <<Frame>> {
+  class IEnemy
+  class ISolider
+  abstract class ICharacter
+}
+
+abstract class ICharacter{
+角色數值
+}
+
+ICharacter <|- - IEnemy
+ICharacter <|- - ISolider
+ICharacter *-right- ICharacterAtt
+ICharacter *- - IWeapon
+ICharacter *- - ICharacterAI
+ICharacterAtt *- - IAttStrategy
+
+ICharacter o-up- UnityGameObject
+ICharacter o-up- UnityAudio
+ICharacter o-up- UnityNavMesh
+
+note as N1
+大致而已，沒按標準畫
+end note
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+<p>但這只是角色而已，但角色需要用系統介入才能動<br>
+所以多個 CharacterSystem 介入來驅動角色<br>
+CharacterSystem只負責角色驅動以及角色AI驅動<br>
+CharacterSystem是繼承IGameSystem，<br>
+由PBaseDefenseGame來宣告並用Update驅動</p>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="1215px" preserveAspectRatio="none" style="width:1158px;height:1215px;" version="1.1" viewBox="0 0 1158 1215" width="1158px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="f1srwspjgm8feg" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><!--MD5=[f0216956209e8b469e223ec4564d489b]
+cluster 攻擊系統--><rect fill="#FFFFFF" filter="url(#f1srwspjgm8feg)" height="364.5" style="stroke: #000000; stroke-width: 2.25;" width="201" x="940.5" y="250.5"></rect><path d="M1045.5,252 L1045.5,269.9106 L1030.5,284.9106 L940.5,284.9106 " fill="none" style="stroke: #000000; stroke-width: 2.25;"></path><text fill="#000000" font-family="sans-serif" font-size="21" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="90" x="945" y="277.2964">攻擊系統</text><!--MD5=[6f68c11ab24f09a417713ff3726dc5ef]
+cluster Unity系統--><rect fill="#FFFFFF" filter="url(#f1srwspjgm8feg)" height="153" style="stroke: #000000; stroke-width: 2.25;" width="645" x="63" y="36"></rect><path d="M175.5,37.5 L175.5,55.4106 L160.5,70.4106 L63,70.4106 " fill="none" style="stroke: #000000; stroke-width: 2.25;"></path><text fill="#000000" font-family="sans-serif" font-size="21" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="97.5" x="67.5" y="62.7964">Unity系統</text><!--MD5=[fd6f8ce48776085e85dc2c52b3c1188d]
+cluster 武器--><rect fill="#FFFFFF" filter="url(#f1srwspjgm8feg)" height="153" style="stroke: #000000; stroke-width: 2.25;" width="171" x="499.5" y="462"></rect><path d="M559.5,463.5 L559.5,481.4106 L544.5,496.4106 L499.5,496.4106 " fill="none" style="stroke: #000000; stroke-width: 2.25;"></path><text fill="#000000" font-family="sans-serif" font-size="21" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="45" x="504" y="488.7964">武器</text><!--MD5=[e140ffe9d520e7041a6e410e66d94b56]
+cluster AI--><rect fill="#FFFFFF" filter="url(#f1srwspjgm8feg)" height="153" style="stroke: #000000; stroke-width: 2.25;" width="198" x="706.5" y="462"></rect><path d="M741,463.5 L741,481.4106 L726,496.4106 L706.5,496.4106 " fill="none" style="stroke: #000000; stroke-width: 2.25;"></path><text fill="#000000" font-family="sans-serif" font-size="21" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="19.5" x="711" y="488.7964">AI</text><!--MD5=[d3dc70f09857205286f574ed7305441f]
+cluster 遊戲系統--><rect fill="#FFFFFF" filter="url(#f1srwspjgm8feg)" height="363" style="stroke: #000000; stroke-width: 2.25;" width="273" x="178.5" y="664.5"></rect><path d="M283.5,666 L283.5,683.9106 L268.5,698.9106 L178.5,698.9106 " fill="none" style="stroke: #000000; stroke-width: 2.25;"></path><text fill="#000000" font-family="sans-serif" font-size="21" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="90" x="183" y="691.2964">遊戲系統</text><!--MD5=[b56097c4a988ddc0dd727dae7637480e]
+cluster 角色部分--><rect fill="#FFFFFF" filter="url(#f1srwspjgm8feg)" height="376.5" style="stroke: #000000; stroke-width: 2.25;" width="322.5" x="141" y="238.5"></rect><path d="M246,240 L246,257.9106 L231,272.9106 L141,272.9106 " fill="none" style="stroke: #000000; stroke-width: 2.25;"></path><text fill="#000000" font-family="sans-serif" font-size="21" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="90" x="145.5" y="265.2964">角色部分</text><!--MD5=[1e9e5e1ac1bd3067eb498ae700f32ebb]
+class ICharacterAtt--><rect fill="#FEFECE" filter="url(#f1srwspjgm8feg)" height="72" id="ICharacterAtt" style="stroke: #A80036; stroke-width: 2.25;" width="153" x="964.5" y="307.5"></rect><ellipse cx="987" cy="331.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M993.1875,337.4297 Q992.6484,338.3672 991.3828,339.3281 Q989.2734,340.8516 985.1719,340.8516 Q981.8906,340.8516 979.6875,338.6484 Q977.1328,336.0938 977.1328,331.3125 Q977.1328,326.9063 979.6641,324.2109 Q981.9844,321.7734 985.3125,321.7734 Q988.125,321.7734 989.6016,322.2188 Q991.0781,322.6641 991.0781,322.6641 Q991.0781,322.6641 991.0781,321.8203 L992.6016,321.6797 L992.8359,327.7734 L990.8438,327.9609 Q989.625,322.5703 985.5234,322.5703 Q985.5234,322.5703 984.6328,322.9922 Q983.2734,323.5078 982.5,324.3281 Q980.4375,326.6484 980.4141,331.3594 Q980.3906,335.5313 982.6875,337.875 Q984.6328,339.8672 985.875,339.8672 Q988.9219,339.8672 992.2031,336.0234 L993.1875,337.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="105" x="1008" y="340.3638">ICharacterAtt</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="966" x2="1116" y1="355.5" y2="355.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="966" x2="1116" y1="367.5" y2="367.5"></line><!--MD5=[4cf1093bb46f15b2da7118d64d1c8f2a]
+class IAttStrategy--><rect fill="#FEFECE" filter="url(#f1srwspjgm8feg)" height="72" id="IAttStrategy" style="stroke: #A80036; stroke-width: 2.25;" width="138" x="972" y="519"></rect><ellipse cx="994.5" cy="543" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M1000.6875,548.9297 Q1000.1484,549.8672 998.8828,550.8281 Q996.7734,552.3516 992.6719,552.3516 Q989.3906,552.3516 987.1875,550.1484 Q984.6328,547.5938 984.6328,542.8125 Q984.6328,538.4063 987.1641,535.7109 Q989.4844,533.2734 992.8125,533.2734 Q995.625,533.2734 997.1016,533.7188 Q998.5781,534.1641 998.5781,534.1641 Q998.5781,534.1641 998.5781,533.3203 L1000.1016,533.1797 L1000.3359,539.2734 L998.3438,539.4609 Q997.125,534.0703 993.0234,534.0703 Q993.0234,534.0703 992.1328,534.4922 Q990.7734,535.0078 990,535.8281 Q987.9375,538.1484 987.9141,542.8594 Q987.8906,547.0313 990.1875,549.375 Q992.1328,551.3672 993.375,551.3672 Q996.4219,551.3672 999.7031,547.5234 L1000.6875,548.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="90" x="1015.5" y="551.8638">IAttStrategy</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="973.5" x2="1108.5" y1="567" y2="567"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="973.5" x2="1108.5" y1="579" y2="579"></line><!--MD5=[53cdd2d2d67a095ecc0fdef2cc67583f]
+class UnityGameObject--><rect fill="#FEFECE" filter="url(#f1srwspjgm8feg)" height="72" id="UnityGameObject" style="stroke: #A80036; stroke-width: 2.25;" width="192" x="492" y="93"></rect><ellipse cx="514.5" cy="117" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M520.6875,122.9297 Q520.1484,123.8672 518.8828,124.8281 Q516.7734,126.3516 512.6719,126.3516 Q509.3906,126.3516 507.1875,124.1484 Q504.6328,121.5938 504.6328,116.8125 Q504.6328,112.4063 507.1641,109.7109 Q509.4844,107.2734 512.8125,107.2734 Q515.625,107.2734 517.1016,107.7188 Q518.5781,108.1641 518.5781,108.1641 Q518.5781,108.1641 518.5781,107.3203 L520.1016,107.1797 L520.3359,113.2734 L518.3438,113.4609 Q517.125,108.0703 513.0234,108.0703 Q513.0234,108.0703 512.1328,108.4922 Q510.7734,109.0078 510,109.8281 Q507.9375,112.1484 507.9141,116.8594 Q507.8906,121.0313 510.1875,123.375 Q512.1328,125.3672 513.375,125.3672 Q516.4219,125.3672 519.7031,121.5234 L520.6875,122.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="144" x="535.5" y="125.8638">UnityGameObject</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="493.5" x2="682.5" y1="141" y2="141"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="493.5" x2="682.5" y1="153" y2="153"></line><!--MD5=[de2a01917c71451e1110c1e3453b0a2d]
+class UnityAudio--><rect fill="#FEFECE" filter="url(#f1srwspjgm8feg)" height="72" id="UnityAudio" style="stroke: #A80036; stroke-width: 2.25;" width="135" x="304.5" y="93"></rect><ellipse cx="327" cy="117" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M333.1875,122.9297 Q332.6484,123.8672 331.3828,124.8281 Q329.2734,126.3516 325.1719,126.3516 Q321.8906,126.3516 319.6875,124.1484 Q317.1328,121.5938 317.1328,116.8125 Q317.1328,112.4063 319.6641,109.7109 Q321.9844,107.2734 325.3125,107.2734 Q328.125,107.2734 329.6016,107.7188 Q331.0781,108.1641 331.0781,108.1641 Q331.0781,108.1641 331.0781,107.3203 L332.6016,107.1797 L332.8359,113.2734 L330.8438,113.4609 Q329.625,108.0703 325.5234,108.0703 Q325.5234,108.0703 324.6328,108.4922 Q323.2734,109.0078 322.5,109.8281 Q320.4375,112.1484 320.4141,116.8594 Q320.3906,121.0313 322.6875,123.375 Q324.6328,125.3672 325.875,125.3672 Q328.9219,125.3672 332.2031,121.5234 L333.1875,122.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="87" x="348" y="125.8638">UnityAudio</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="306" x2="438" y1="141" y2="141"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="306" x2="438" y1="153" y2="153"></line><!--MD5=[160c488ccb2dd3d7ba7e6b90123697d2]
+class UnityNavMesh--><rect fill="#FEFECE" filter="url(#f1srwspjgm8feg)" height="72" id="UnityNavMesh" style="stroke: #A80036; stroke-width: 2.25;" width="165" x="87" y="93"></rect><ellipse cx="109.5" cy="117" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M115.6875,122.9297 Q115.1484,123.8672 113.8828,124.8281 Q111.7734,126.3516 107.6719,126.3516 Q104.3906,126.3516 102.1875,124.1484 Q99.6328,121.5938 99.6328,116.8125 Q99.6328,112.4063 102.1641,109.7109 Q104.4844,107.2734 107.8125,107.2734 Q110.625,107.2734 112.1016,107.7188 Q113.5781,108.1641 113.5781,108.1641 Q113.5781,108.1641 113.5781,107.3203 L115.1016,107.1797 L115.3359,113.2734 L113.3438,113.4609 Q112.125,108.0703 108.0234,108.0703 Q108.0234,108.0703 107.1328,108.4922 Q105.7734,109.0078 105,109.8281 Q102.9375,112.1484 102.9141,116.8594 Q102.8906,121.0313 105.1875,123.375 Q107.1328,125.3672 108.375,125.3672 Q111.4219,125.3672 114.7031,121.5234 L115.6875,122.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="117" x="130.5" y="125.8638">UnityNavMesh</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="88.5" x2="250.5" y1="141" y2="141"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="88.5" x2="250.5" y1="153" y2="153"></line><!--MD5=[bbfad1d37da2db032274317489871dea]
+class IWeapon--><rect fill="#FEFECE" filter="url(#f1srwspjgm8feg)" height="72" id="IWeapon" style="stroke: #A80036; stroke-width: 2.25;" width="121.5" x="524.25" y="519"></rect><ellipse cx="546.75" cy="543" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M552.9375,548.9297 Q552.3984,549.8672 551.1328,550.8281 Q549.0234,552.3516 544.9219,552.3516 Q541.6406,552.3516 539.4375,550.1484 Q536.8828,547.5938 536.8828,542.8125 Q536.8828,538.4063 539.4141,535.7109 Q541.7344,533.2734 545.0625,533.2734 Q547.875,533.2734 549.3516,533.7188 Q550.8281,534.1641 550.8281,534.1641 Q550.8281,534.1641 550.8281,533.3203 L552.3516,533.1797 L552.5859,539.2734 L550.5938,539.4609 Q549.375,534.0703 545.2734,534.0703 Q545.2734,534.0703 544.3828,534.4922 Q543.0234,535.0078 542.25,535.8281 Q540.1875,538.1484 540.1641,542.8594 Q540.1406,547.0313 542.4375,549.375 Q544.3828,551.3672 545.625,551.3672 Q548.6719,551.3672 551.9531,547.5234 L552.9375,548.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="73.5" x="567.75" y="551.8638">IWeapon</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="525.75" x2="644.25" y1="567" y2="567"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="525.75" x2="644.25" y1="579" y2="579"></line><!--MD5=[82251a853253b7e188650373a1faaf87]
+class ICharacterAI--><rect fill="#FEFECE" filter="url(#f1srwspjgm8feg)" height="72" id="ICharacterAI" style="stroke: #A80036; stroke-width: 2.25;" width="148.5" x="731.25" y="519"></rect><ellipse cx="753.75" cy="543" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M759.9375,548.9297 Q759.3984,549.8672 758.1328,550.8281 Q756.0234,552.3516 751.9219,552.3516 Q748.6406,552.3516 746.4375,550.1484 Q743.8828,547.5938 743.8828,542.8125 Q743.8828,538.4063 746.4141,535.7109 Q748.7344,533.2734 752.0625,533.2734 Q754.875,533.2734 756.3516,533.7188 Q757.8281,534.1641 757.8281,534.1641 Q757.8281,534.1641 757.8281,533.3203 L759.3516,533.1797 L759.5859,539.2734 L757.5938,539.4609 Q756.375,534.0703 752.2734,534.0703 Q752.2734,534.0703 751.3828,534.4922 Q750.0234,535.0078 749.25,535.8281 Q747.1875,538.1484 747.1641,542.8594 Q747.1406,547.0313 749.4375,549.375 Q751.3828,551.3672 752.625,551.3672 Q755.6719,551.3672 758.9531,547.5234 L759.9375,548.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="100.5" x="774.75" y="551.8638">ICharacterAI</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="732.75" x2="878.25" y1="567" y2="567"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="732.75" x2="878.25" y1="579" y2="579"></line><!--MD5=[2187309e89d2ede2c7a09597958c7bbf]
+class CharacterSystem--><rect fill="#FEFECE" filter="url(#f1srwspjgm8feg)" height="119.0024" id="CharacterSystem" style="stroke: #A80036; stroke-width: 2.25;" width="214.5" x="207.75" y="721.5"></rect><ellipse cx="241.05" cy="745.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M247.2375,751.4297 Q246.6984,752.3672 245.4328,753.3281 Q243.3234,754.8516 239.2219,754.8516 Q235.9406,754.8516 233.7375,752.6484 Q231.1828,750.0938 231.1828,745.3125 Q231.1828,740.9063 233.7141,738.2109 Q236.0344,735.7734 239.3625,735.7734 Q242.175,735.7734 243.6516,736.2188 Q245.1281,736.6641 245.1281,736.6641 Q245.1281,736.6641 245.1281,735.8203 L246.6516,735.6797 L246.8859,741.7734 L244.8937,741.9609 Q243.675,736.5703 239.5734,736.5703 Q239.5734,736.5703 238.6828,736.9922 Q237.3234,737.5078 236.55,738.3281 Q234.4875,740.6484 234.4641,745.3594 Q234.4406,749.5313 236.7375,751.875 Q238.6828,753.8672 239.925,753.8672 Q242.9719,753.8672 246.2531,750.0234 L247.2375,751.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="142.5" x="264.45" y="754.3638">CharacterSystem</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="209.25" x2="420.75" y1="769.5" y2="769.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="196.5" x="216.75" y="795.3757">List&lt;ICharacter&gt; m_ISolider</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="195" x="216.75" y="818.877">List&lt;ICharacter&gt; m_IEnemy</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="209.25" x2="420.75" y1="828.5024" y2="828.5024"></line><!--MD5=[d6e7d65f18a88d4a5988beef91fa8368]
+class PBaseDefenseGame--><rect fill="#FEFECE" filter="url(#f1srwspjgm8feg)" height="72" id="PBaseDefenseGame" style="stroke: #A80036; stroke-width: 2.25;" width="225" x="202.5" y="931.5"></rect><ellipse cx="225" cy="955.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M231.1875,961.4297 Q230.6484,962.3672 229.3828,963.3281 Q227.2734,964.8516 223.1719,964.8516 Q219.8906,964.8516 217.6875,962.6484 Q215.1328,960.0938 215.1328,955.3125 Q215.1328,950.9063 217.6641,948.2109 Q219.9844,945.7734 223.3125,945.7734 Q226.125,945.7734 227.6016,946.2188 Q229.0781,946.6641 229.0781,946.6641 Q229.0781,946.6641 229.0781,945.8203 L230.6016,945.6797 L230.8359,951.7734 L228.8438,951.9609 Q227.625,946.5703 223.5234,946.5703 Q223.5234,946.5703 222.6328,946.9922 Q221.2734,947.5078 220.5,948.3281 Q218.4375,950.6484 218.4141,955.3594 Q218.3906,959.5313 220.6875,961.875 Q222.6328,963.8672 223.875,963.8672 Q226.9219,963.8672 230.2031,960.0234 L231.1875,961.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="177" x="246" y="964.3638">PBaseDefenseGame</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="204" x2="426" y1="979.5" y2="979.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="204" x2="426" y1="991.5" y2="991.5"></line><!--MD5=[6c9afd200c147b205c0a7326c0169cfa]
+class IEnemy--><rect fill="#FEFECE" filter="url(#f1srwspjgm8feg)" height="72" id="IEnemy" style="stroke: #A80036; stroke-width: 2.25;" width="109.5" x="329.25" y="519"></rect><ellipse cx="351.75" cy="543" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M357.9375,548.9297 Q357.3984,549.8672 356.1328,550.8281 Q354.0234,552.3516 349.9219,552.3516 Q346.6406,552.3516 344.4375,550.1484 Q341.8828,547.5938 341.8828,542.8125 Q341.8828,538.4063 344.4141,535.7109 Q346.7344,533.2734 350.0625,533.2734 Q352.875,533.2734 354.3516,533.7188 Q355.8281,534.1641 355.8281,534.1641 Q355.8281,534.1641 355.8281,533.3203 L357.3516,533.1797 L357.5859,539.2734 L355.5938,539.4609 Q354.375,534.0703 350.2734,534.0703 Q350.2734,534.0703 349.3828,534.4922 Q348.0234,535.0078 347.25,535.8281 Q345.1875,538.1484 345.1641,542.8594 Q345.1406,547.0313 347.4375,549.375 Q349.3828,551.3672 350.625,551.3672 Q353.6719,551.3672 356.9531,547.5234 L357.9375,548.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="61.5" x="372.75" y="551.8638">IEnemy</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="330.75" x2="437.25" y1="567" y2="567"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="330.75" x2="437.25" y1="579" y2="579"></line><!--MD5=[c19000bd153798aaf6274083ab3f2832]
+class ISolider--><rect fill="#FEFECE" filter="url(#f1srwspjgm8feg)" height="72" id="ISolider" style="stroke: #A80036; stroke-width: 2.25;" width="111" x="165" y="519"></rect><ellipse cx="187.5" cy="543" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M193.6875,548.9297 Q193.1484,549.8672 191.8828,550.8281 Q189.7734,552.3516 185.6719,552.3516 Q182.3906,552.3516 180.1875,550.1484 Q177.6328,547.5938 177.6328,542.8125 Q177.6328,538.4063 180.1641,535.7109 Q182.4844,533.2734 185.8125,533.2734 Q188.625,533.2734 190.1016,533.7188 Q191.5781,534.1641 191.5781,534.1641 Q191.5781,534.1641 191.5781,533.3203 L193.1016,533.1797 L193.3359,539.2734 L191.3438,539.4609 Q190.125,534.0703 186.0234,534.0703 Q186.0234,534.0703 185.1328,534.4922 Q183.7734,535.0078 183,535.8281 Q180.9375,538.1484 180.9141,542.8594 Q180.8906,547.0313 183.1875,549.375 Q185.1328,551.3672 186.375,551.3672 Q189.4219,551.3672 192.7031,547.5234 L193.6875,548.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="63" x="208.5" y="551.8638">ISolider</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="166.5" x2="274.5" y1="567" y2="567"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="166.5" x2="274.5" y1="579" y2="579"></line><!--MD5=[a1908832394178c0f507a77908d0ff4a]
+class ICharacter--><rect fill="#FEFECE" filter="url(#f1srwspjgm8feg)" height="95.5012" id="ICharacter" style="stroke: #A80036; stroke-width: 2.25;" width="135" x="304.5" y="295.5"></rect><ellipse cx="327" cy="319.5" fill="#A9DCDF" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M336.3516,326.6484 L328.9688,326.6484 L328.9688,326.1563 Q329.9297,326.0859 330.3281,325.9453 Q330.9609,325.6641 330.9609,324.8906 Q330.9609,324.2813 330.5156,323.1094 L329.625,320.6484 L324.1641,320.6484 L322.9219,323.8125 Q322.7109,324.3047 322.7109,324.8906 Q322.7109,325.6875 323.3203,325.9453 Q323.5781,326.0859 324.3516,326.1563 L324.3516,326.6484 L318.3047,326.6484 L318.3047,326.1563 Q318.6328,326.0859 318.9375,326.0156 Q319.2422,325.9453 319.5234,325.5938 Q320.2266,324.7031 321.3281,321.6563 L326.3672,307.9922 L327.9609,307.9922 L333.8672,323.6953 Q334.4063,325.1953 335.0625,325.7344 Q335.4375,326.0156 336.3516,326.1563 L336.3516,326.6484 Z M329.2969,319.7109 L326.625,311.8594 L324.375,319.7109 L329.2969,319.7109 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="87" x="348" y="328.3638">ICharacter</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="306" x2="438" y1="343.5" y2="343.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="66" x="313.5" y="369.3757">角色數值</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="306" x2="438" y1="379.0012" y2="379.0012"></line><!--MD5=[125155bbbdbd597e8725b48d1b3b0825]
+class GameLoop--><rect fill="#FEFECE" filter="url(#f1srwspjgm8feg)" height="72" id="GameLoop" style="stroke: #A80036; stroke-width: 2.25;" width="141" x="9" y="931.5"></rect><ellipse cx="31.5" cy="955.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M37.6875,961.4297 Q37.1484,962.3672 35.8828,963.3281 Q33.7734,964.8516 29.6719,964.8516 Q26.3906,964.8516 24.1875,962.6484 Q21.6328,960.0938 21.6328,955.3125 Q21.6328,950.9063 24.1641,948.2109 Q26.4844,945.7734 29.8125,945.7734 Q32.625,945.7734 34.1016,946.2188 Q35.5781,946.6641 35.5781,946.6641 Q35.5781,946.6641 35.5781,945.8203 L37.1016,945.6797 L37.3359,951.7734 L35.3438,951.9609 Q34.125,946.5703 30.0234,946.5703 Q30.0234,946.5703 29.1328,946.9922 Q27.7734,947.5078 27,948.3281 Q24.9375,950.6484 24.9141,955.3594 Q24.8906,959.5313 27.1875,961.875 Q29.1328,963.8672 30.375,963.8672 Q33.4219,963.8672 36.7031,960.0234 L37.6875,961.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="93" x="52.5" y="964.3638">GameLoop</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="148.5" y1="979.5" y2="979.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="148.5" y1="991.5" y2="991.5"></line><!--MD5=[4ef492104fd8c07f3f85a3e942554193]
+class Unity--><rect fill="#FEFECE" filter="url(#f1srwspjgm8feg)" height="72" id="Unity" style="stroke: #A80036; stroke-width: 2.25;" width="88.5" x="35.25" y="1126.5"></rect><ellipse cx="57.75" cy="1150.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M63.9375,1156.4297 Q63.3984,1157.3672 62.1328,1158.3281 Q60.0234,1159.8516 55.9219,1159.8516 Q52.6406,1159.8516 50.4375,1157.6484 Q47.8828,1155.0938 47.8828,1150.3125 Q47.8828,1145.9063 50.4141,1143.2109 Q52.7344,1140.7734 56.0625,1140.7734 Q58.875,1140.7734 60.3516,1141.2188 Q61.8281,1141.6641 61.8281,1141.6641 Q61.8281,1141.6641 61.8281,1140.8203 L63.3516,1140.6797 L63.5859,1146.7734 L61.5938,1146.9609 Q60.375,1141.5703 56.2734,1141.5703 Q56.2734,1141.5703 55.3828,1141.9922 Q54.0234,1142.5078 53.25,1143.3281 Q51.1875,1145.6484 51.1641,1150.3594 Q51.1406,1154.5313 53.4375,1156.875 Q55.3828,1158.8672 56.625,1158.8672 Q59.6719,1158.8672 62.9531,1155.0234 L63.9375,1156.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="40.5" x="78.75" y="1159.3638">Unity</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="36.75" x2="122.25" y1="1174.5" y2="1174.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="36.75" x2="122.25" y1="1186.5" y2="1186.5"></line><path d="M737.25,107.25 L737.25,150.0242 L963.75,150.0242 L963.75,122.25 L948.75,107.25 L737.25,107.25 " fill="#FBFB77" filter="url(#f1srwspjgm8feg)" style="stroke: #A80036; stroke-width: 1.5;"></path><path d="M948.75,107.25 L948.75,122.25 L963.75,122.25 L948.75,107.25 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.5;"></path><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="195" x="746.25" y="138.2395">大致而已，沒按標準畫</text><!--MD5=[82f5edbb55fd784eea6bdbccc1650440]
+reverse link ICharacter to IEnemy--><path d="M376.425,421.8885 C378.3345,455.0535 380.472,492.195 381.9885,518.5425 " fill="none" id="ICharacter<-IEnemy" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="365.934,422.346,374.6925,391.791,386.8995,421.1385,365.934,422.346" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[f11ebbd9f2b9fa00c229856f6526ff64]
+reverse link ICharacter to ISolider--><path d="M320.2005,416.2875 C295.119,450.807 266.1315,490.701 245.901,518.5425 " fill="none" id="ICharacter<-ISolider" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="311.871,409.8885,338.001,391.791,328.86,422.2335,311.871,409.8885" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[344ac2d815ff938c78f9f5ca115fc9f9]
+reverse link ICharacter to ICharacterAtt--><path d="M459.909,343.5 C627.975,343.5 796.041,343.5 964.107,343.5 " fill="none" id="ICharacter<-ICharacterAtt" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="439.9455,343.5,448.9455,349.5,457.9455,343.5,448.9455,337.5,439.9455,343.5" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[064eab02486ca0807bab172217c556e8]
+reverse link ICharacter to IWeapon--><path d="M434.181,405.8685 C471.612,442.5075 517.932,487.848 549.288,518.5425 " fill="none" id="ICharacter<-IWeapon" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="419.802,391.791,422.0369,402.3742,432.6657,404.3817,430.4307,393.7985,419.802,391.791" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[e79646f356c0a19c42b11c62183deac6]
+reverse link ICharacter to ICharacterAI--><path d="M458.841,367.638 C520.0935,385.4715 602.931,413.4225 670.5,450 C705.5625,468.9795 741.186,496.725 767.031,518.712 " fill="none" id="ICharacter<-ICharacterAI" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="439.7595,362.2065,446.7724,370.4418,457.0714,367.1358,450.0586,358.9005,439.7595,362.2065" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[8a8ec5e1d2e7e35484ba97a958b126e8]
+reverse link ICharacterAtt to IAttStrategy--><path d="M1041,399.4545 C1041,437.064 1041,485.976 1041,518.4885 " fill="none" id="ICharacterAtt<-IAttStrategy" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="1041,379.8975,1035,388.8975,1041,397.8975,1047,388.8975,1041,379.8975" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[1f3af1ff3a830e86c2a070b35dcda48e]
+link UnityGameObject to ICharacter--><path d="M552.3315,165.4245 C520.245,196.8435 472.3905,243.7005 434.0415,281.2515 " fill="none" id="UnityGameObject->ICharacter" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#FFFFFF" points="419.862,295.1355,430.4903,293.1256,432.7227,282.5418,422.0945,284.5517,419.862,295.1355" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[555daaf08402bcd267d2ea51d3b0cbd9]
+link UnityAudio to ICharacter--><path d="M372,165.4245 C372,195.183 372,238.7895 372,275.2215 " fill="none" id="UnityAudio->ICharacter" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#FFFFFF" points="372,295.1355,378,286.1355,372,277.1355,366,286.1355,372,295.1355" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[4786991acbe69b2051ca1800e84b46ec]
+link UnityNavMesh to ICharacter--><path d="M202.9395,165.4245 C232.8885,196.7055 277.488,243.288 313.3605,280.7535 " fill="none" id="UnityNavMesh->ICharacter" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#FFFFFF" points="327.129,295.1355,325.239,284.4853,314.681,282.1337,316.5711,292.7839,327.129,295.1355" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[5aaf666e5dd78e4d13708aca197acced]
+link IEnemy to CharacterSystem--><path d="M373.2195,591.3045 C364.0515,620.8965 350.556,664.467 338.865,702.207 " fill="none" id="IEnemy->CharacterSystem" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="332.949,721.3065,341.3428,714.4842,338.2737,704.1121,329.8799,710.9344,332.949,721.3065" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[4190729721edfdb138beaec66e2a0700]
+link ISolider to CharacterSystem--><path d="M235.266,591.3045 C247.935,621.168 266.643,665.268 282.7545,703.245 " fill="none" id="ISolider->CharacterSystem" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="290.418,721.3065,292.4264,710.6779,283.3879,704.7361,281.3795,715.3647,290.418,721.3065" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[6ebb997ba373c03b4e44ce5f3cfe2fc1]
+link CharacterSystem to PBaseDefenseGame--><path d="M315,840.39 C315,863.019 315,888.8175 315,911.124 " fill="none" id="CharacterSystem->PBaseDefenseGame" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="315,931.2225,321,922.2225,315,913.2225,309,922.2225,315,931.2225" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[f5f7a3c2909b0901203542761e45f8fa]
+reverse link GameLoop to PBaseDefenseGame--><path d="M169.872,967.5 C180.726,967.5 191.5815,967.5 202.4355,967.5 " fill="none" id="GameLoop<-PBaseDefenseGame" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#FFFFFF" points="150.3341,967.5,159.3341,973.5,168.3341,967.5,159.3341,961.5,150.3341,967.5" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[e8567c4e4f5a74b1956837458a6789f1]
+reverse link GameLoop to Unity--><path d="M79.5,1011.3705 C79.5,1045.959 79.5,1094.2239 79.5,1126.4889 " fill="none" id="GameLoop<-Unity" style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 7.0,7.0;"></path><polygon fill="#A80036" points="79.5,1003.77,73.5,1017.27,79.5,1011.27,85.5,1017.27,79.5,1003.77" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="106.5" x="81" y="1076.4895">Update 更新</text><!--MD5=[d85aeefb209649f0cabc5b78025650cf]
+@startuml
+skinparam classAttributeIconSize 0
+scale 1.5
+package 攻擊系統 <<Frame>> {
+  class ICharacterAtt
+   class IAttStrategy
+}
+
+package Unity系統 <<Frame>> {
+  class UnityGameObject
+   class UnityAudio
+    class UnityNavMesh
+}
+
+package 武器 <<Frame>> {
+  class IWeapon
+}
+
+package AI <<Frame>> {
+  class ICharacterAI
+}
+
+package 遊戲系統 <<Frame>> {
+  class CharacterSystem
+  class PBaseDefenseGame
+}
+
+package 角色部分 <<Frame>> {
+  class IEnemy
+  class ISolider
+  abstract class ICharacter
+}
+
+abstract class ICharacter{
+角色數值
+}
+
+class CharacterSystem{
+List<ICharacter> m_ISolider
+List<ICharacter> m_IEnemy
+}
+
+ICharacter <|- - IEnemy
+ICharacter <|- - ISolider
+ICharacter *-right- ICharacterAtt
+ICharacter *- - IWeapon
+ICharacter *- - ICharacterAI
+ICharacterAtt *- - IAttStrategy
+
+ICharacter o-up- UnityGameObject
+ICharacter o-up- UnityAudio
+ICharacter o-up- UnityNavMesh
+
+CharacterSystem *-up- IEnemy
+CharacterSystem *-up- ISolider
+
+PBaseDefenseGame  *-up- CharacterSystem
+
+GameLoop  o-right-  PBaseDefenseGame
+
+Unity  .up.>  GameLoop :Update 更新
+
+note as N1
+大致而已，沒按標準畫
+end note
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+<p>現在看看時序圖</p>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="1065px" preserveAspectRatio="none" style="width:1402px;height:1065px;" version="1.1" viewBox="0 0 1402 1065" width="1402.5px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="f1guwjxad1a631" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><rect fill="#FFFFFF" filter="url(#f1guwjxad1a631)" height="79.5483" style="stroke: #000000; stroke-width: 3.0;" width="288.75" x="19.5" y="160.4106"></rect><rect fill="#FFFFFF" filter="url(#f1guwjxad1a631)" height="643.0642" style="stroke: #000000; stroke-width: 3.0;" width="1254.75" x="131.25" y="260.959"></rect><rect fill="#FFFFFF" filter="url(#f1guwjxad1a631)" height="128.3225" style="stroke: #000000; stroke-width: 3.0;" width="559.5" x="146.25" y="302.2332"></rect><rect fill="#FFFFFF" filter="url(#f1guwjxad1a631)" height="175.5967" style="stroke: #000000; stroke-width: 3.0;" width="477.75" x="450.75" y="451.5557"></rect><rect fill="#FFFFFF" filter="url(#f1guwjxad1a631)" height="245.3708" style="stroke: #000000; stroke-width: 3.0;" width="663" x="708" y="648.1523"></rect><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="61.5" x2="61.5" y1="134.9106" y2="929.5232"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="227.25" x2="227.25" y1="134.9106" y2="929.5232"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="387.75" x2="387.75" y1="134.9106" y2="929.5232"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="578.25" x2="578.25" y1="134.9106" y2="929.5232"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="817.5" x2="817.5" y1="134.9106" y2="929.5232"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="991.5" x2="991.5" y1="134.9106" y2="929.5232"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="1141.5" x2="1141.5" y1="134.9106" y2="929.5232"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="1291.5" x2="1291.5" y1="134.9106" y2="929.5232"></line><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="46.5" x="34.5" y="130.2964">Unity</text><ellipse cx="62.25" cy="19.5" fill="#FEFECE" filter="url(#f1guwjxad1a631)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 3.0;"></ellipse><path d="M62.25,31.5 L62.25,72 M42.75,43.5 L81.75,43.5 M62.25,72 L42.75,94.5 M62.25,72 L81.75,94.5 " fill="none" filter="url(#f1guwjxad1a631)" style="stroke: #A80036; stroke-width: 3.0;"></path><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="46.5" x="34.5" y="953.3196">Unity</text><ellipse cx="62.25" cy="972.9338" fill="#FEFECE" filter="url(#f1guwjxad1a631)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 3.0;"></ellipse><path d="M62.25,984.9338 L62.25,1025.4338 M42.75,996.9338 L81.75,996.9338 M62.25,1025.4338 L42.75,1047.9338 M62.25,1025.4338 L81.75,1047.9338 " fill="none" filter="url(#f1guwjxad1a631)" style="stroke: #A80036; stroke-width: 3.0;"></path><rect fill="#FEFECE" filter="url(#f1guwjxad1a631)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="126" x="161.25" y="76.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="105" x="171.75" y="112.2964">GameLoop</text><rect fill="#FEFECE" filter="url(#f1guwjxad1a631)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="126" x="161.25" y="928.0232"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="105" x="171.75" y="963.8196">GameLoop</text><rect fill="#FEFECE" filter="url(#f1guwjxad1a631)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="120" x="324.75" y="76.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="99" x="335.25" y="112.2964">BatteState</text><rect fill="#FEFECE" filter="url(#f1guwjxad1a631)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="120" x="324.75" y="928.0232"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="99" x="335.25" y="963.8196">BatteState</text><rect fill="#FEFECE" filter="url(#f1guwjxad1a631)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="219" x="465.75" y="76.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="198" x="476.25" y="112.2964">PBaseDefenseGame</text><rect fill="#FEFECE" filter="url(#f1guwjxad1a631)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="219" x="465.75" y="928.0232"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="198" x="476.25" y="963.8196">PBaseDefenseGame</text><rect fill="#FEFECE" filter="url(#f1guwjxad1a631)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="184.5" x="723" y="76.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="163.5" x="733.5" y="112.2964">CharacterSystem</text><rect fill="#FEFECE" filter="url(#f1guwjxad1a631)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="184.5" x="723" y="928.0232"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="163.5" x="733.5" y="963.8196">CharacterSystem</text><rect fill="#FEFECE" filter="url(#f1guwjxad1a631)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="120" x="928.5" y="76.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="99" x="939" y="112.2964">ICharacter</text><rect fill="#FEFECE" filter="url(#f1guwjxad1a631)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="120" x="928.5" y="928.0232"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="99" x="939" y="963.8196">ICharacter</text><rect fill="#FEFECE" filter="url(#f1guwjxad1a631)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="138" x="1069.5" y="76.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="117" x="1080" y="112.2964">ICharacterAI</text><rect fill="#FEFECE" filter="url(#f1guwjxad1a631)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="138" x="1069.5" y="928.0232"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="117" x="1080" y="963.8196">ICharacterAI</text><rect fill="#FEFECE" filter="url(#f1guwjxad1a631)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="121.5" x="1228.5" y="76.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="100.5" x="1239" y="112.2964">IdleAIState</text><rect fill="#FEFECE" filter="url(#f1guwjxad1a631)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="121.5" x="1228.5" y="928.0232"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="100.5" x="1239" y="963.8196">IdleAIState</text><path d="M19.5,160.4106 L246,160.4106 L246,175.4106 L231,190.4106 L19.5,190.4106 L19.5,160.4106 " fill="#EEEEEE" style="stroke: #000000; stroke-width: 1.5;"></path><rect fill="none" height="79.5483" style="stroke: #000000; stroke-width: 3.0;" width="288.75" x="19.5" y="160.4106"></rect><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="159" x="42" y="185.4001">Untiy 到遊戲系統</text><polygon fill="#A80036" points="209.25,221.959,224.25,227.959,209.25,233.959,215.25,227.959" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="62.25" x2="218.25" y1="227.959" y2="227.959"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="72.75" y="220.6743">1</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="112.5" x="89.25" y="220.6743">Unity Update</text><path d="M131.25,260.959 L413.25,260.959 L413.25,275.959 L398.25,290.959 L131.25,290.959 L131.25,260.959 " fill="#EEEEEE" style="stroke: #000000; stroke-width: 1.5;"></path><rect fill="none" height="643.0642" style="stroke: #000000; stroke-width: 3.0;" width="1254.75" x="131.25" y="260.959"></rect><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="214.5" x="153.75" y="285.9485">遊戲系統自己的Update</text><path d="M146.25,302.2332 L344.25,302.2332 L344.25,317.2332 L329.25,332.2332 L146.25,332.2332 L146.25,302.2332 " fill="#EEEEEE" style="stroke: #000000; stroke-width: 1.5;"></path><rect fill="none" height="128.3225" style="stroke: #000000; stroke-width: 3.0;" width="559.5" x="146.25" y="302.2332"></rect><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="130.5" x="168.75" y="327.2227">狀態機Update</text><polygon fill="#A80036" points="369.75,363.7815,384.75,369.7815,369.75,375.7815,375.75,369.7815" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="227.25" x2="378.75" y1="369.7815" y2="369.7815"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="237.75" y="362.4968">2</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="108" x="254.25" y="362.4968">StateUpdate</text><polygon fill="#A80036" points="560.25,412.5557,575.25,418.5557,560.25,424.5557,566.25,418.5557" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="387.75" x2="569.25" y1="418.5557" y2="418.5557"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="398.25" y="411.271">3</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="61.5" x="414.75" y="411.271">Update</text><path d="M450.75,451.5557 L875.25,451.5557 L875.25,466.5557 L860.25,481.5557 L450.75,481.5557 L450.75,451.5557 " fill="#EEEEEE" style="stroke: #000000; stroke-width: 1.5;"></path><rect fill="none" height="175.5967" style="stroke: #000000; stroke-width: 3.0;" width="477.75" x="450.75" y="451.5557"></rect><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="357" x="473.25" y="476.5452">PBaseDefenseGame Update 遊戲系統</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="578.25" x2="641.25" y1="519.104" y2="519.104"></line><line style="stroke: #A80036; stroke-width: 1.5;" x1="641.25" x2="641.25" y1="519.104" y2="538.604"></line><line style="stroke: #A80036; stroke-width: 1.5;" x1="579.75" x2="641.25" y1="538.604" y2="538.604"></line><polygon fill="#A80036" points="594.75,532.604,579.75,538.604,594.75,544.604,588.75,538.604" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="588.75" y="511.8193">4</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="181.5" x="605.25" y="511.8193">GameSystemUpdate</text><polygon fill="#A80036" points="800.25,609.1523,815.25,615.1523,800.25,621.1523,806.25,615.1523" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="578.25" x2="809.25" y1="615.1523" y2="615.1523"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="588.75" y="593.9806">5</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="181.5" x="605.25" y="580.0935">GameSystemUpdate</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="106.5" x="611.25" y="607.8677">裡的 Update</text><path d="M708,648.1523 L910.5,648.1523 L910.5,663.1523 L895.5,678.1523 L708,678.1523 L708,648.1523 " fill="#EEEEEE" style="stroke: #000000; stroke-width: 1.5;"></path><rect fill="none" height="245.3708" style="stroke: #000000; stroke-width: 3.0;" width="663" x="708" y="648.1523"></rect><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="135" x="730.5" y="673.1418">角色AI Update</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="818.25" x2="881.25" y1="715.7007" y2="715.7007"></line><line style="stroke: #A80036; stroke-width: 1.5;" x1="881.25" x2="881.25" y1="715.7007" y2="735.2007"></line><line style="stroke: #A80036; stroke-width: 1.5;" x1="819.75" x2="881.25" y1="735.2007" y2="735.2007"></line><polygon fill="#A80036" points="834.75,729.2007,819.75,735.2007,834.75,741.2007,828.75,735.2007" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="828.75" y="708.416">6</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="79.5" x="845.25" y="708.416">UpdateAI</text><polygon fill="#A80036" points="973.5,777.9749,988.5,783.9749,973.5,789.9749,979.5,783.9749" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="818.25" x2="982.5" y1="783.9749" y2="783.9749"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="828.75" y="776.6902">7</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="79.5" x="845.25" y="776.6902">UpdateAI</text><polygon fill="#A80036" points="1123.5,826.749,1138.5,832.749,1123.5,838.749,1129.5,832.749" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="991.5" x2="1132.5" y1="832.749" y2="832.749"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="1002" y="825.4644">8</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="61.5" x="1018.5" y="825.4644">Update</text><polygon fill="#A80036" points="1274.25,875.5232,1289.25,881.5232,1274.25,887.5232,1280.25,881.5232" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="1141.5" x2="1283.25" y1="881.5232" y2="881.5232"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="1152" y="874.2385">9</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="61.5" x="1168.5" y="874.2385">Update</text><!--MD5=[c6c1d70a3d740f853717238c714531f8]
+@startuml
+autonumber
+scale 1.5
+
+actor Unity
+participant GameLoop
+participant BatteState
+participant PBaseDefenseGame
+participant CharacterSystem
+participant ICharacter
+participant ICharacterAI
+participant IdleAIState
+
+group Untiy 到遊戲系統
+Unity -> GameLoop :Unity Update
+end
+
+group 遊戲系統自己的Update
+
+group 狀態機Update
+GameLoop ->BatteState : StateUpdate
+
+BatteState -> PBaseDefenseGame :Update
+end
+
+group PBaseDefenseGame Update 遊戲系統
+PBaseDefenseGame -> PBaseDefenseGame : GameSystemUpdate
+
+PBaseDefenseGame ->CharacterSystem : GameSystemUpdate \n 裡的 Update
+end
+
+group 角色AI Update
+CharacterSystem -> CharacterSystem :UpdateAI
+
+CharacterSystem -> ICharacter :UpdateAI
+
+ICharacter -> ICharacterAI : Update
+
+ICharacterAI -> IdleAIState :Update
+end
+
+end
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+
+    </div>
+</div>
+</div>
+
+<div id="container-floating" style="display:none;" class="d-none d-md-block d-xl-block">
+    <div id="floating-button" onclick="toggleMore()">
+        <p id="floating-more" class="more">&gt;</p>
+    </div>
+</div>
+
+<!--
+<div class="footer" id="vnote-footer">
+    <p>Generated by <em><a href="https://tamlok.github.io/vnote/">VNote</a></em>.</p>
+</div>
+-->
+</body>
+</html>

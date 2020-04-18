@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="VNote">
+
+    <title>15.命令模式 Command</title>
+    <link rel="icon" href="https://github.com/tamlok/vnote/raw/master/src/resources/icons/vnote.ico">
+
+    <style type="text/css">
+    /* STYLE_GLOBAL_PLACE_HOLDER */
+    </style>
+
+    <style type="text/css">
+    *,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.container-fluid {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.col-12 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+@media (min-width: 768px) {
+    .col-md-3 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 25%;
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+}
+
+@media (min-width: 768px) {
+    .col-md-9 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 75%;
+        flex: 0 0 75%;
+        max-width: 75%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-xl-2 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 16.666667%;
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-xl-10 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 83.333333%;
+        flex: 0 0 83.333333%;
+        max-width: 83.333333%;
+    }
+}
+
+@media (min-width: 768px) {
+    .pt-md-3, .py-md-3 {
+        padding-top: 1rem!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .pb-md-3, .py-md-3 {
+        padding-bottom: 1rem!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .pl-md-5, .px-md-5 {
+        padding-left: 3rem!important;
+    }
+}
+
+.d-none {
+    display: none!important;
+}
+
+@media (min-width: 1200px) {
+    .d-xl-block {
+        display: block!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .d-md-block {
+        display: block!important;
+    }
+}
+
+.bd-content {
+    -webkit-box-ordinal-group: 1;
+    -ms-flex-order: 0;
+    order: 0;
+}
+
+.bd-toc {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 4rem;
+    height: calc(100vh - 10rem);
+    overflow-y: auto;
+}
+
+.bd-toc {
+    -webkit-box-ordinal-group: 2;
+    -ms-flex-order: 1;
+    order: 1;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    font-size: .875rem;
+}
+
+.section-nav {
+    padding-left: 0;
+}
+
+.section-nav ul {
+    font-size: .875rem;
+    list-style-type: none;
+}
+
+.section-nav li {
+    font-size: .875rem;
+}
+
+.section-nav a {
+    color: inherit !important;
+}
+
+.row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+@media (min-width: 1200px) {
+    .flex-xl-nowrap {
+        flex-wrap: nowrap !important;
+    }
+}
+
+#floating-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: #00897B;
+    position: fixed;
+    top: .5rem;
+    right: .5rem;
+    cursor: pointer;
+    box-shadow: 0px 2px 5px #666;
+}
+
+#floating-button .more {
+    color: #F5F5F5;
+    position: absolute;
+    top: 0;
+    display: block;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    line-height: 2.5rem;
+    font-size: 2rem;
+    font-family: 'monospace';
+    font-weight: 300;
+}
+
+.hide-none {
+    display: none !important;
+}
+
+.col-expand {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    padding-right: 3rem !important;
+}
+
+.outline-bold {
+    font-weight: bolder !important;
+}
+
+@media print {
+    #floating-button {
+        display: none !important;
+    }
+}
+
+    @keyframes flash { 
+  0% { color: rgb(128, 203, 196); }
+  10% { color: rgb(0, 137, 123); }
+  40% { color: rgb(0, 137, 123); }
+  50% { color: rgb(128, 203, 196); }
+  60% { color: rgb(0, 137, 123); }
+  90% { color: rgb(0, 137, 123); }
+}
+.highlighted-anchor { animation: flash 1s; }
+div.mark-rect { background: transparent; border: 5px solid rgb(87, 104, 196); border-radius: 2px; position: absolute; }
+#vnote-footer { width: 100%; text-align: center; opacity: 0.2; margin-top: 3rem; }
+#vnote-footer p { font-size: 0.8rem; }
+#vnote-footer a { color: inherit !important; }
+x-eqs { display: flex; flex-direction: row; align-content: space-between; align-items: center; }
+x-eqs > x-eqn { width: 100%; margin-left: 3rem; }
+x-eqs > span { text-align: right; }
+.view-image, .view-svg { transition: 0.3s; }
+.modal-box { display: none; position: fixed; z-index: 1000; padding-top: 50px; left: 0px; top: 0px; width: 100%; height: 100%; overflow: hidden; background-color: rgba(68, 68, 68, 0.952941); }
+.modal-content { margin: auto; display: block; width: auto; height: auto; cursor: move; }
+.modal-content { animation-name: zoom; animation-duration: 0.6s; }
+@-webkit-keyframes zoom { 
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+@keyframes zoom { 
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+span.modal-close { position: absolute; z-index: 1000; top: 15px; right: 35px; color: rgb(218, 218, 218); font-size: 40px; font-weight: bold; transition: 0.3s; }
+span.modal-close:hover, span.modal-close:focus { color: rgb(238, 238, 238); text-decoration: none; cursor: pointer; }
+@media print {
+  pre, pre code, td.hljs-ln-code { white-space: pre-wrap !important; word-break: break-all !important; }
+  code, a { word-break: break-all !important; }
+  div.flowchart-diagram, div.mermaid-diagram, div.plantuml-diagram { overflow: hidden !important; }
+  img { max-width: 100% !important; height: auto !important; }
+  #vnote-footer { display: none !important; }
+}
+.alert { position: relative; padding: 0.75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: 0.25rem; }
+.alert-primary { color: rgb(0, 64, 133); background-color: rgb(204, 229, 255); border-color: rgb(184, 218, 255); }
+.alert-secondary { color: rgb(56, 61, 65); background-color: rgb(226, 227, 229); border-color: rgb(214, 216, 219); }
+.alert-success { color: rgb(21, 87, 36); background-color: rgb(212, 237, 218); border-color: rgb(195, 230, 203); }
+.alert-info { color: rgb(12, 84, 96); background-color: rgb(209, 236, 241); border-color: rgb(190, 229, 235); }
+.alert-warning { color: rgb(133, 100, 4); background-color: rgb(255, 243, 205); border-color: rgb(255, 238, 186); }
+.alert-danger { color: rgb(114, 28, 36); background-color: rgb(248, 215, 218); border-color: rgb(245, 198, 203); }
+.alert-light { color: rgb(129, 129, 130); background-color: rgb(254, 254, 254); border-color: rgb(253, 253, 254); }
+.alert-dark { color: rgb(27, 30, 33); background-color: rgb(214, 216, 217); border-color: rgb(198, 200, 202); }
+.vnote-anchor { font-weight: 400; color: rgba(0, 123, 255, 0.498039); transition: color 0.16s linear; padding-left: 0.375em; -webkit-font-smoothing: antialiased; text-decoration: none; opacity: 0; }
+.vnote-anchor:hover { color: rgb(0, 123, 255); text-decoration: none; opacity: 1; }
+.vnote-anchor::after { content: attr(data-anchor-icon); }
+.vnote-btn { position: relative; display: inline-block; padding: 6px 12px; font-size: 13px; font-weight: 700; line-height: 20px; white-space: nowrap; vertical-align: middle; cursor: pointer; border: none; user-select: none; -webkit-appearance: none; }
+.vnote-copy-clipboard-btn { transition: opacity 0.3s ease-in-out; opacity: 0; padding: 2px 6px; position: absolute; top: 5px; right: 5px; }
+pre:hover .vnote-copy-clipboard-btn { opacity: 1; }
+pre.vnote-snippet { position: relative; }
+body { margin: 0px auto; font-family: "Segoe UI", Helvetica, sans-serif, Tahoma, Arial, Geneva, Georgia, Palatino, "Times New Roman", "Hiragino Sans GB", 冬青黑体, "Microsoft YaHei", 微软雅黑, "Microsoft YaHei UI", "WenQuanYi Micro Hei", 文泉驿雅黑, Dengxian, 等线体, STXihei, 华文细黑, "Liberation Sans", "Droid Sans", NSimSun, 新宋体, SimSun, 宋体; color: rgb(34, 34, 34); line-height: 1.5; padding: 15px; background: rgb(238, 238, 238); font-size: 16px; }
+h1, h2, h3, h4, h5, h6 { color: rgb(34, 34, 34); font-weight: bold; margin-top: 20px; margin-bottom: 10px; padding: 0px; }
+p { padding: 0px; margin-top: 16px; margin-bottom: 16px; }
+h1 { font-size: 26px; }
+h2 { font-size: 24px; }
+h3 { font-size: 22px; }
+h4 { font-size: 20px; }
+h5 { font-size: 19px; }
+h6 { font-size: 18px; }
+a { color: rgb(0, 153, 255); margin: 0px; padding: 0px; vertical-align: baseline; text-decoration: none; word-break: break-word; }
+a:hover { text-decoration: underline; color: rgb(255, 102, 0); }
+a:visited { color: purple; }
+ul, ol { padding: 0px 0px 0px 24px; }
+li { line-height: 24px; }
+li ul, li ol { margin-left: 16px; }
+p, ul, ol { font-size: 16px; line-height: 24px; }
+pre { display: block; overflow-y: hidden; overflow-x: auto; tab-size: 4; }
+code { font-family: Consolas, Monaco, monospace, Courier; color: rgb(142, 36, 170); word-break: break-word; }
+pre code { display: block; overflow-x: auto; padding: 0.5em; color: rgb(34, 34, 34); background-color: rgb(224, 224, 224); border-left: 0.5em solid rgb(0, 137, 123); line-height: 1.5; font-family: Consolas, Monaco, monospace, Courier; white-space: pre; tab-size: 4; }
+pre code.markdown-metadata { border-left: 0.5em solid rgb(128, 203, 196); }
+aside { display: block; float: right; width: 390px; }
+blockquote { color: rgb(102, 102, 102); border-left: 0.5em solid rgb(122, 122, 122); padding: 0px 1em; margin-left: 0px; }
+blockquote p { color: rgb(102, 102, 102); }
+hr { display: block; text-align: left; margin: 1em 0px; border: none; height: 2px; background: rgb(153, 153, 153); }
+table { padding: 0px; margin: 1rem 0.5rem; border-collapse: collapse; }
+table tr { border-top: 2px solid rgb(204, 204, 204); background-color: white; margin: 0px; padding: 0px; }
+table tr:nth-child(2n) { background-color: rgb(248, 248, 248); }
+table tr th { font-weight: bold; border: 2px solid rgb(204, 204, 204); margin: 0px; padding: 6px 13px; }
+table tr td { border: 2px solid rgb(204, 204, 204); margin: 0px; padding: 6px 13px; }
+table tr th :first-child, table tr td :first-child { margin-top: 0px; }
+table tr th :last-child, table tr td :last-child { margin-bottom: 0px; }
+div.mermaid-diagram { margin: 16px 0px; overflow-y: hidden; }
+div.flowchart-diagram { padding: 0px 5px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+div.wavedrom-diagram { padding: 0px 5px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+div.plantuml-diagram { padding: 5px 5px 0px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+.img-package { text-align: center; }
+img.img-center { display: block; margin-left: auto; margin-right: auto; }
+span.img-caption { min-width: 20%; max-width: 80%; display: inline-block; padding: 10px; margin: 0px auto; border-bottom: 1px solid rgb(192, 192, 192); color: rgb(108, 108, 108); text-align: center; line-height: 1.5; }
+.emoji_zero, .emoji_one, .emoji_two, .emoji_three, .emoji_four, .emoji_five, .emoji_six, .emoji_seven, .emoji_eight, .emoji_nine { margin-left: 5px; margin-right: 8px; }
+div.preview-hint { opacity: 0.5; margin-top: 30%; margin-bottom: 30%; align-items: center; display: flex; flex-direction: column; justify-content: center; }
+table.hljs-ln tr { border: none; background-color: transparent; }
+table.hljs-ln tr td { border: none; background-color: transparent; }
+table.hljs-ln tr td.hljs-ln-numbers { user-select: none; text-align: center; color: rgb(170, 170, 170); border-right: 1px solid rgb(204, 204, 204); vertical-align: top; padding-right: 5px; white-space: nowrap; }
+table.hljs-ln tr td.hljs-ln-code { padding-left: 10px; }
+::-webkit-scrollbar { background-color: rgb(234, 234, 234); width: 14px; height: 14px; border: none; }
+::-webkit-scrollbar-corner { background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-button { height: 14px; width: 14px; background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-button:hover { background-color: rgb(208, 208, 208); }
+::-webkit-scrollbar-button:active { background-color: rgb(178, 178, 178); }
+::-webkit-scrollbar-track { background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-thumb { border: none; background-color: rgb(218, 218, 218); }
+::-webkit-scrollbar-thumb:hover { background-color: rgb(208, 208, 208); }
+::-webkit-scrollbar-thumb:active { background-color: rgb(178, 178, 178); }
+::-webkit-scrollbar-button:horizontal:increment { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(-90 256.00000000000006,256) " id="svg_1">   <polygon fill="%23333333" id="svg_2" points="128,192 256,320 384,192  "/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:horizontal:decrement { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(90 255.99999999999997,256.00000000000006) " id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:vertical:increment { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="null" id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:vertical:decrement { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(180 255.99999999999997,256) " id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::selection { background: rgb(25, 118, 210); color: rgb(238, 238, 238); }
+.modal-box { background-color: rgba(234, 234, 234, 0.952941); }
+span.modal-close { color: rgb(102, 102, 102); }
+span.modal-close:hover, span.modal-close:focus { color: rgb(34, 34, 34); }
+.hljs { display: block; overflow-x: auto; padding: 0.5em; background: rgb(224, 224, 224); }
+.hljs, .hljs-subst { color: rgb(54, 54, 54); }
+.hljs-comment { color: rgb(118, 118, 118); }
+.hljs-keyword, .hljs-attribute, .hljs-selector-tag, .hljs-meta-keyword, .hljs-doctag, .hljs-name { color: rgb(0, 0, 238); }
+.hljs-type, .hljs-string, .hljs-number, .hljs-selector-id, .hljs-selector-class, .hljs-quote, .hljs-template-tag, .hljs-deletion { color: rgb(136, 0, 0); }
+.hljs-title, .hljs-section { color: rgb(136, 0, 0); font-weight: bold; }
+.hljs-regexp, .hljs-symbol, .hljs-variable, .hljs-template-variable, .hljs-link, .hljs-selector-attr, .hljs-selector-pseudo { color: rgb(188, 96, 96); }
+.hljs-literal { color: rgb(175, 0, 215); }
+.hljs-built_in, .hljs-bullet, .hljs-code, .hljs-addition { color: rgb(0, 135, 0); }
+.hljs-meta { color: rgb(31, 113, 153); }
+.hljs-meta-string { color: rgb(77, 153, 191); }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: bold; }
+.mermaid-diagram .mermaid .label { color: rgb(51, 51, 51); }
+.mermaid-diagram .node rect, .mermaid-diagram .node circle, .mermaid-diagram .node ellipse, .mermaid-diagram .node polygon { fill: rgb(236, 236, 255); stroke: rgb(204, 204, 255); stroke-width: 1px; }
+.mermaid-diagram .edgePath .path { stroke: rgb(51, 51, 51); }
+.mermaid-diagram .edgeLabel { background-color: rgb(232, 232, 232); }
+.mermaid-diagram .cluster rect { fill: rgb(255, 255, 222) !important; rx: 4 !important; stroke: rgb(170, 170, 51) !important; stroke-width: 1px !important; }
+.mermaid-diagram .cluster text { fill: rgb(51, 51, 51); }
+.mermaid-diagram .actor { stroke: rgb(204, 204, 255); fill: rgb(236, 236, 255); }
+.mermaid-diagram text.actor { fill: black; stroke: none; }
+.mermaid-diagram .actor-line { stroke: grey; }
+.mermaid-diagram .messageLine0 { stroke-width: 1.5; stroke: rgb(51, 51, 51); }
+.mermaid-diagram .messageLine1 { stroke-width: 1.5; stroke: rgb(51, 51, 51); }
+.mermaid-diagram #arrowhead { fill: rgb(51, 51, 51); }
+.mermaid-diagram #crosshead path { fill: rgb(51, 51, 51) !important; stroke: rgb(51, 51, 51) !important; }
+.mermaid-diagram .messageText { fill: rgb(51, 51, 51); stroke: none; }
+.mermaid-diagram .labelBox { stroke: rgb(204, 204, 255); fill: rgb(236, 236, 255); }
+.mermaid-diagram .labelText { fill: black; stroke: none; }
+.mermaid-diagram .loopText { fill: black; stroke: none; }
+.mermaid-diagram .loopLine { stroke-width: 2; stroke: rgb(204, 204, 255); }
+.mermaid-diagram .note { stroke: rgb(170, 170, 51); fill: rgb(255, 245, 173); }
+.mermaid-diagram .noteText { fill: black; stroke: none; font-family: "trebuchet ms", verdana, arial; font-size: 14px; }
+.mermaid-diagram .section { stroke: none; opacity: 0.2; }
+.mermaid-diagram .section0 { fill: rgba(102, 102, 255, 0.490196); }
+.mermaid-diagram .section2 { fill: rgb(255, 244, 0); }
+.mermaid-diagram .section1, .mermaid-diagram .section3 { fill: white; opacity: 0.2; }
+.mermaid-diagram .sectionTitle0 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle1 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle2 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle3 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle { text-anchor: start; font-size: 11px; }
+.mermaid-diagram .grid .tick { stroke: lightgrey; opacity: 0.3; shape-rendering: crispEdges; }
+.mermaid-diagram .grid path { stroke-width: 0; }
+.mermaid-diagram .today { fill: none; stroke: red; stroke-width: 2px; }
+.mermaid-diagram .task { stroke-width: 2; }
+.mermaid-diagram .taskText { text-anchor: middle; font-size: 11px; }
+.mermaid-diagram .taskTextOutsideRight { fill: black; text-anchor: start; font-size: 11px; }
+.mermaid-diagram .taskTextOutsideLeft { fill: black; text-anchor: end; font-size: 11px; }
+.mermaid-diagram .taskText0, .mermaid-diagram .taskText1, .mermaid-diagram .taskText2, .mermaid-diagram .taskText3 { fill: white; }
+.mermaid-diagram .task0, .mermaid-diagram .task1, .mermaid-diagram .task2, .mermaid-diagram .task3 { fill: rgb(138, 144, 221); stroke: rgb(83, 79, 188); }
+.mermaid-diagram .taskTextOutside0, .mermaid-diagram .taskTextOutside2 { fill: black; }
+.mermaid-diagram .taskTextOutside1, .mermaid-diagram .taskTextOutside3 { fill: black; }
+.mermaid-diagram .active0, .mermaid-diagram .active1, .mermaid-diagram .active2, .mermaid-diagram .active3 { fill: rgb(191, 199, 255); stroke: rgb(83, 79, 188); }
+.mermaid-diagram .activeText0, .mermaid-diagram .activeText1, .mermaid-diagram .activeText2, .mermaid-diagram .activeText3 { fill: black !important; }
+.mermaid-diagram .done0, .mermaid-diagram .done1, .mermaid-diagram .done2, .mermaid-diagram .done3 { stroke: grey; fill: lightgrey; stroke-width: 2; }
+.mermaid-diagram .doneText0, .mermaid-diagram .doneText1, .mermaid-diagram .doneText2, .mermaid-diagram .doneText3 { fill: black !important; }
+.mermaid-diagram .crit0, .mermaid-diagram .crit1, .mermaid-diagram .crit2, .mermaid-diagram .crit3 { stroke: rgb(255, 136, 136); fill: red; stroke-width: 2; }
+.mermaid-diagram .activeCrit0, .mermaid-diagram .activeCrit1, .mermaid-diagram .activeCrit2, .mermaid-diagram .activeCrit3 { stroke: rgb(255, 136, 136); fill: rgb(191, 199, 255); stroke-width: 2; }
+.mermaid-diagram .doneCrit0, .mermaid-diagram .doneCrit1, .mermaid-diagram .doneCrit2, .mermaid-diagram .doneCrit3 { stroke: rgb(255, 136, 136); fill: lightgrey; stroke-width: 2; cursor: pointer; shape-rendering: crispEdges; }
+.mermaid-diagram .doneCritText0, .mermaid-diagram .doneCritText1, .mermaid-diagram .doneCritText2, .mermaid-diagram .doneCritText3 { fill: black !important; }
+.mermaid-diagram .activeCritText0, .mermaid-diagram .activeCritText1, .mermaid-diagram .activeCritText2, .mermaid-diagram .activeCritText3 { fill: black !important; }
+.mermaid-diagram .titleText { text-anchor: middle; font-size: 18px; fill: black; }
+.mermaid-diagram .node text { font-family: "trebuchet ms", verdana, arial; font-size: 14px; }
+.mermaid-diagram div.mermaidTooltip { position: absolute; text-align: center; max-width: 200px; padding: 2px; font-family: "trebuchet ms", verdana, arial; font-size: 12px; background: rgb(255, 255, 222); border: 1px solid rgb(170, 170, 51); border-radius: 2px; pointer-events: none; z-index: 100; }
+.hljs-ln { border-collapse: collapse; }
+.hljs-ln td { padding: 0px; }
+.hljs-ln-n::before { content: attr(data-line-number); }
+.MathJax_Hover_Frame { border-radius: 0.25em; box-shadow: rgb(136, 51, 170) 0px 0px 15px; display: inline-block; position: absolute; border: 1px solid rgb(170, 102, 221) !important; }
+.MathJax_Menu_Button .MathJax_Hover_Arrow { position: absolute; cursor: pointer; display: inline-block; border: 2px solid rgb(170, 170, 170); border-radius: 4px; font-family: "Courier New", Courier; font-size: 9px; color: rgb(240, 240, 240); }
+.MathJax_Menu_Button .MathJax_Hover_Arrow span { display: block; background-color: rgb(170, 170, 170); border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px; }
+.MathJax_Hover_Arrow:hover { color: white !important; border: 2px solid rgb(204, 204, 204) !important; }
+.MathJax_Hover_Arrow:hover span { background-color: rgb(204, 204, 204) !important; }
+#MathJax_About { position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: rgb(221, 221, 221); color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; box-shadow: rgb(128, 128, 128) 0px 10px 20px; }
+#MathJax_About.MathJax_MousePost { outline: none; }
+.MathJax_Menu { position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid rgb(204, 204, 204); margin: 0px; cursor: default; font-style: normal; font-weight: normal; font-size: 15px; font-family: "Microsoft JhengHei UI"; font-stretch: normal; font-variant: normal; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: rgb(128, 128, 128) 0px 10px 20px; }
+.MathJax_MenuItem { padding: 2px 2em; background: transparent; }
+.MathJax_MenuArrow { position: absolute; right: 0.5em; padding-top: 0.25em; color: rgb(102, 102, 102); font-size: 0.75em; }
+.MathJax_MenuActive .MathJax_MenuArrow { color: white; }
+.MathJax_MenuArrow.RTL { left: 0.5em; right: auto; }
+.MathJax_MenuCheck { position: absolute; left: 0.7em; }
+.MathJax_MenuCheck.RTL { right: 0.7em; left: auto; }
+.MathJax_MenuRadioCheck { position: absolute; left: 1em; }
+.MathJax_MenuRadioCheck.RTL { right: 1em; left: auto; }
+.MathJax_MenuLabel { padding: 2px 2em 4px 1.33em; font-style: italic; }
+.MathJax_MenuRule { border-top: 1px solid rgb(204, 204, 204); margin: 4px 1px 0px; }
+.MathJax_MenuDisabled { color: graytext; }
+.MathJax_MenuActive { background-color: highlight; color: highlighttext; }
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus { background-color: rgb(232, 232, 232); }
+.MathJax_ContextMenu:focus { outline: none; }
+.MathJax_ContextMenu .MathJax_MenuItem:focus { outline: none; }
+#MathJax_AboutClose { top: 0.2em; right: 0.2em; }
+.MathJax_Menu .MathJax_MenuClose { top: -10px; left: -10px; }
+.MathJax_MenuClose { position: absolute; cursor: pointer; display: inline-block; border: 2px solid rgb(170, 170, 170); border-radius: 18px; font-family: "Courier New", Courier; font-size: 24px; color: rgb(240, 240, 240); }
+.MathJax_MenuClose span { display: block; background-color: rgb(170, 170, 170); border: 1.5px solid; border-radius: 18px; line-height: 0; padding: 8px 0px 6px; }
+.MathJax_MenuClose:hover { color: white !important; border: 2px solid rgb(204, 204, 204) !important; }
+.MathJax_MenuClose:hover span { background-color: rgb(204, 204, 204) !important; }
+.MathJax_MenuClose:hover:focus { outline: none; }
+.MathJax_Preview .MJXf-math { color: inherit !important; }
+.MJX_Assistive_MathML { top: 0px; left: 0px; clip: rect(1px 1px 1px 1px); user-select: none; position: absolute !important; padding: 1px 0px 0px !important; border: 0px !important; height: 1px !important; width: 1px !important; overflow: hidden !important; display: block !important; }
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block { width: 100% !important; }
+#MathJax_Zoom { position: absolute; background-color: rgb(240, 240, 240); overflow: auto; display: block; z-index: 301; padding: 0.5em; border: 1px solid black; margin: 0px; font-weight: normal; font-style: normal; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; box-sizing: content-box; box-shadow: rgb(170, 170, 170) 5px 5px 15px; }
+#MathJax_ZoomOverlay { position: absolute; left: 0px; top: 0px; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0px; padding: 0px; margin: 0px; background-color: white; opacity: 0; }
+#MathJax_ZoomFrame { position: relative; display: inline-block; height: 0px; width: 0px; }
+#MathJax_ZoomEventTrap { position: absolute; left: 0px; top: 0px; z-index: 302; display: inline-block; border: 0px; padding: 0px; margin: 0px; background-color: white; opacity: 0; }
+.MathJax_Preview { color: rgb(136, 136, 136); }
+#MathJax_Message { position: fixed; left: 1px; bottom: 2px; background-color: rgb(230, 230, 230); border: 1px solid rgb(149, 149, 149); margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap; }
+#MathJax_MSIE_Frame { position: absolute; top: 0px; left: 0px; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px; }
+.MathJax_Error { color: rgb(204, 0, 0); font-style: italic; }
+.MJXp-script { font-size: 0.8em; }
+.MJXp-right { transform-origin: right center 0px; }
+.MJXp-bold { font-weight: bold; }
+.MJXp-italic { font-style: italic; }
+.MJXp-scr { font-family: MathJax_Script, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-frak { font-family: MathJax_Fraktur, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-sf { font-family: MathJax_SansSerif, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-cal { font-family: MathJax_Caligraphic, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-mono { font-family: MathJax_Typewriter, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-largeop { font-size: 150%; }
+.MJXp-largeop.MJXp-int { vertical-align: -0.2em; }
+.MJXp-math { display: inline-block; line-height: 1.2; text-indent: 0px; font-family: "Times New Roman", Times, STIXGeneral, serif; white-space: nowrap; border-collapse: collapse; }
+.MJXp-display { display: block; text-align: center; margin: 1em 0px; }
+.MJXp-math span { display: inline-block; }
+.MJXp-box { text-align: center; display: block !important; }
+.MJXp-box::after { content: " "; }
+.MJXp-rule { margin-top: 0.1em; display: block !important; }
+.MJXp-char { display: block !important; }
+.MJXp-mo { margin: 0px 0.15em; }
+.MJXp-mfrac { margin: 0px 0.125em; vertical-align: 0.25em; }
+.MJXp-denom { width: 100%; display: inline-table !important; }
+.MJXp-denom > * { display: table-row !important; }
+.MJXp-surd { vertical-align: top; }
+.MJXp-surd > * { display: block !important; }
+.MJXp-script-box > * { height: 50%; display: table !important; }
+.MJXp-script-box > * > * { vertical-align: top; display: table-cell !important; }
+.MJXp-script-box > :last-child > * { vertical-align: bottom; }
+.MJXp-script-box > * > * > * { display: block !important; }
+.MJXp-mphantom { visibility: hidden; }
+.MJXp-munderover { display: inline-table !important; }
+.MJXp-over { text-align: center; display: inline-block !important; }
+.MJXp-over > * { display: block !important; }
+.MJXp-munderover > * { display: table-row !important; }
+.MJXp-mtable { vertical-align: 0.25em; margin: 0px 0.125em; }
+.MJXp-mtable > * { vertical-align: middle; display: inline-table !important; }
+.MJXp-mtr { display: table-row !important; }
+.MJXp-mtd { text-align: center; padding: 0.5em 0px 0px 0.5em; display: table-cell !important; }
+.MJXp-mtr > .MJXp-mtd:first-child { padding-left: 0px; }
+.MJXp-mtr:first-child > .MJXp-mtd { padding-top: 0px; }
+.MJXp-mlabeledtr { display: table-row !important; }
+.MJXp-mlabeledtr > .MJXp-mtd:first-child { padding-left: 0px; }
+.MJXp-mlabeledtr:first-child > .MJXp-mtd { padding-top: 0px; }
+.MJXp-merror { background-color: rgb(255, 255, 136); color: rgb(204, 0, 0); border: 1px solid rgb(204, 0, 0); padding: 1px 3px; font-style: normal; font-size: 90%; }
+.MJXp-scale0 { transform: scaleX(0); }
+.MJXp-scale1 { transform: scaleX(0.1); }
+.MJXp-scale2 { transform: scaleX(0.2); }
+.MJXp-scale3 { transform: scaleX(0.3); }
+.MJXp-scale4 { transform: scaleX(0.4); }
+.MJXp-scale5 { transform: scaleX(0.5); }
+.MJXp-scale6 { transform: scaleX(0.6); }
+.MJXp-scale7 { transform: scaleX(0.7); }
+.MJXp-scale8 { transform: scaleX(0.8); }
+.MJXp-scale9 { transform: scaleX(0.9); }
+.MathJax_PHTML .noError { font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid; }
+#mermaid-diagram-1 .label { font-family: var(--mermaid-font-family); color: rgb(51, 51, 51); }
+#mermaid-diagram-1 .label text { fill: rgb(51, 51, 51); }
+#mermaid-diagram-1 .node rect, #mermaid-diagram-1 .node circle, #mermaid-diagram-1 .node ellipse, #mermaid-diagram-1 .node polygon { fill: rgb(236, 236, 255); stroke: rgb(147, 112, 219); stroke-width: 1px; }
+#mermaid-diagram-1 .node .label { text-align: center; }
+#mermaid-diagram-1 .node.clickable { cursor: pointer; }
+#mermaid-diagram-1 .arrowheadPath { fill: rgb(51, 51, 51); }
+#mermaid-diagram-1 .edgePath .path { stroke: rgb(51, 51, 51); stroke-width: 1.5px; }
+#mermaid-diagram-1 .edgeLabel { background-color: rgb(232, 232, 232); text-align: center; }
+#mermaid-diagram-1 .cluster rect { fill: rgb(255, 255, 222); stroke: rgb(170, 170, 51); stroke-width: 1px; }
+#mermaid-diagram-1 .cluster text { fill: rgb(51, 51, 51); }
+#mermaid-diagram-1 div.mermaidTooltip { position: absolute; text-align: center; max-width: 200px; padding: 2px; font-family: var(--mermaid-font-family); font-size: 12px; background: rgb(255, 255, 222); border: 1px solid rgb(170, 170, 51); border-radius: 2px; pointer-events: none; z-index: 100; }
+#mermaid-diagram-1 .actor { stroke: rgb(204, 204, 255); fill: rgb(236, 236, 255); }
+#mermaid-diagram-1 text.actor { fill: rgb(0, 0, 0); stroke: none; }
+#mermaid-diagram-1 .actor-line { stroke: grey; }
+#mermaid-diagram-1 .messageLine0 { stroke-width: 1.5; stroke: rgb(51, 51, 51); }
+#mermaid-diagram-1 .messageLine1 { stroke-width: 1.5; stroke: rgb(51, 51, 51); }
+#mermaid-diagram-1 #arrowhead { fill: rgb(51, 51, 51); }
+#mermaid-diagram-1 .sequenceNumber { fill: rgb(255, 255, 255); }
+#mermaid-diagram-1 #sequencenumber { fill: rgb(51, 51, 51); }
+#mermaid-diagram-1 #crosshead path { fill: rgb(51, 51, 51) !important; stroke: rgb(51, 51, 51) !important; }
+#mermaid-diagram-1 .messageText { fill: rgb(51, 51, 51); stroke: none; }
+#mermaid-diagram-1 .labelBox { stroke: rgb(204, 204, 255); fill: rgb(236, 236, 255); }
+#mermaid-diagram-1 .labelText { fill: rgb(0, 0, 0); stroke: none; }
+#mermaid-diagram-1 .loopText { fill: rgb(0, 0, 0); stroke: none; }
+#mermaid-diagram-1 .loopLine { stroke-width: 2; stroke: rgb(204, 204, 255); }
+#mermaid-diagram-1 .note { stroke: rgb(170, 170, 51); fill: rgb(255, 245, 173); }
+#mermaid-diagram-1 .noteText { fill: black; stroke: none; font-family: var(--mermaid-font-family); font-size: 14px; }
+#mermaid-diagram-1 .activation0 { fill: rgb(244, 244, 244); stroke: rgb(102, 102, 102); }
+#mermaid-diagram-1 .activation1 { fill: rgb(244, 244, 244); stroke: rgb(102, 102, 102); }
+#mermaid-diagram-1 .activation2 { fill: rgb(244, 244, 244); stroke: rgb(102, 102, 102); }
+#mermaid-diagram-1 .mermaid-main-font { font-family: var(--mermaid-font-family); }
+#mermaid-diagram-1 .section { stroke: none; opacity: 0.2; }
+#mermaid-diagram-1 .section0 { fill: rgba(102, 102, 255, 0.490196); }
+#mermaid-diagram-1 .section2 { fill: rgb(255, 244, 0); }
+#mermaid-diagram-1 .section1, #mermaid-diagram-1 .section3 { fill: rgb(255, 255, 255); opacity: 0.2; }
+#mermaid-diagram-1 .sectionTitle0 { fill: rgb(51, 51, 51); }
+#mermaid-diagram-1 .sectionTitle1 { fill: rgb(51, 51, 51); }
+#mermaid-diagram-1 .sectionTitle2 { fill: rgb(51, 51, 51); }
+#mermaid-diagram-1 .sectionTitle3 { fill: rgb(51, 51, 51); }
+#mermaid-diagram-1 .sectionTitle { text-anchor: start; font-size: 11px; font-family: var(--mermaid-font-family); }
+#mermaid-diagram-1 .grid .tick { stroke: rgb(211, 211, 211); opacity: 0.3; shape-rendering: crispEdges; }
+#mermaid-diagram-1 .grid .tick text { font-family: var(--mermaid-font-family); }
+#mermaid-diagram-1 .grid path { stroke-width: 0; }
+#mermaid-diagram-1 .today { fill: none; stroke: red; stroke-width: 2px; }
+#mermaid-diagram-1 .task { stroke-width: 2; }
+#mermaid-diagram-1 .taskText { text-anchor: middle; font-family: var(--mermaid-font-family); }
+#mermaid-diagram-1 .taskText:not([font-size]) { font-size: 11px; }
+#mermaid-diagram-1 .taskTextOutsideRight { fill: rgb(0, 0, 0); text-anchor: start; font-size: 11px; font-family: var(--mermaid-font-family); }
+#mermaid-diagram-1 .taskTextOutsideLeft { fill: rgb(0, 0, 0); text-anchor: end; font-size: 11px; }
+#mermaid-diagram-1 .task.clickable { cursor: pointer; }
+#mermaid-diagram-1 .taskText.clickable { cursor: pointer; font-weight: bold; fill: rgb(0, 49, 99) !important; }
+#mermaid-diagram-1 .taskTextOutsideLeft.clickable { cursor: pointer; font-weight: bold; fill: rgb(0, 49, 99) !important; }
+#mermaid-diagram-1 .taskTextOutsideRight.clickable { cursor: pointer; font-weight: bold; fill: rgb(0, 49, 99) !important; }
+#mermaid-diagram-1 .taskText0, #mermaid-diagram-1 .taskText1, #mermaid-diagram-1 .taskText2, #mermaid-diagram-1 .taskText3 { fill: rgb(255, 255, 255); }
+#mermaid-diagram-1 .task0, #mermaid-diagram-1 .task1, #mermaid-diagram-1 .task2, #mermaid-diagram-1 .task3 { fill: rgb(138, 144, 221); stroke: rgb(83, 79, 188); }
+#mermaid-diagram-1 .taskTextOutside0, #mermaid-diagram-1 .taskTextOutside2 { fill: rgb(0, 0, 0); }
+#mermaid-diagram-1 .taskTextOutside1, #mermaid-diagram-1 .taskTextOutside3 { fill: rgb(0, 0, 0); }
+#mermaid-diagram-1 .active0, #mermaid-diagram-1 .active1, #mermaid-diagram-1 .active2, #mermaid-diagram-1 .active3 { fill: rgb(191, 199, 255); stroke: rgb(83, 79, 188); }
+#mermaid-diagram-1 .activeText0, #mermaid-diagram-1 .activeText1, #mermaid-diagram-1 .activeText2, #mermaid-diagram-1 .activeText3 { fill: rgb(0, 0, 0) !important; }
+#mermaid-diagram-1 .done0, #mermaid-diagram-1 .done1, #mermaid-diagram-1 .done2, #mermaid-diagram-1 .done3 { stroke: grey; fill: rgb(211, 211, 211); stroke-width: 2; }
+#mermaid-diagram-1 .doneText0, #mermaid-diagram-1 .doneText1, #mermaid-diagram-1 .doneText2, #mermaid-diagram-1 .doneText3 { fill: rgb(0, 0, 0) !important; }
+#mermaid-diagram-1 .crit0, #mermaid-diagram-1 .crit1, #mermaid-diagram-1 .crit2, #mermaid-diagram-1 .crit3 { stroke: rgb(255, 136, 136); fill: red; stroke-width: 2; }
+#mermaid-diagram-1 .activeCrit0, #mermaid-diagram-1 .activeCrit1, #mermaid-diagram-1 .activeCrit2, #mermaid-diagram-1 .activeCrit3 { stroke: rgb(255, 136, 136); fill: rgb(191, 199, 255); stroke-width: 2; }
+#mermaid-diagram-1 .doneCrit0, #mermaid-diagram-1 .doneCrit1, #mermaid-diagram-1 .doneCrit2, #mermaid-diagram-1 .doneCrit3 { stroke: rgb(255, 136, 136); fill: rgb(211, 211, 211); stroke-width: 2; cursor: pointer; shape-rendering: crispEdges; }
+#mermaid-diagram-1 .milestone { transform: rotate(45deg) scale(0.8, 0.8); }
+#mermaid-diagram-1 .milestoneText { font-style: italic; }
+#mermaid-diagram-1 .doneCritText0, #mermaid-diagram-1 .doneCritText1, #mermaid-diagram-1 .doneCritText2, #mermaid-diagram-1 .doneCritText3 { fill: rgb(0, 0, 0) !important; }
+#mermaid-diagram-1 .activeCritText0, #mermaid-diagram-1 .activeCritText1, #mermaid-diagram-1 .activeCritText2, #mermaid-diagram-1 .activeCritText3 { fill: rgb(0, 0, 0) !important; }
+#mermaid-diagram-1 .titleText { text-anchor: middle; font-size: 18px; fill: rgb(0, 0, 0); font-family: var(--mermaid-font-family); }
+#mermaid-diagram-1 g.classGroup text { fill: rgb(147, 112, 219); stroke: none; font-family: var(--mermaid-font-family); font-size: 10px; }
+#mermaid-diagram-1 g.classGroup text .title { font-weight: bolder; }
+#mermaid-diagram-1 g.classGroup rect { fill: rgb(236, 236, 255); stroke: rgb(147, 112, 219); }
+#mermaid-diagram-1 g.classGroup line { stroke: rgb(147, 112, 219); stroke-width: 1; }
+#mermaid-diagram-1 .classLabel .box { stroke: none; stroke-width: 0; fill: rgb(236, 236, 255); opacity: 0.5; }
+#mermaid-diagram-1 .classLabel .label { fill: rgb(147, 112, 219); font-size: 10px; }
+#mermaid-diagram-1 .relation { stroke: rgb(147, 112, 219); stroke-width: 1; fill: none; }
+#mermaid-diagram-1 #compositionStart { fill: rgb(147, 112, 219); stroke: rgb(147, 112, 219); stroke-width: 1; }
+#mermaid-diagram-1 #compositionEnd { fill: rgb(147, 112, 219); stroke: rgb(147, 112, 219); stroke-width: 1; }
+#mermaid-diagram-1 #aggregationStart { fill: rgb(236, 236, 255); stroke: rgb(147, 112, 219); stroke-width: 1; }
+#mermaid-diagram-1 #aggregationEnd { fill: rgb(236, 236, 255); stroke: rgb(147, 112, 219); stroke-width: 1; }
+#mermaid-diagram-1 #dependencyStart { fill: rgb(147, 112, 219); stroke: rgb(147, 112, 219); stroke-width: 1; }
+#mermaid-diagram-1 #dependencyEnd { fill: rgb(147, 112, 219); stroke: rgb(147, 112, 219); stroke-width: 1; }
+#mermaid-diagram-1 #extensionStart { fill: rgb(147, 112, 219); stroke: rgb(147, 112, 219); stroke-width: 1; }
+#mermaid-diagram-1 #extensionEnd { fill: rgb(147, 112, 219); stroke: rgb(147, 112, 219); stroke-width: 1; }
+#mermaid-diagram-1 .commit-id, #mermaid-diagram-1 .commit-msg, #mermaid-diagram-1 .branch-label { fill: lightgrey; color: lightgrey; font-family: var(--mermaid-font-family); }
+#mermaid-diagram-1 .pieTitleText { text-anchor: middle; font-size: 25px; fill: rgb(0, 0, 0); font-family: var(--mermaid-font-family); }
+#mermaid-diagram-1 .slice { font-family: var(--mermaid-font-family); }
+#mermaid-diagram-1 g.stateGroup text { fill: rgb(147, 112, 219); stroke: none; font-size: 10px; font-family: var(--mermaid-font-family); }
+#mermaid-diagram-1 g.stateGroup text { fill: rgb(147, 112, 219); stroke: none; font-size: 10px; }
+#mermaid-diagram-1 g.stateGroup .state-title { font-weight: bolder; fill: rgb(0, 0, 0); }
+#mermaid-diagram-1 g.stateGroup rect { fill: rgb(236, 236, 255); stroke: rgb(147, 112, 219); }
+#mermaid-diagram-1 g.stateGroup line { stroke: rgb(147, 112, 219); stroke-width: 1; }
+#mermaid-diagram-1 .transition { stroke: rgb(147, 112, 219); stroke-width: 1; fill: none; }
+#mermaid-diagram-1 .stateGroup .composit { fill: white; border-bottom: 1px; }
+#mermaid-diagram-1 .state-note { stroke: rgb(170, 170, 51); fill: rgb(255, 245, 173); }
+#mermaid-diagram-1 .state-note text { fill: black; stroke: none; font-size: 10px; }
+#mermaid-diagram-1 .stateLabel .box { stroke: none; stroke-width: 0; fill: rgb(236, 236, 255); opacity: 0.5; }
+#mermaid-diagram-1 .stateLabel text { fill: rgb(0, 0, 0); font-size: 10px; font-weight: bold; font-family: var(--mermaid-font-family); }
+:root { --mermaid-font-family: "Comic Sans MS", "Comic Sans", cursive; }
+:root { --mermaid-font-family: "trebuchet ms", verdana, arial; }
+#mermaid-diagram-1 { color: rgb(34, 34, 34); font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: 24px; font-family: "Segoe UI", Helvetica, sans-serif, Tahoma, Arial, Geneva, Georgia, Palatino, "Times New Roman", "Hiragino Sans GB", 冬青黑体, "Microsoft YaHei", 微软雅黑, "Microsoft YaHei UI", "WenQuanYi Micro Hei", 文泉驿雅黑, Dengxian, 等线体, STXihei, 华文细黑, "Liberation Sans", "Droid Sans", NSimSun, 新宋体, SimSun, 宋体; }
+
+    </style>
+
+    <script type="text/javascript">
+var toc = [];
+
+var setVisible = function(node, visible) {
+    var cl = 'hide-none';
+    if (visible) {
+        node.classList.remove(cl);
+    } else {
+        node.classList.add(cl);
+    }
+};
+
+var isVisible = function(node) {
+    var cl = 'hide-none';
+    return !node.classList.contains(cl);
+};
+
+var setPostContentExpanded = function(node, expanded) {
+    var cl = 'col-expand';
+    if (expanded) {
+        node.classList.add(cl);
+    } else {
+        node.classList.remove(cl);
+    }
+};
+
+var setOutlinePanelVisible = function(visible) {
+    var outlinePanel = document.getElementById('outline-panel');
+    var postContent = document.getElementById('post-content');
+
+    setVisible(outlinePanel, visible);
+    setPostContentExpanded(postContent, !visible);
+};
+
+var isOutlinePanelVisible = function() {
+    var outlinePanel = document.getElementById('outline-panel');
+    return isVisible(outlinePanel);
+};
+
+window.addEventListener('load', function() {
+    var outlinePanel = document.getElementById('outline-panel');
+    outlinePanel.style.display = 'initial';
+
+    var floatingContainer = document.getElementById('container-floating');
+    floatingContainer.style.display = 'initial';
+
+    var outlineContent = document.getElementById('outline-content');
+    var postContent = document.getElementById('post-content');
+
+    // Escape @text to Html.
+    var escapeHtml = function(text) {
+        var map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    // Fetch the outline.
+    var headers = postContent.querySelectorAll("h1, h2, h3, h4, h5, h6");
+    toc = [];
+    for (var i = 0; i < headers.length; ++i) {
+        var header = headers[i];
+
+        toc.push({
+            level: parseInt(header.tagName.substr(1)),
+            anchor: header.id,
+            title: escapeHtml(header.textContent)
+        });
+    }
+
+    if (toc.length == 0) {
+        setOutlinePanelVisible(false);
+        setVisible(floatingContainer, false);
+        return;
+    }
+
+    var baseLevel = baseLevelOfToc(toc);
+    var tocTree = tocToTree(toPerfectToc(toc, baseLevel), baseLevel);
+
+    outlineContent.innerHTML = tocTree;
+    setOutlinePanelVisible(true);
+    setVisible(floatingContainer, true);
+});
+
+// Return the topest level of @toc, starting from 1.
+var baseLevelOfToc = function(p_toc) {
+    var level = -1;
+    for (i in p_toc) {
+        if (level == -1) {
+            level = p_toc[i].level;
+        } else if (level > p_toc[i].level) {
+            level = p_toc[i].level;
+        }
+    }
+
+    if (level == -1) {
+        level = 1;
+    }
+
+    return level;
+};
+
+// Handle wrong title levels, such as '#' followed by '###'
+var toPerfectToc = function(p_toc, p_baseLevel) {
+    var i;
+    var curLevel = p_baseLevel - 1;
+    var perfToc = [];
+    for (i in p_toc) {
+        var item = p_toc[i];
+
+        // Insert empty header.
+        while (item.level > curLevel + 1) {
+            curLevel += 1;
+            var tmp = { level: curLevel,
+                        anchor: '',
+                        title: '[EMPTY]'
+                      };
+            perfToc.push(tmp);
+        }
+
+        perfToc.push(item);
+        curLevel = item.level;
+    }
+
+    return perfToc;
+};
+
+var itemToHtml = function(item) {
+    return '<a href="#' + item.anchor + '" data="' + item.anchor + '">' + item.title + '</a>';
+};
+
+// Turn a perfect toc to a tree using <ul>
+var tocToTree = function(p_toc, p_baseLevel) {
+    var i;
+    var front = '<li>';
+    var ending = ['</li>'];
+    var curLevel = p_baseLevel;
+    for (i in p_toc) {
+        var item = p_toc[i];
+        if (item.level == curLevel) {
+            front += '</li>';
+            front += '<li>';
+            front += itemToHtml(item);
+        } else if (item.level > curLevel) {
+            // assert(item.level - curLevel == 1)
+            front += '<ul>';
+            ending.push('</ul>');
+            front += '<li>';
+            front += itemToHtml(item);
+            ending.push('</li>');
+            curLevel = item.level;
+        } else {
+            while (item.level < curLevel) {
+                var ele = ending.pop();
+                front += ele;
+                if (ele == '</ul>') {
+                    curLevel--;
+                }
+            }
+            front += '</li>';
+            front += '<li>';
+            front += itemToHtml(item);
+        }
+    }
+    while (ending.length > 0) {
+        front += ending.pop();
+    }
+    front = front.replace("<li></li>", "");
+    front = '<ul>' + front + '</ul>';
+    return front;
+};
+
+var toggleMore = function() {
+    if (toc.length == 0) {
+        return;
+    }
+
+    var p = document.getElementById('floating-more');
+    if (isOutlinePanelVisible()) {
+        p.textContent = '<';
+        setOutlinePanelVisible(false);
+    } else {
+        p.textContent = '>';
+        setOutlinePanelVisible(true);
+    }
+};
+
+window.addEventListener('scroll', function() {
+    if (toc.length == 0 || !isOutlinePanelVisible()) {
+        return;
+    }
+
+    var postContent = document.getElementById('post-content');
+    var scrollTop = document.documentElement.scrollTop
+                    || document.body.scrollTop
+                    || window.pageYOffset;
+    var eles = postContent.querySelectorAll("h1, h2, h3, h4, h5, h6");
+
+    if (eles.length == 0) {
+        return;
+    }
+
+    var idx = -1;
+    var biaScrollTop = scrollTop + 50;
+    for (var i = 0; i < eles.length; ++i) {
+        if (biaScrollTop >= eles[i].offsetTop) {
+            idx = i;
+        } else {
+            break;
+        }
+    }
+
+    var header = '';
+    if (idx != -1) {
+        header = eles[idx].id;
+    }
+
+    highlightItemOnlyInOutline(header);
+});
+
+var highlightItemOnlyInOutline = function(id) {
+    var cl = 'outline-bold';
+    var outlineContent = document.getElementById('outline-content');
+    var eles = outlineContent.querySelectorAll("a");
+    var target = null;
+    for (var i = 0; i < eles.length; ++i) {
+        var ele = eles[i];
+        if (ele.getAttribute('data') == id) {
+            target = ele;
+            ele.classList.add(cl);
+        } else {
+            ele.classList.remove(cl);
+        }
+    }
+
+    // TODO: scroll target into view within the outline panel scroll area.
+};
+
+</script>
+
+
+<!-- HEAD_PLACE_HOLDER -->
+</head>
+<body>
+<div class="container-fluid">
+<div class="row flex-xl-nowrap">
+    <div id="outline-panel" style="display:none;" class="d-none d-md-block d-xl-block col-md-3 col-xl-2 bd-toc">
+        <div id="outline-content" class="section-nav"></div>
+    </div>
+    <div id="post-content" class="col-12 col-md-9 col-xl-10 py-md-3 pl-md-5 bd-content">
+    <h1 id="toc_0">15.命令模式 Command<a class="vnote-anchor" href="#toc_0" data-anchor-icon="#"></a></h1>
+<h2 id="toc_1">講解<a class="vnote-anchor" href="#toc_1" data-anchor-icon="#"></a></h2>
+<p>命令模式可以構想成，客人跟服務生的關係，<br>
+客戶端只需要跟調用者呼叫，就可以去做任何事，<br>
+客戶端無須知道該如何實現，以達到解耦合</p>
+<div class="mermaid-diagram"><svg id="mermaid-diagram-1" width="472.1875" xmlns="http://www.w3.org/2000/svg" height="119" viewBox="0 0 472.1875 119"><style>#mermaid-diagram-1 .label{font-family:'trebuchet ms', verdana, arial;font-family:var(--mermaid-font-family);color:#333}#mermaid-diagram-1 .label text{fill:#333}#mermaid-diagram-1 .node rect,#mermaid-diagram-1 .node circle,#mermaid-diagram-1 .node ellipse,#mermaid-diagram-1 .node polygon{fill:#ECECFF;stroke:#9370db;stroke-width:1px}#mermaid-diagram-1 .node .label{text-align:center}#mermaid-diagram-1 .node.clickable{cursor:pointer}#mermaid-diagram-1 .arrowheadPath{fill:#333}#mermaid-diagram-1 .edgePath .path{stroke:#333;stroke-width:1.5px}#mermaid-diagram-1 .edgeLabel{background-color:#e8e8e8;text-align:center}#mermaid-diagram-1 .cluster rect{fill:#ffffde;stroke:#aa3;stroke-width:1px}#mermaid-diagram-1 .cluster text{fill:#333}#mermaid-diagram-1 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:'trebuchet ms', verdana, arial;font-family:var(--mermaid-font-family);font-size:12px;background:#ffffde;border:1px solid #aa3;border-radius:2px;pointer-events:none;z-index:100}#mermaid-diagram-1 .actor{stroke:#ccf;fill:#ECECFF}#mermaid-diagram-1 text.actor{fill:#000;stroke:none}#mermaid-diagram-1 .actor-line{stroke:grey}#mermaid-diagram-1 .messageLine0{stroke-width:1.5;stroke-dasharray:'2 2';stroke:#333}#mermaid-diagram-1 .messageLine1{stroke-width:1.5;stroke-dasharray:'2 2';stroke:#333}#mermaid-diagram-1 #arrowhead{fill:#333}#mermaid-diagram-1 .sequenceNumber{fill:#fff}#mermaid-diagram-1 #sequencenumber{fill:#333}#mermaid-diagram-1 #crosshead path{fill:#333 !important;stroke:#333 !important}#mermaid-diagram-1 .messageText{fill:#333;stroke:none}#mermaid-diagram-1 .labelBox{stroke:#ccf;fill:#ECECFF}#mermaid-diagram-1 .labelText{fill:#000;stroke:none}#mermaid-diagram-1 .loopText{fill:#000;stroke:none}#mermaid-diagram-1 .loopLine{stroke-width:2;stroke-dasharray:'2 2';stroke:#ccf}#mermaid-diagram-1 .note{stroke:#aa3;fill:#fff5ad}#mermaid-diagram-1 .noteText{fill:black;stroke:none;font-family:'trebuchet ms', verdana, arial;font-family:var(--mermaid-font-family);font-size:14px}#mermaid-diagram-1 .activation0{fill:#f4f4f4;stroke:#666}#mermaid-diagram-1 .activation1{fill:#f4f4f4;stroke:#666}#mermaid-diagram-1 .activation2{fill:#f4f4f4;stroke:#666}#mermaid-diagram-1 .mermaid-main-font{font-family:"trebuchet ms", verdana, arial;font-family:var(--mermaid-font-family)}#mermaid-diagram-1 .section{stroke:none;opacity:0.2}#mermaid-diagram-1 .section0{fill:rgba(102,102,255,0.49)}#mermaid-diagram-1 .section2{fill:#fff400}#mermaid-diagram-1 .section1,#mermaid-diagram-1 .section3{fill:#fff;opacity:0.2}#mermaid-diagram-1 .sectionTitle0{fill:#333}#mermaid-diagram-1 .sectionTitle1{fill:#333}#mermaid-diagram-1 .sectionTitle2{fill:#333}#mermaid-diagram-1 .sectionTitle3{fill:#333}#mermaid-diagram-1 .sectionTitle{text-anchor:start;font-size:11px;text-height:14px;font-family:'trebuchet ms', verdana, arial;font-family:var(--mermaid-font-family)}#mermaid-diagram-1 .grid .tick{stroke:#d3d3d3;opacity:0.3;shape-rendering:crispEdges}#mermaid-diagram-1 .grid .tick text{font-family:'trebuchet ms', verdana, arial;font-family:var(--mermaid-font-family)}#mermaid-diagram-1 .grid path{stroke-width:0}#mermaid-diagram-1 .today{fill:none;stroke:red;stroke-width:2px}#mermaid-diagram-1 .task{stroke-width:2}#mermaid-diagram-1 .taskText{text-anchor:middle;font-family:'trebuchet ms', verdana, arial;font-family:var(--mermaid-font-family)}#mermaid-diagram-1 .taskText:not([font-size]){font-size:11px}#mermaid-diagram-1 .taskTextOutsideRight{fill:#000;text-anchor:start;font-size:11px;font-family:'trebuchet ms', verdana, arial;font-family:var(--mermaid-font-family)}#mermaid-diagram-1 .taskTextOutsideLeft{fill:#000;text-anchor:end;font-size:11px}#mermaid-diagram-1 .task.clickable{cursor:pointer}#mermaid-diagram-1 .taskText.clickable{cursor:pointer;fill:#003163 !important;font-weight:bold}#mermaid-diagram-1 .taskTextOutsideLeft.clickable{cursor:pointer;fill:#003163 !important;font-weight:bold}#mermaid-diagram-1 .taskTextOutsideRight.clickable{cursor:pointer;fill:#003163 !important;font-weight:bold}#mermaid-diagram-1 .taskText0,#mermaid-diagram-1 .taskText1,#mermaid-diagram-1 .taskText2,#mermaid-diagram-1 .taskText3{fill:#fff}#mermaid-diagram-1 .task0,#mermaid-diagram-1 .task1,#mermaid-diagram-1 .task2,#mermaid-diagram-1 .task3{fill:#8a90dd;stroke:#534fbc}#mermaid-diagram-1 .taskTextOutside0,#mermaid-diagram-1 .taskTextOutside2{fill:#000}#mermaid-diagram-1 .taskTextOutside1,#mermaid-diagram-1 .taskTextOutside3{fill:#000}#mermaid-diagram-1 .active0,#mermaid-diagram-1 .active1,#mermaid-diagram-1 .active2,#mermaid-diagram-1 .active3{fill:#bfc7ff;stroke:#534fbc}#mermaid-diagram-1 .activeText0,#mermaid-diagram-1 .activeText1,#mermaid-diagram-1 .activeText2,#mermaid-diagram-1 .activeText3{fill:#000 !important}#mermaid-diagram-1 .done0,#mermaid-diagram-1 .done1,#mermaid-diagram-1 .done2,#mermaid-diagram-1 .done3{stroke:grey;fill:#d3d3d3;stroke-width:2}#mermaid-diagram-1 .doneText0,#mermaid-diagram-1 .doneText1,#mermaid-diagram-1 .doneText2,#mermaid-diagram-1 .doneText3{fill:#000 !important}#mermaid-diagram-1 .crit0,#mermaid-diagram-1 .crit1,#mermaid-diagram-1 .crit2,#mermaid-diagram-1 .crit3{stroke:#f88;fill:red;stroke-width:2}#mermaid-diagram-1 .activeCrit0,#mermaid-diagram-1 .activeCrit1,#mermaid-diagram-1 .activeCrit2,#mermaid-diagram-1 .activeCrit3{stroke:#f88;fill:#bfc7ff;stroke-width:2}#mermaid-diagram-1 .doneCrit0,#mermaid-diagram-1 .doneCrit1,#mermaid-diagram-1 .doneCrit2,#mermaid-diagram-1 .doneCrit3{stroke:#f88;fill:#d3d3d3;stroke-width:2;cursor:pointer;shape-rendering:crispEdges}#mermaid-diagram-1 .milestone{transform:rotate(45deg) scale(0.8, 0.8)}#mermaid-diagram-1 .milestoneText{font-style:italic}#mermaid-diagram-1 .doneCritText0,#mermaid-diagram-1 .doneCritText1,#mermaid-diagram-1 .doneCritText2,#mermaid-diagram-1 .doneCritText3{fill:#000 !important}#mermaid-diagram-1 .activeCritText0,#mermaid-diagram-1 .activeCritText1,#mermaid-diagram-1 .activeCritText2,#mermaid-diagram-1 .activeCritText3{fill:#000 !important}#mermaid-diagram-1 .titleText{text-anchor:middle;font-size:18px;fill:#000;font-family:'trebuchet ms', verdana, arial;font-family:var(--mermaid-font-family)}#mermaid-diagram-1 g.classGroup text{fill:#9370db;stroke:none;font-family:'trebuchet ms', verdana, arial;font-family:var(--mermaid-font-family);font-size:10px}#mermaid-diagram-1 g.classGroup text .title{font-weight:bolder}#mermaid-diagram-1 g.classGroup rect{fill:#ECECFF;stroke:#9370db}#mermaid-diagram-1 g.classGroup line{stroke:#9370db;stroke-width:1}#mermaid-diagram-1 .classLabel .box{stroke:none;stroke-width:0;fill:#ECECFF;opacity:0.5}#mermaid-diagram-1 .classLabel .label{fill:#9370db;font-size:10px}#mermaid-diagram-1 .relation{stroke:#9370db;stroke-width:1;fill:none}#mermaid-diagram-1 #compositionStart{fill:#9370db;stroke:#9370db;stroke-width:1}#mermaid-diagram-1 #compositionEnd{fill:#9370db;stroke:#9370db;stroke-width:1}#mermaid-diagram-1 #aggregationStart{fill:#ECECFF;stroke:#9370db;stroke-width:1}#mermaid-diagram-1 #aggregationEnd{fill:#ECECFF;stroke:#9370db;stroke-width:1}#mermaid-diagram-1 #dependencyStart{fill:#9370db;stroke:#9370db;stroke-width:1}#mermaid-diagram-1 #dependencyEnd{fill:#9370db;stroke:#9370db;stroke-width:1}#mermaid-diagram-1 #extensionStart{fill:#9370db;stroke:#9370db;stroke-width:1}#mermaid-diagram-1 #extensionEnd{fill:#9370db;stroke:#9370db;stroke-width:1}#mermaid-diagram-1 .commit-id,#mermaid-diagram-1 .commit-msg,#mermaid-diagram-1 .branch-label{fill:lightgrey;color:lightgrey;font-family:'trebuchet ms', verdana, arial;font-family:var(--mermaid-font-family)}#mermaid-diagram-1 .pieTitleText{text-anchor:middle;font-size:25px;fill:#000;font-family:'trebuchet ms', verdana, arial;font-family:var(--mermaid-font-family)}#mermaid-diagram-1 .slice{font-family:'trebuchet ms', verdana, arial;font-family:var(--mermaid-font-family)}#mermaid-diagram-1 g.stateGroup text{fill:#9370db;stroke:none;font-size:10px;font-family:'trebuchet ms', verdana, arial;font-family:var(--mermaid-font-family)}#mermaid-diagram-1 g.stateGroup text{fill:#9370db;stroke:none;font-size:10px}#mermaid-diagram-1 g.stateGroup .state-title{font-weight:bolder;fill:#000}#mermaid-diagram-1 g.stateGroup rect{fill:#ECECFF;stroke:#9370db}#mermaid-diagram-1 g.stateGroup line{stroke:#9370db;stroke-width:1}#mermaid-diagram-1 .transition{stroke:#9370db;stroke-width:1;fill:none}#mermaid-diagram-1 .stateGroup .composit{fill:white;border-bottom:1px}#mermaid-diagram-1 .state-note{stroke:#aa3;fill:#fff5ad}#mermaid-diagram-1 .state-note text{fill:black;stroke:none;font-size:10px}#mermaid-diagram-1 .stateLabel .box{stroke:none;stroke-width:0;fill:#ECECFF;opacity:0.5}#mermaid-diagram-1 .stateLabel text{fill:#000;font-size:10px;font-weight:bold;font-family:'trebuchet ms', verdana, arial;font-family:var(--mermaid-font-family)}:root{--mermaid-font-family: '"trebuchet ms", verdana, arial';--mermaid-font-family: "Comic Sans MS", "Comic Sans", cursive}
+
+:root { --mermaid-font-family: "trebuchet ms", verdana, arial;}</style><style>#mermaid-diagram-1 {
+    color: rgb(34, 34, 34);
+    font: normal normal normal normal 16px / 24px "Segoe UI", Helvetica, sans-serif, Tahoma, Arial, Geneva, Georgia, Palatino, "Times New Roman", "Hiragino Sans GB", 冬青黑体, "Microsoft YaHei", 微软雅黑, "Microsoft YaHei UI", "WenQuanYi Micro Hei", 文泉驿雅黑, Dengxian, 等线体, STXihei, 华文细黑, "Liberation Sans", "Droid Sans", NSimSun, 新宋体, SimSun, 宋体;
+  }</style><g transform="translate(0, 0)"><g class="output"><g class="clusters"></g><g class="edgePaths"><g class="edgePath" style="opacity: 1;"><path class="path" d="M60,30L107.046875,30L154.09375,30" marker-end="url(#arrowhead15)" style="fill:none"></path><defs><marker id="arrowhead15" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M222.09375,30L301.140625,30L380.1875,30" marker-end="url(#arrowhead16)" style="fill:none"></path><defs><marker id="arrowhead16" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g><g class="edgePath" style="opacity: 1;"><path class="path" d="M404.8625,52L380.1875,83.33333333333333L380.1875,91.16666666666666L422.1875,99L464.1875,91.16666666666666L464.1875,83.33333333333333L439.5125,52" marker-end="url(#arrowhead17)" style="fill:none"></path><defs><marker id="arrowhead17" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g></g><g class="edgeLabels"><g class="edgeLabel" transform="translate(107.046875,30)" style="opacity: 1;"><g transform="translate(-22.046875,-12)" class="label"><foreignObject width="44.09375" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="edgeLabel">1.呼叫</span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(301.140625,30)" style="opacity: 1;"><g transform="translate(-54.046875,-12)" class="label"><foreignObject width="108.09375" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="edgeLabel">2.呼叫菜單函式</span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(422.1875,99)" style="opacity: 1;"><g transform="translate(-22.046875,-12)" class="label"><foreignObject width="44.09375" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="edgeLabel">3.實作</span></div></foreignObject></g></g></g><g class="nodes"><g class="node" id="客人" transform="translate(34,30)" style="opacity: 1;"><rect rx="0" ry="0" x="-26" y="-22" width="52" height="44" class="label-container"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-16,-12)"><foreignObject width="32" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">客人</div></foreignObject></g></g></g><g class="node" id="服務生" transform="translate(188.09375,30)" style="opacity: 1;"><rect rx="0" ry="0" x="-34" y="-22" width="68" height="44" class="label-container"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-24,-12)"><foreignObject width="48" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">服務生</div></foreignObject></g></g></g><g class="node" id="炒菜師傅" transform="translate(422.1875,30)" style="opacity: 1;"><rect rx="0" ry="0" x="-42" y="-22" width="84" height="44" class="label-container"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-32,-12)"><foreignObject width="64" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">炒菜師傅</div></foreignObject></g></g></g></g></g></g></svg></div>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="600px" preserveAspectRatio="none" style="width:966px;height:600px;" version="1.1" viewBox="0 0 966 600" width="966px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="f11l8v2bjznhbc" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><!--MD5=[521817ab83e81da341a3f4b5e91bae41]
+class Command--><rect fill="#FEFECE" filter="url(#f11l8v2bjznhbc)" height="119.0024" id="Command" style="stroke: #A80036; stroke-width: 2.25;" width="136.5" x="317.25" y="30"></rect><ellipse cx="339.75" cy="54" fill="#B4A7E5" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M344.25,63.0234 L335.625,63.0234 L335.625,62.5313 Q337.2656,62.4375 337.8516,61.8984 Q338.4375,61.3594 338.4375,59.8594 L338.4375,47.9063 Q338.4375,46.3594 337.8047,45.7969 Q337.2656,45.3047 335.625,45.2109 L335.625,44.7188 L344.25,44.7188 L344.25,45.2109 Q342.7266,45.2813 342.1641,45.7031 Q341.4141,46.3125 341.4141,47.9063 L341.4141,59.8594 Q341.4141,61.4297 342.1641,61.9922 Q342.7266,62.4609 344.25,62.5313 L344.25,63.0234 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="88.5" x="360.75" y="62.8638">Command</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="318.75" x2="452.25" y1="78" y2="78"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="326.25" y="103.8757">命令的介面</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="318.75" x2="452.25" y1="113.5012" y2="113.5012"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="70.5" x="326.25" y="139.377">例子:菜單</text><!--MD5=[6fb1311da0745c184c648aedb301439e]
+class ConcreteCommand--><rect fill="#FEFECE" filter="url(#f11l8v2bjznhbc)" height="119.0024" id="ConcreteCommand" style="stroke: #A80036; stroke-width: 2.25;" width="211.5" x="137.25" y="256.5"></rect><ellipse cx="159.75" cy="280.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M165.9375,286.4297 Q165.3984,287.3672 164.1328,288.3281 Q162.0234,289.8516 157.9219,289.8516 Q154.6406,289.8516 152.4375,287.6484 Q149.8828,285.0938 149.8828,280.3125 Q149.8828,275.9063 152.4141,273.2109 Q154.7344,270.7734 158.0625,270.7734 Q160.875,270.7734 162.3516,271.2188 Q163.8281,271.6641 163.8281,271.6641 Q163.8281,271.6641 163.8281,270.8203 L165.3516,270.6797 L165.5859,276.7734 L163.5938,276.9609 Q162.375,271.5703 158.2734,271.5703 Q158.2734,271.5703 157.3828,271.9922 Q156.0234,272.5078 155.25,273.3281 Q153.1875,275.6484 153.1641,280.3594 Q153.1406,284.5313 155.4375,286.875 Q157.3828,288.8672 158.625,288.8672 Q161.6719,288.8672 164.9531,285.0234 L165.9375,286.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="163.5" x="180.75" y="289.3638">ConcreteCommand</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="138.75" x2="347.25" y1="304.5" y2="304.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="99" x="146.25" y="330.3757">命令實作產品</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="138.75" x2="347.25" y1="340.0012" y2="340.0012"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="153" x="146.25" y="365.877">例子:菜單上的一份菜</text><!--MD5=[4a29daf885f4427d7f324b74c3138fb6]
+class ConcreteCommand2--><rect fill="#FEFECE" filter="url(#f11l8v2bjznhbc)" height="119.0024" id="ConcreteCommand2" style="stroke: #A80036; stroke-width: 2.25;" width="222" x="402" y="256.5"></rect><ellipse cx="424.5" cy="280.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M430.6875,286.4297 Q430.1484,287.3672 428.8828,288.3281 Q426.7734,289.8516 422.6719,289.8516 Q419.3906,289.8516 417.1875,287.6484 Q414.6328,285.0938 414.6328,280.3125 Q414.6328,275.9063 417.1641,273.2109 Q419.4844,270.7734 422.8125,270.7734 Q425.625,270.7734 427.1016,271.2188 Q428.5781,271.6641 428.5781,271.6641 Q428.5781,271.6641 428.5781,270.8203 L430.1016,270.6797 L430.3359,276.7734 L428.3438,276.9609 Q427.125,271.5703 423.0234,271.5703 Q423.0234,271.5703 422.1328,271.9922 Q420.7734,272.5078 420,273.3281 Q417.9375,275.6484 417.9141,280.3594 Q417.8906,284.5313 420.1875,286.875 Q422.1328,288.8672 423.375,288.8672 Q426.4219,288.8672 429.7031,285.0234 L430.6875,286.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="174" x="445.5" y="289.3638">ConcreteCommand2</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="403.5" x2="622.5" y1="304.5" y2="304.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="108" x="411" y="330.3757">命令實作產品2</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="403.5" x2="622.5" y1="340.0012" y2="340.0012"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="186" x="411" y="365.877">例子:菜單上的另外一份菜</text><!--MD5=[bcee973e2623bef0127252815a37a6e8]
+class Receiver--><rect fill="#FEFECE" filter="url(#f11l8v2bjznhbc)" height="119.0024" id="Receiver" style="stroke: #A80036; stroke-width: 2.25;" width="121.5" x="182.25" y="465"></rect><ellipse cx="205.425" cy="489" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M211.6125,494.9297 Q211.0734,495.8672 209.8078,496.8281 Q207.6984,498.3516 203.5969,498.3516 Q200.3156,498.3516 198.1125,496.1484 Q195.5578,493.5938 195.5578,488.8125 Q195.5578,484.4063 198.0891,481.7109 Q200.4094,479.2734 203.7375,479.2734 Q206.55,479.2734 208.0266,479.7188 Q209.5031,480.1641 209.5031,480.1641 Q209.5031,480.1641 209.5031,479.3203 L211.0266,479.1797 L211.2609,485.2734 L209.2687,485.4609 Q208.05,480.0703 203.9484,480.0703 Q203.9484,480.0703 203.0578,480.4922 Q201.6984,481.0078 200.925,481.8281 Q198.8625,484.1484 198.8391,488.8594 Q198.8156,493.0313 201.1125,495.375 Q203.0578,497.3672 204.3,497.3672 Q207.3469,497.3672 210.6281,493.5234 L211.6125,494.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="72" x="226.575" y="497.8638">Receiver</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="183.75" x2="302.25" y1="513" y2="513"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="49.5" x="191.25" y="538.8757">實作者</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="183.75" x2="302.25" y1="548.5012" y2="548.5012"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="103.5" x="191.25" y="574.377">例子:炒菜師傅</text><!--MD5=[d01e39adb8cc3240d418de1aedb45e74]
+class Invoker--><rect fill="#FEFECE" filter="url(#f11l8v2bjznhbc)" height="119.0024" id="Invoker" style="stroke: #A80036; stroke-width: 2.25;" width="106.5" x="158.25" y="30"></rect><ellipse cx="180.75" cy="54" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M186.9375,59.9297 Q186.3984,60.8672 185.1328,61.8281 Q183.0234,63.3516 178.9219,63.3516 Q175.6406,63.3516 173.4375,61.1484 Q170.8828,58.5938 170.8828,53.8125 Q170.8828,49.4063 173.4141,46.7109 Q175.7344,44.2734 179.0625,44.2734 Q181.875,44.2734 183.3516,44.7188 Q184.8281,45.1641 184.8281,45.1641 Q184.8281,45.1641 184.8281,44.3203 L186.3516,44.1797 L186.5859,50.2734 L184.5938,50.4609 Q183.375,45.0703 179.2734,45.0703 Q179.2734,45.0703 178.3828,45.4922 Q177.0234,46.0078 176.25,46.8281 Q174.1875,49.1484 174.1641,53.8594 Q174.1406,58.0313 176.4375,60.375 Q178.3828,62.3672 179.625,62.3672 Q182.6719,62.3672 185.9531,58.5234 L186.9375,59.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="58.5" x="201.75" y="62.8638">Invoker</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="159.75" x2="263.25" y1="78" y2="78"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="49.5" x="167.25" y="103.8757">調用者</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="159.75" x2="263.25" y1="113.5012" y2="113.5012"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="87" x="167.25" y="139.377">例子:服務生</text><!--MD5=[4bc0ac3dee5ac25f3614c581cf99dd21]
+class Clinet--><rect fill="#FEFECE" filter="url(#f11l8v2bjznhbc)" height="95.5012" id="Clinet" style="stroke: #A80036; stroke-width: 2.25;" width="96" x="9" y="41.25"></rect><ellipse cx="31.5" cy="65.25" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M37.6875,71.1797 Q37.1484,72.1172 35.8828,73.0781 Q33.7734,74.6016 29.6719,74.6016 Q26.3906,74.6016 24.1875,72.3984 Q21.6328,69.8438 21.6328,65.0625 Q21.6328,60.6563 24.1641,57.9609 Q26.4844,55.5234 29.8125,55.5234 Q32.625,55.5234 34.1016,55.9688 Q35.5781,56.4141 35.5781,56.4141 Q35.5781,56.4141 35.5781,55.5703 L37.1016,55.4297 L37.3359,61.5234 L35.3438,61.7109 Q34.125,56.3203 30.0234,56.3203 Q30.0234,56.3203 29.1328,56.7422 Q27.7734,57.2578 27,58.0781 Q24.9375,60.3984 24.9141,65.1094 Q24.8906,69.2813 27.1875,71.625 Q29.1328,73.6172 30.375,73.6172 Q33.4219,73.6172 36.7031,69.7734 L37.6875,71.1797 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="48" x="52.5" y="74.1138">Clinet</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="103.5" y1="89.25" y2="89.25"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="103.5" y1="101.25" y2="101.25"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="70.5" x="18" y="127.1257">例子:客人</text><path d="M507,12 L507,165.8708 L948,165.8708 L948,27 L933,12 L507,12 " fill="#FBFB77" filter="url(#f11l8v2bjznhbc)" style="stroke: #A80036; stroke-width: 1.5;"></path><path d="M933,12 L933,27 L948,27 L933,12 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.5;"></path><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="292.5" x="516" y="42.9895">命令模式在模式中也算是蠻重要的</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="370.5" x="516" y="70.7637">因為命令模式擁有添加、撤銷、安排的概念</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="409.5" x="516" y="98.5378">對於程式來說，命令模式解耦合是個很好的概念</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="409.5" x="516" y="126.312">對於程式本身只需輸出呼叫，剩下由命令來傳達</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="370.5" x="516" y="154.0862">還可以跟工廠模式結合，命令後就呼叫工廠</text><!--MD5=[71d76317347f4c6586f3f69fe5800413]
+reverse link Command to ConcreteCommand--><path d="M332.049,174.5835 C314.667,201.846 295.7745,231.477 279.882,256.4025 " fill="none" id="Command<-ConcreteCommand" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="323.4495,168.54,348.432,148.8885,341.157,179.829,323.4495,168.54" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[97f968a0de22712e67524cf85ab87ca3]
+reverse link Command to ConcreteCommand2--><path d="M433.566,175.0065 C449.052,202.152 465.8535,231.606 480,256.4025 " fill="none" id="Command<-ConcreteCommand2" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="424.4115,180.15,418.6665,148.8885,442.6515,169.743,424.4115,180.15" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[850bba5183eed445a2d5c636b3c3d656]
+reverse link Invoker to Command--><path d="M284.9835,89.25 C295.6185,89.25 306.2535,89.25 316.8885,89.25 " fill="none" id="Invoker<-Command" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#FFFFFF" points="265.1955,89.25,274.1955,95.25,283.1955,89.25,274.1955,83.25,265.1955,89.25" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[61226423da3d0f874329010916e4aeca]
+link ConcreteCommand to Receiver--><path d="M243,375.0405 C243,400.4295 243,430.383 243,456.6554 " fill="none" id="ConcreteCommand->Receiver" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="243,464.6817,249,451.1817,243,457.1817,237,451.1817,243,464.6817" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[f98b71e08c1162cfcfe2e3d1976f9da4]
+link ConcreteCommand2 to Receiver--><path d="M437.0715,375.0405 C397.0965,405.465 348.5145,442.4418 309.9585,471.7875 " fill="none" id="ConcreteCommand2->Receiver" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="303.8595,476.4297,318.2356,473.0272,309.8273,471.8871,310.9674,463.4787,303.8595,476.4297" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[d96b162d4470282b9892f2b23492a2d1]
+link Clinet to Receiver--><path d="M58.2764,137.454 C61.531,195.8415 72.764,297.5235 111,375 C127.1336,407.691 152.5329,438.6378 176.76,463.6812 " fill="none" id="Clinet->Receiver" style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 7.0,7.0;"></path><polygon fill="#A80036" points="182.2335,469.2603,177.0644,455.4208,176.982,463.9057,168.4971,463.8233,182.2335,469.2603" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[edffc7c44f653d25869f67c152c446be]
+link Clinet to Invoker--><path d="M105.2813,89.25 C120.2388,89.25 135.1964,89.25 150.1539,89.25 " fill="none" id="Clinet->Invoker" style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 7.0,7.0;"></path><polygon fill="#A80036" points="157.9757,89.25,144.4757,83.25,150.4757,89.25,144.4757,95.25,157.9757,89.25" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[f4f039c4a57845f503514a3709dd40fa]
+@startuml
+skinparam classAttributeIconSize 0
+scale 1.5
+
+
+Interface Command{
+命令的介面
+__
+例子:菜單
+}
+
+class ConcreteCommand{
+命令實作產品
+__
+例子:菜單上的一份菜
+}
+class ConcreteCommand2{
+命令實作產品2
+__
+例子:菜單上的另外一份菜
+}
+
+class Receiver{
+實作者
+__
+例子:炒菜師傅
+}
+
+class Invoker{
+調用者
+__
+例子:服務生
+}
+
+class Clinet{
+__
+例子:客人
+}
+
+Command <|- - ConcreteCommand
+Command <|- - ConcreteCommand2
+
+Invoker o-right- Command
+
+Receiver <-down- ConcreteCommand
+Receiver <-down- ConcreteCommand2
+
+Clinet .right.> Receiver
+Clinet .right.> Invoker
+
+note as N1
+命令模式在模式中也算是蠻重要的
+因為命令模式擁有添加、撤銷、安排的概念
+對於程式來說，命令模式解耦合是個很好的概念
+對於程式本身只需輸出呼叫，剩下由命令來傳達
+還可以跟工廠模式結合，命令後就呼叫工廠
+end note
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+<h2 id="toc_2">書中案例<a class="vnote-anchor" href="#toc_2" data-anchor-icon="#"></a></h2>
+<p>在書中案例裡，是將命令模式應用在兵營命令上面，生產、撤銷生產</p>
+<p>在書中案例有幾個比較特別的地方</p>
+<ol>
+<li>因為遊戲兵營是分開的所以能理解成一個兵營一個產品</li>
+<li>因第1點，所以命令模式中"實作產品"其實就是三個兵營</li>
+<li>角色兵營裡面設定了Invoker也就是調用者</li>
+<li>角色兵營會呼叫TranSoldierCommand去實作角色</li>
+<li>TranSoldierCommand其實才應該為三種不同產品，但這案例將他挪到兵營上，所以才簡化成只是設定參數而已</li>
+<li>在這裡實作者為工廠</li>
+</ol>
+<p>這案例算是命令的變種，將命令實作產品，挪到兵營裡，<br>
+而唯一實作的TranSoldierCommand也就是命令實作產品，變成設定數據版本，透過設定數據簡化成一個類，就不用做成三個類<br>
+兵營裡包含調用者，這就方便兵營的製作<br>
+實作者部分為工廠，這單純就是讓命令和工廠解耦合</p>
+<p>這也跟遊戲機制設定有關，遊戲是兵營生兵所以才用設定數據，但數量多也會很麻煩</p>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="903px" preserveAspectRatio="none" style="width:888px;height:903px;" version="1.1" viewBox="0 0 888 903" width="888px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="fnqle1x5hh52z" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><!--MD5=[5be5ed620f2da37854835c47f3d4bbcf]
+cluster 命令模式--><polygon fill="#FFFFFF" filter="url(#fnqle1x5hh52z)" points="33,36,132,36,142.5,74.9106,855,74.9106,855,748.5,33,748.5,33,36" style="stroke: #000000; stroke-width: 2.25;"></polygon><line style="stroke: #000000; stroke-width: 2.25;" x1="33" x2="142.5" y1="74.9106" y2="74.9106"></line><text fill="#000000" font-family="sans-serif" font-size="21" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="90" x="39" y="64.2964">命令模式</text><!--MD5=[f8d72808aae3efdfa81ce4ca43965663]
+class ITranCommand--><rect fill="#FEFECE" filter="url(#fnqle1x5hh52z)" height="119.0024" id="ITranCommand" style="stroke: #A80036; stroke-width: 2.25;" width="223.5" x="330.75" y="93"></rect><ellipse cx="372.825" cy="117" fill="#B4A7E5" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M377.325,126.0234 L368.7,126.0234 L368.7,125.5313 Q370.3406,125.4375 370.9266,124.8984 Q371.5125,124.3594 371.5125,122.8594 L371.5125,110.9063 Q371.5125,109.3594 370.8797,108.7969 Q370.3406,108.3047 368.7,108.2109 L368.7,107.7188 L377.325,107.7188 L377.325,108.2109 Q375.8016,108.2813 375.2391,108.7031 Q374.4891,109.3125 374.4891,110.9063 L374.4891,122.8594 Q374.4891,124.4297 375.2391,124.9922 Q375.8016,125.4609 377.325,125.5313 L377.325,126.0234 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="132" x="398.175" y="125.8638">ITranCommand</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="332.25" x2="552.75" y1="141" y2="141"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="66" x="339.75" y="166.8757">命令父類</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="332.25" x2="552.75" y1="176.5012" y2="176.5012"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="205.5" x="339.75" y="202.377">這邊他是Interface Command</text><!--MD5=[3e69d3912d4c12ac588aa198968eec6c]
+class TranSoldierCommand--><rect fill="#FEFECE" filter="url(#fnqle1x5hh52z)" height="142.5037" id="TranSoldierCommand" style="stroke: #A80036; stroke-width: 2.25;" width="232.5" x="326.25" y="313.5"></rect><ellipse cx="348.75" cy="337.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M354.9375,343.4297 Q354.3984,344.3672 353.1328,345.3281 Q351.0234,346.8516 346.9219,346.8516 Q343.6406,346.8516 341.4375,344.6484 Q338.8828,342.0938 338.8828,337.3125 Q338.8828,332.9063 341.4141,330.2109 Q343.7344,327.7734 347.0625,327.7734 Q349.875,327.7734 351.3516,328.2188 Q352.8281,328.6641 352.8281,328.6641 Q352.8281,328.6641 352.8281,327.8203 L354.3516,327.6797 L354.5859,333.7734 L352.5938,333.9609 Q351.375,328.5703 347.2734,328.5703 Q347.2734,328.5703 346.3828,328.9922 Q345.0234,329.5078 344.25,330.3281 Q342.1875,332.6484 342.1641,337.3594 Q342.1406,341.5313 344.4375,343.875 Q346.3828,345.8672 347.625,345.8672 Q350.6719,345.8672 353.9531,342.0234 L354.9375,343.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="184.5" x="369.75" y="346.3638">TranSoldierCommand</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="327.75" x2="557.25" y1="361.5" y2="361.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="99" x="335.25" y="387.3757">命令實作產品</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="335.25" y="410.877">這裡是士兵</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="327.75" x2="557.25" y1="420.5024" y2="420.5024"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="202.5" x="335.25" y="446.3782">這邊他是ConcreteCommand</text><!--MD5=[92cad20d3f38b9e6e20b10c021e3bfa0]
+class IConcreteFectory--><rect fill="#FEFECE" filter="url(#fnqle1x5hh52z)" height="119.0024" id="IConcreteFectory" style="stroke: #A80036; stroke-width: 2.25;" width="216" x="57" y="325.5"></rect><ellipse cx="93" cy="349.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M99.1875,355.4297 Q98.6484,356.3672 97.3828,357.3281 Q95.2734,358.8516 91.1719,358.8516 Q87.8906,358.8516 85.6875,356.6484 Q83.1328,354.0938 83.1328,349.3125 Q83.1328,344.9063 85.6641,342.2109 Q87.9844,339.7734 91.3125,339.7734 Q94.125,339.7734 95.6016,340.2188 Q97.0781,340.6641 97.0781,340.6641 Q97.0781,340.6641 97.0781,339.8203 L98.6016,339.6797 L98.8359,345.7734 L96.8438,345.9609 Q95.625,340.5703 91.5234,340.5703 Q91.5234,340.5703 90.6328,340.9922 Q89.2734,341.5078 88.5,342.3281 Q86.4375,344.6484 86.4141,349.3594 Q86.3906,353.5313 88.6875,355.875 Q90.6328,357.8672 91.875,357.8672 Q94.9219,357.8672 98.2031,354.0234 L99.1875,355.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="138" x="117" y="358.3638">IConcreteFectory</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="58.5" x2="271.5" y1="373.5" y2="373.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="198" x="66" y="399.3757">實作者，在這邊是角色工廠</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="58.5" x2="271.5" y1="409.0012" y2="409.0012"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="130.5" x="66" y="434.877">這邊他是Receiver</text><!--MD5=[68a19f1c9ade2974b719b53b8e015e8c]
+class ICamp--><rect fill="#FEFECE" filter="url(#fnqle1x5hh52z)" height="166.0049" id="ICamp" style="stroke: #A80036; stroke-width: 2.25;" width="219" x="612" y="301.5"></rect><ellipse cx="686.625" cy="325.5" fill="#A9DCDF" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M695.9766,332.6484 L688.5938,332.6484 L688.5938,332.1563 Q689.5547,332.0859 689.9531,331.9453 Q690.5859,331.6641 690.5859,330.8906 Q690.5859,330.2813 690.1406,329.1094 L689.25,326.6484 L683.7891,326.6484 L682.5469,329.8125 Q682.3359,330.3047 682.3359,330.8906 Q682.3359,331.6875 682.9453,331.9453 Q683.2031,332.0859 683.9766,332.1563 L683.9766,332.6484 L677.9297,332.6484 L677.9297,332.1563 Q678.2578,332.0859 678.5625,332.0156 Q678.8672,331.9453 679.1484,331.5938 Q679.8516,330.7031 680.9531,327.6563 L685.9922,313.9922 L687.5859,313.9922 L693.4922,329.6953 Q694.0313,331.1953 694.6875,331.7344 Q695.0625,332.0156 695.9766,332.1563 L695.9766,332.6484 Z M688.9219,325.7109 L686.25,317.8594 L684,325.7109 L688.9219,325.7109 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="57" x="717.375" y="334.3638">ICamp</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="613.5" x2="829.5" y1="349.5" y2="349.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="66" x="621" y="375.3757">兵營父類</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="201" x="621" y="398.877">對命令模式而言他是Invoker</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="99" x="621" y="422.3782">也就是調用者</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="613.5" x2="829.5" y1="432.0037" y2="432.0037"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="118.5" x="621" y="457.8794">這邊他是Invoker</text><!--MD5=[2bc126ac523d05c9614e008144c530f5]
+class SolodierICamp--><rect fill="#FEFECE" filter="url(#fnqle1x5hh52z)" height="166.0049" id="SolodierICamp" style="stroke: #A80036; stroke-width: 2.25;" width="219" x="612" y="558"></rect><ellipse cx="655.425" cy="582" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M661.6125,587.9297 Q661.0734,588.8672 659.8078,589.8281 Q657.6984,591.3516 653.5969,591.3516 Q650.3156,591.3516 648.1125,589.1484 Q645.5578,586.5938 645.5578,581.8125 Q645.5578,577.4063 648.0891,574.7109 Q650.4094,572.2734 653.7375,572.2734 Q656.55,572.2734 658.0266,572.7188 Q659.5031,573.1641 659.5031,573.1641 Q659.5031,573.1641 659.5031,572.3203 L661.0266,572.1797 L661.2609,578.2734 L659.2688,578.4609 Q658.05,573.0703 653.9484,573.0703 Q653.9484,573.0703 653.0578,573.4922 Q651.6984,574.0078 650.925,574.8281 Q648.8625,577.1484 648.8391,581.8594 Q648.8156,586.0313 651.1125,588.375 Q653.0578,590.3672 654.3,590.3672 Q657.3469,590.3672 660.6281,586.5234 L661.6125,587.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="124.5" x="681.075" y="590.8638">SolodierICamp</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="613.5" x2="829.5" y1="606" y2="606"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="66" x="621" y="631.8757">角色兵營</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="201" x="621" y="655.377">對命令模式而言他是Invoker</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="99" x="621" y="678.8782">也就是調用者</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="613.5" x2="829.5" y1="688.5037" y2="688.5037"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="118.5" x="621" y="714.3794">這邊他是Invoker</text><!--MD5=[308de564e57c8d51c168255b0b03c096]
+class player--><rect fill="#FEFECE" filter="url(#fnqle1x5hh52z)" height="72" id="player" style="stroke: #A80036; stroke-width: 2.25;" width="97.5" x="672.75" y="814.5"></rect><ellipse cx="695.25" cy="838.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M701.4375,844.4297 Q700.8984,845.3672 699.6328,846.3281 Q697.5234,847.8516 693.4219,847.8516 Q690.1406,847.8516 687.9375,845.6484 Q685.3828,843.0938 685.3828,838.3125 Q685.3828,833.9063 687.9141,831.2109 Q690.2344,828.7734 693.5625,828.7734 Q696.375,828.7734 697.8516,829.2188 Q699.3281,829.6641 699.3281,829.6641 Q699.3281,829.6641 699.3281,828.8203 L700.8516,828.6797 L701.0859,834.7734 L699.0938,834.9609 Q697.875,829.5703 693.7734,829.5703 Q693.7734,829.5703 692.8828,829.9922 Q691.5234,830.5078 690.75,831.3281 Q688.6875,833.6484 688.6641,838.3594 Q688.6406,842.5313 690.9375,844.875 Q692.8828,846.8672 694.125,846.8672 Q697.1719,846.8672 700.4531,843.0234 L701.4375,844.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="49.5" x="716.25" y="847.3638">player</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="674.25" x2="768.75" y1="862.5" y2="862.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="674.25" x2="768.75" y1="874.5" y2="874.5"></line><!--MD5=[09734ff87e88f2b6931364de63658bfe]
+reverse link ITranCommand to TranSoldierCommand--><path d="M442.5,242.028 C442.5,265.7025 442.5,290.9685 442.5,313.4865 " fill="none" id="ITranCommand<-TranSoldierCommand" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="432,241.662,442.5,211.662,453,241.662,432,241.662" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[20707b943d657f28e2070e3a64542970]
+link TranSoldierCommand to ICamp--><path d="M559.113,384.75 C570.0825,384.75 581.0505,384.75 592.0185,384.75 " fill="none" id="TranSoldierCommand->ICamp" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="611.7615,384.75,602.7615,378.75,593.7615,384.75,602.7615,390.75,611.7615,384.75" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[85ee4e3b6f314615bf0d8d826aa971c0]
+reverse link ICamp to SolodierICamp--><path d="M721.5,499.0185 C721.5,518.826 721.5,539.0955 721.5,557.859 " fill="none" id="ICamp<-SolodierICamp" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="711,498.5535,721.5,468.5535,732,498.5535,711,498.5535" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[e6c08b24c8030cac3c75072b11406d4b]
+reverse link IConcreteFectory to TranSoldierCommand--><path d="M281.2425,384.75 C296.2425,384.75 311.2425,384.75 326.2425,384.75 " fill="none" id="IConcreteFectory<-TranSoldierCommand" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="273.399,384.75,286.899,390.75,280.899,384.75,286.899,378.75,273.399,384.75" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[0f7bdcd73e55124443d13319138cbc05]
+reverse link SolodierICamp to player--><path d="M721.5,732.9615 C721.5,761.8472 721.5,792.1064 721.5,814.4802 " fill="none" id="SolodierICamp<-player" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="721.5,724.8585,715.5,738.3585,721.5,732.3585,727.5,738.3585,721.5,724.8585" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[f9b78b9e3aa08299157a92165800d284]
+@startuml
+skinparam classAttributeIconSize 0
+scale 1.5
+
+package 命令模式 <<Folder>> {
+Interface ITranCommand
+class TranSoldierCommand
+class IConcreteFectory
+abstract class ICamp
+class SolodierICamp
+}
+
+Interface ITranCommand{
+命令父類
+__
+這邊他是Interface Command
+}
+
+class TranSoldierCommand{
+命令實作產品 
+這裡是士兵
+__
+這邊他是ConcreteCommand
+}
+
+class IConcreteFectory{
+實作者，在這邊是角色工廠
+__
+這邊他是Receiver
+}
+
+abstract class ICamp{
+兵營父類
+對命令模式而言他是Invoker
+也就是調用者
+__
+這邊他是Invoker
+}
+
+class SolodierICamp{
+角色兵營
+對命令模式而言他是Invoker
+也就是調用者
+__
+這邊他是Invoker
+}
+
+class player{
+
+}
+
+ITranCommand <|- - TranSoldierCommand
+
+TranSoldierCommand -left-* ICamp
+
+ICamp <|- - SolodierICamp
+
+TranSoldierCommand -left-> IConcreteFectory
+
+player -up-> SolodierICamp
+
+
+
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="555px" preserveAspectRatio="none" style="width:1444px;height:555px;" version="1.1" viewBox="0 0 1444 555" width="1444.5px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="f1kor3sr1enawy" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="124.5" x2="124.5" y1="62.9106" y2="489.8782"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="327" x2="327" y1="62.9106" y2="489.8782"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="486" x2="486" y1="62.9106" y2="489.8782"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="702.75" x2="702.75" y1="62.9106" y2="489.8782"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="1009.5" x2="1009.5" y1="62.9106" y2="489.8782"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="1185" x2="1185" y1="62.9106" y2="489.8782"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="1338" x2="1338" y1="62.9106" y2="489.8782"></line><rect fill="#FEFECE" filter="url(#f1kor3sr1enawy)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="219" x="12" y="4.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="198" x="22.5" y="40.2964">PBaseDefenseGame</text><rect fill="#FEFECE" filter="url(#f1kor3sr1enawy)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="219" x="12" y="488.3782"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="198" x="22.5" y="524.1746">PBaseDefenseGame</text><rect fill="#FEFECE" filter="url(#f1kor3sr1enawy)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="145.5" x="252" y="4.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="124.5" x="262.5" y="40.2964">CampSystem</text><rect fill="#FEFECE" filter="url(#f1kor3sr1enawy)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="145.5" x="252" y="488.3782"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="124.5" x="262.5" y="524.1746">CampSystem</text><rect fill="#FEFECE" filter="url(#f1kor3sr1enawy)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="129" x="418.5" y="4.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="108" x="429" y="40.2964">CampInfoUI</text><rect fill="#FEFECE" filter="url(#f1kor3sr1enawy)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="129" x="418.5" y="488.3782"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="108" x="429" y="524.1746">CampInfoUI</text><rect fill="#FEFECE" filter="url(#f1kor3sr1enawy)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="142.5" x="629.25" y="4.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="121.5" x="639.75" y="40.2964">SoldierCamp</text><rect fill="#FEFECE" filter="url(#f1kor3sr1enawy)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="142.5" x="629.25" y="488.3782"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="121.5" x="639.75" y="524.1746">SoldierCamp</text><rect fill="#FEFECE" filter="url(#f1kor3sr1enawy)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="228" x="892.5" y="4.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="207" x="903" y="40.2964">TranSoldierCommand</text><rect fill="#FEFECE" filter="url(#f1kor3sr1enawy)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="228" x="892.5" y="488.3782"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="207" x="903" y="524.1746">TranSoldierCommand</text><rect fill="#FEFECE" filter="url(#f1kor3sr1enawy)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="81" x="1141.5" y="4.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="60" x="1152" y="40.2964">ICamp</text><rect fill="#FEFECE" filter="url(#f1kor3sr1enawy)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="81" x="1141.5" y="488.3782"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="60" x="1152" y="524.1746">ICamp</text><rect fill="#FEFECE" filter="url(#f1kor3sr1enawy)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="184.5" x="1243.5" y="4.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="163.5" x="1254" y="40.2964">IConcreteFectory</text><rect fill="#FEFECE" filter="url(#f1kor3sr1enawy)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="184.5" x="1243.5" y="488.3782"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="163.5" x="1254" y="524.1746">IConcreteFectory</text><polygon fill="#A80036" points="685.5,108.6848,700.5,114.6848,685.5,120.6848,691.5,114.6848" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="486" x2="694.5" y1="114.6848" y2="114.6848"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="496.5" y="107.4001">1</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="165" x="513" y="107.4001">Train 命令兵營生產</text><polygon fill="#A80036" points="991.5,213.0073,1006.5,219.0073,991.5,225.0073,997.5,219.0073" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="703.5" x2="1000.5" y1="219.0073" y2="219.0073"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="714" y="183.9485">2</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="730.5" y="156.1743">New 一個</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="241.5" x="736.5" y="183.9485">TranSoldierCommand Class</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="117" x="736.5" y="211.7227">設定生成單位</text><polygon fill="#A80036" points="1167,261.7815,1182,267.7815,1167,273.7815,1173,267.7815" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="703.5" x2="1176" y1="267.7815" y2="267.7815"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="714" y="260.4968">3</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="249" x="730.5" y="260.4968">AddTrainCommand 排入命令</text><polygon fill="#A80036" points="309.75,310.5557,324.75,316.5557,309.75,322.5557,315.75,316.5557" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="124.5" x2="318.75" y1="316.5557" y2="316.5557"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="135" y="309.271">4</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="61.5" x="151.5" y="309.271">Update</text><polygon fill="#A80036" points="1167,359.3298,1182,365.3298,1167,371.3298,1173,365.3298" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="327.75" x2="1176" y1="365.3298" y2="365.3298"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="338.25" y="358.0452">5</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="117" x="354.75" y="358.0452">執行兵營訓練</text><polygon fill="#A80036" points="1026,408.104,1011,414.104,1026,420.104,1020,414.104" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="1017" x2="1183.5" y1="414.104" y2="414.104"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="1035" y="406.8193">6</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="78" x="1051.5" y="406.8193">執行命令</text><polygon fill="#A80036" points="1320.75,456.8782,1335.75,462.8782,1320.75,468.8782,1326.75,462.8782" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="1009.5" x2="1329.75" y1="462.8782" y2="462.8782"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="1020" y="455.5935">7</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="78" x="1036.5" y="455.5935">生成角色</text><!--MD5=[4824b0993a69b12600db5b6f1becfeb3]
+@startuml
+autonumber
+scale 1.5
+participant PBaseDefenseGame
+participant CampSystem
+participant CampInfoUI
+participant SoldierCamp
+participant TranSoldierCommand
+participant ICamp
+participant IConcreteFectory
+
+CampInfoUI -> SoldierCamp : Train 命令兵營生產
+SoldierCamp -> TranSoldierCommand : New 一個 \n TranSoldierCommand Class \n 設定生成單位
+SoldierCamp -> ICamp : AddTrainCommand 排入命令
+
+PBaseDefenseGame -> CampSystem : Update
+
+CampSystem -> ICamp : 執行兵營訓練
+
+ICamp -> TranSoldierCommand : 執行命令
+
+TranSoldierCommand -> IConcreteFectory :生成角色
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+<h2 id="toc_3">總結<a class="vnote-anchor" href="#toc_3" data-anchor-icon="#"></a></h2>
+<p>命令模式很好用，在於它能將實作和執行區分開來，<br>
+在這案例實作由工廠決定，執行由命令決定，<br>
+但命令模式也要考慮一些東西<br>
+否則容易造成類別太多很難維護，或是有點繞太大圈子 例:書中案例的兵營升級就是直接調用函式製成</p>
+
+    </div>
+</div>
+</div>
+
+<div id="container-floating" style="display:none;" class="d-none d-md-block d-xl-block">
+    <div id="floating-button" onclick="toggleMore()">
+        <p id="floating-more" class="more">&gt;</p>
+    </div>
+</div>
+
+<!--
+<div class="footer" id="vnote-footer">
+    <p>Generated by <em><a href="https://tamlok.github.io/vnote/">VNote</a></em>.</p>
+</div>
+-->
+</body>
+</html>

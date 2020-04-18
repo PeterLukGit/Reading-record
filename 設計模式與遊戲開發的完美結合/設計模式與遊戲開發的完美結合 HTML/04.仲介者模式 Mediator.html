@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="VNote">
+
+    <title>04.仲介者模式 Mediator</title>
+    <link rel="icon" href="https://github.com/tamlok/vnote/raw/master/src/resources/icons/vnote.ico">
+
+    <style type="text/css">
+    /* STYLE_GLOBAL_PLACE_HOLDER */
+    </style>
+
+    <style type="text/css">
+    *,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.container-fluid {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.col-12 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+@media (min-width: 768px) {
+    .col-md-3 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 25%;
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+}
+
+@media (min-width: 768px) {
+    .col-md-9 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 75%;
+        flex: 0 0 75%;
+        max-width: 75%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-xl-2 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 16.666667%;
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-xl-10 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 83.333333%;
+        flex: 0 0 83.333333%;
+        max-width: 83.333333%;
+    }
+}
+
+@media (min-width: 768px) {
+    .pt-md-3, .py-md-3 {
+        padding-top: 1rem!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .pb-md-3, .py-md-3 {
+        padding-bottom: 1rem!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .pl-md-5, .px-md-5 {
+        padding-left: 3rem!important;
+    }
+}
+
+.d-none {
+    display: none!important;
+}
+
+@media (min-width: 1200px) {
+    .d-xl-block {
+        display: block!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .d-md-block {
+        display: block!important;
+    }
+}
+
+.bd-content {
+    -webkit-box-ordinal-group: 1;
+    -ms-flex-order: 0;
+    order: 0;
+}
+
+.bd-toc {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 4rem;
+    height: calc(100vh - 10rem);
+    overflow-y: auto;
+}
+
+.bd-toc {
+    -webkit-box-ordinal-group: 2;
+    -ms-flex-order: 1;
+    order: 1;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    font-size: .875rem;
+}
+
+.section-nav {
+    padding-left: 0;
+}
+
+.section-nav ul {
+    font-size: .875rem;
+    list-style-type: none;
+}
+
+.section-nav li {
+    font-size: .875rem;
+}
+
+.section-nav a {
+    color: inherit !important;
+}
+
+.row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+@media (min-width: 1200px) {
+    .flex-xl-nowrap {
+        flex-wrap: nowrap !important;
+    }
+}
+
+#floating-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: #00897B;
+    position: fixed;
+    top: .5rem;
+    right: .5rem;
+    cursor: pointer;
+    box-shadow: 0px 2px 5px #666;
+}
+
+#floating-button .more {
+    color: #F5F5F5;
+    position: absolute;
+    top: 0;
+    display: block;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    line-height: 2.5rem;
+    font-size: 2rem;
+    font-family: 'monospace';
+    font-weight: 300;
+}
+
+.hide-none {
+    display: none !important;
+}
+
+.col-expand {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    padding-right: 3rem !important;
+}
+
+.outline-bold {
+    font-weight: bolder !important;
+}
+
+@media print {
+    #floating-button {
+        display: none !important;
+    }
+}
+
+    @keyframes flash { 
+  0% { color: rgb(128, 203, 196); }
+  10% { color: rgb(0, 137, 123); }
+  40% { color: rgb(0, 137, 123); }
+  50% { color: rgb(128, 203, 196); }
+  60% { color: rgb(0, 137, 123); }
+  90% { color: rgb(0, 137, 123); }
+}
+.highlighted-anchor { animation: flash 1s; }
+div.mark-rect { background: transparent; border: 5px solid rgb(87, 104, 196); border-radius: 2px; position: absolute; }
+#vnote-footer { width: 100%; text-align: center; opacity: 0.2; margin-top: 3rem; }
+#vnote-footer p { font-size: 0.8rem; }
+#vnote-footer a { color: inherit !important; }
+x-eqs { display: flex; flex-direction: row; align-content: space-between; align-items: center; }
+x-eqs > x-eqn { width: 100%; margin-left: 3rem; }
+x-eqs > span { text-align: right; }
+.view-image, .view-svg { transition: 0.3s; }
+.modal-box { display: none; position: fixed; z-index: 1000; padding-top: 50px; left: 0px; top: 0px; width: 100%; height: 100%; overflow: hidden; background-color: rgba(68, 68, 68, 0.952941); }
+.modal-content { margin: auto; display: block; width: auto; height: auto; cursor: move; }
+.modal-content { animation-name: zoom; animation-duration: 0.6s; }
+@-webkit-keyframes zoom { 
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+@keyframes zoom { 
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+span.modal-close { position: absolute; z-index: 1000; top: 15px; right: 35px; color: rgb(218, 218, 218); font-size: 40px; font-weight: bold; transition: 0.3s; }
+span.modal-close:hover, span.modal-close:focus { color: rgb(238, 238, 238); text-decoration: none; cursor: pointer; }
+@media print {
+  pre, pre code, td.hljs-ln-code { white-space: pre-wrap !important; word-break: break-all !important; }
+  code, a { word-break: break-all !important; }
+  div.flowchart-diagram, div.mermaid-diagram, div.plantuml-diagram { overflow: hidden !important; }
+  img { max-width: 100% !important; height: auto !important; }
+  #vnote-footer { display: none !important; }
+}
+.alert { position: relative; padding: 0.75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: 0.25rem; }
+.alert-primary { color: rgb(0, 64, 133); background-color: rgb(204, 229, 255); border-color: rgb(184, 218, 255); }
+.alert-secondary { color: rgb(56, 61, 65); background-color: rgb(226, 227, 229); border-color: rgb(214, 216, 219); }
+.alert-success { color: rgb(21, 87, 36); background-color: rgb(212, 237, 218); border-color: rgb(195, 230, 203); }
+.alert-info { color: rgb(12, 84, 96); background-color: rgb(209, 236, 241); border-color: rgb(190, 229, 235); }
+.alert-warning { color: rgb(133, 100, 4); background-color: rgb(255, 243, 205); border-color: rgb(255, 238, 186); }
+.alert-danger { color: rgb(114, 28, 36); background-color: rgb(248, 215, 218); border-color: rgb(245, 198, 203); }
+.alert-light { color: rgb(129, 129, 130); background-color: rgb(254, 254, 254); border-color: rgb(253, 253, 254); }
+.alert-dark { color: rgb(27, 30, 33); background-color: rgb(214, 216, 217); border-color: rgb(198, 200, 202); }
+.vnote-anchor { font-weight: 400; color: rgba(0, 123, 255, 0.498039); transition: color 0.16s linear; padding-left: 0.375em; -webkit-font-smoothing: antialiased; text-decoration: none; opacity: 0; }
+.vnote-anchor:hover { color: rgb(0, 123, 255); text-decoration: none; opacity: 1; }
+.vnote-anchor::after { content: attr(data-anchor-icon); }
+.vnote-btn { position: relative; display: inline-block; padding: 6px 12px; font-size: 13px; font-weight: 700; line-height: 20px; white-space: nowrap; vertical-align: middle; cursor: pointer; border: none; user-select: none; -webkit-appearance: none; }
+.vnote-copy-clipboard-btn { transition: opacity 0.3s ease-in-out; opacity: 0; padding: 2px 6px; position: absolute; top: 5px; right: 5px; }
+pre:hover .vnote-copy-clipboard-btn { opacity: 1; }
+pre.vnote-snippet { position: relative; }
+body { margin: 0px auto; font-family: "Segoe UI", Helvetica, sans-serif, Tahoma, Arial, Geneva, Georgia, Palatino, "Times New Roman", "Hiragino Sans GB", 冬青黑体, "Microsoft YaHei", 微软雅黑, "Microsoft YaHei UI", "WenQuanYi Micro Hei", 文泉驿雅黑, Dengxian, 等线体, STXihei, 华文细黑, "Liberation Sans", "Droid Sans", NSimSun, 新宋体, SimSun, 宋体; color: rgb(34, 34, 34); line-height: 1.5; padding: 15px; background: rgb(238, 238, 238); font-size: 16px; }
+h1, h2, h3, h4, h5, h6 { color: rgb(34, 34, 34); font-weight: bold; margin-top: 20px; margin-bottom: 10px; padding: 0px; }
+p { padding: 0px; margin-top: 16px; margin-bottom: 16px; }
+h1 { font-size: 26px; }
+h2 { font-size: 24px; }
+h3 { font-size: 22px; }
+h4 { font-size: 20px; }
+h5 { font-size: 19px; }
+h6 { font-size: 18px; }
+a { color: rgb(0, 153, 255); margin: 0px; padding: 0px; vertical-align: baseline; text-decoration: none; word-break: break-word; }
+a:hover { text-decoration: underline; color: rgb(255, 102, 0); }
+a:visited { color: purple; }
+ul, ol { padding: 0px 0px 0px 24px; }
+li { line-height: 24px; }
+li ul, li ol { margin-left: 16px; }
+p, ul, ol { font-size: 16px; line-height: 24px; }
+pre { display: block; overflow-y: hidden; overflow-x: auto; tab-size: 4; }
+code { font-family: Consolas, Monaco, monospace, Courier; color: rgb(142, 36, 170); word-break: break-word; }
+pre code { display: block; overflow-x: auto; padding: 0.5em; color: rgb(34, 34, 34); background-color: rgb(224, 224, 224); border-left: 0.5em solid rgb(0, 137, 123); line-height: 1.5; font-family: Consolas, Monaco, monospace, Courier; white-space: pre; tab-size: 4; }
+pre code.markdown-metadata { border-left: 0.5em solid rgb(128, 203, 196); }
+aside { display: block; float: right; width: 390px; }
+blockquote { color: rgb(102, 102, 102); border-left: 0.5em solid rgb(122, 122, 122); padding: 0px 1em; margin-left: 0px; }
+blockquote p { color: rgb(102, 102, 102); }
+hr { display: block; text-align: left; margin: 1em 0px; border: none; height: 2px; background: rgb(153, 153, 153); }
+table { padding: 0px; margin: 1rem 0.5rem; border-collapse: collapse; }
+table tr { border-top: 2px solid rgb(204, 204, 204); background-color: white; margin: 0px; padding: 0px; }
+table tr:nth-child(2n) { background-color: rgb(248, 248, 248); }
+table tr th { font-weight: bold; border: 2px solid rgb(204, 204, 204); margin: 0px; padding: 6px 13px; }
+table tr td { border: 2px solid rgb(204, 204, 204); margin: 0px; padding: 6px 13px; }
+table tr th :first-child, table tr td :first-child { margin-top: 0px; }
+table tr th :last-child, table tr td :last-child { margin-bottom: 0px; }
+div.mermaid-diagram { margin: 16px 0px; overflow-y: hidden; }
+div.flowchart-diagram { padding: 0px 5px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+div.wavedrom-diagram { padding: 0px 5px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+div.plantuml-diagram { padding: 5px 5px 0px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+.img-package { text-align: center; }
+img.img-center { display: block; margin-left: auto; margin-right: auto; }
+span.img-caption { min-width: 20%; max-width: 80%; display: inline-block; padding: 10px; margin: 0px auto; border-bottom: 1px solid rgb(192, 192, 192); color: rgb(108, 108, 108); text-align: center; line-height: 1.5; }
+.emoji_zero, .emoji_one, .emoji_two, .emoji_three, .emoji_four, .emoji_five, .emoji_six, .emoji_seven, .emoji_eight, .emoji_nine { margin-left: 5px; margin-right: 8px; }
+div.preview-hint { opacity: 0.5; margin-top: 30%; margin-bottom: 30%; align-items: center; display: flex; flex-direction: column; justify-content: center; }
+table.hljs-ln tr { border: none; background-color: transparent; }
+table.hljs-ln tr td { border: none; background-color: transparent; }
+table.hljs-ln tr td.hljs-ln-numbers { user-select: none; text-align: center; color: rgb(170, 170, 170); border-right: 1px solid rgb(204, 204, 204); vertical-align: top; padding-right: 5px; white-space: nowrap; }
+table.hljs-ln tr td.hljs-ln-code { padding-left: 10px; }
+::-webkit-scrollbar { background-color: rgb(234, 234, 234); width: 14px; height: 14px; border: none; }
+::-webkit-scrollbar-corner { background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-button { height: 14px; width: 14px; background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-button:hover { background-color: rgb(208, 208, 208); }
+::-webkit-scrollbar-button:active { background-color: rgb(178, 178, 178); }
+::-webkit-scrollbar-track { background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-thumb { border: none; background-color: rgb(218, 218, 218); }
+::-webkit-scrollbar-thumb:hover { background-color: rgb(208, 208, 208); }
+::-webkit-scrollbar-thumb:active { background-color: rgb(178, 178, 178); }
+::-webkit-scrollbar-button:horizontal:increment { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(-90 256.00000000000006,256) " id="svg_1">   <polygon fill="%23333333" id="svg_2" points="128,192 256,320 384,192  "/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:horizontal:decrement { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(90 255.99999999999997,256.00000000000006) " id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:vertical:increment { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="null" id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:vertical:decrement { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(180 255.99999999999997,256) " id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::selection { background: rgb(25, 118, 210); color: rgb(238, 238, 238); }
+.modal-box { background-color: rgba(234, 234, 234, 0.952941); }
+span.modal-close { color: rgb(102, 102, 102); }
+span.modal-close:hover, span.modal-close:focus { color: rgb(34, 34, 34); }
+.hljs { display: block; overflow-x: auto; padding: 0.5em; background: rgb(224, 224, 224); }
+.hljs, .hljs-subst { color: rgb(54, 54, 54); }
+.hljs-comment { color: rgb(118, 118, 118); }
+.hljs-keyword, .hljs-attribute, .hljs-selector-tag, .hljs-meta-keyword, .hljs-doctag, .hljs-name { color: rgb(0, 0, 238); }
+.hljs-type, .hljs-string, .hljs-number, .hljs-selector-id, .hljs-selector-class, .hljs-quote, .hljs-template-tag, .hljs-deletion { color: rgb(136, 0, 0); }
+.hljs-title, .hljs-section { color: rgb(136, 0, 0); font-weight: bold; }
+.hljs-regexp, .hljs-symbol, .hljs-variable, .hljs-template-variable, .hljs-link, .hljs-selector-attr, .hljs-selector-pseudo { color: rgb(188, 96, 96); }
+.hljs-literal { color: rgb(175, 0, 215); }
+.hljs-built_in, .hljs-bullet, .hljs-code, .hljs-addition { color: rgb(0, 135, 0); }
+.hljs-meta { color: rgb(31, 113, 153); }
+.hljs-meta-string { color: rgb(77, 153, 191); }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: bold; }
+.mermaid-diagram .mermaid .label { color: rgb(51, 51, 51); }
+.mermaid-diagram .node rect, .mermaid-diagram .node circle, .mermaid-diagram .node ellipse, .mermaid-diagram .node polygon { fill: rgb(236, 236, 255); stroke: rgb(204, 204, 255); stroke-width: 1px; }
+.mermaid-diagram .edgePath .path { stroke: rgb(51, 51, 51); }
+.mermaid-diagram .edgeLabel { background-color: rgb(232, 232, 232); }
+.mermaid-diagram .cluster rect { fill: rgb(255, 255, 222) !important; rx: 4 !important; stroke: rgb(170, 170, 51) !important; stroke-width: 1px !important; }
+.mermaid-diagram .cluster text { fill: rgb(51, 51, 51); }
+.mermaid-diagram .actor { stroke: rgb(204, 204, 255); fill: rgb(236, 236, 255); }
+.mermaid-diagram text.actor { fill: black; stroke: none; }
+.mermaid-diagram .actor-line { stroke: grey; }
+.mermaid-diagram .messageLine0 { stroke-width: 1.5; stroke: rgb(51, 51, 51); }
+.mermaid-diagram .messageLine1 { stroke-width: 1.5; stroke: rgb(51, 51, 51); }
+.mermaid-diagram #arrowhead { fill: rgb(51, 51, 51); }
+.mermaid-diagram #crosshead path { fill: rgb(51, 51, 51) !important; stroke: rgb(51, 51, 51) !important; }
+.mermaid-diagram .messageText { fill: rgb(51, 51, 51); stroke: none; }
+.mermaid-diagram .labelBox { stroke: rgb(204, 204, 255); fill: rgb(236, 236, 255); }
+.mermaid-diagram .labelText { fill: black; stroke: none; }
+.mermaid-diagram .loopText { fill: black; stroke: none; }
+.mermaid-diagram .loopLine { stroke-width: 2; stroke: rgb(204, 204, 255); }
+.mermaid-diagram .note { stroke: rgb(170, 170, 51); fill: rgb(255, 245, 173); }
+.mermaid-diagram .noteText { fill: black; stroke: none; font-family: "trebuchet ms", verdana, arial; font-size: 14px; }
+.mermaid-diagram .section { stroke: none; opacity: 0.2; }
+.mermaid-diagram .section0 { fill: rgba(102, 102, 255, 0.490196); }
+.mermaid-diagram .section2 { fill: rgb(255, 244, 0); }
+.mermaid-diagram .section1, .mermaid-diagram .section3 { fill: white; opacity: 0.2; }
+.mermaid-diagram .sectionTitle0 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle1 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle2 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle3 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle { text-anchor: start; font-size: 11px; }
+.mermaid-diagram .grid .tick { stroke: lightgrey; opacity: 0.3; shape-rendering: crispEdges; }
+.mermaid-diagram .grid path { stroke-width: 0; }
+.mermaid-diagram .today { fill: none; stroke: red; stroke-width: 2px; }
+.mermaid-diagram .task { stroke-width: 2; }
+.mermaid-diagram .taskText { text-anchor: middle; font-size: 11px; }
+.mermaid-diagram .taskTextOutsideRight { fill: black; text-anchor: start; font-size: 11px; }
+.mermaid-diagram .taskTextOutsideLeft { fill: black; text-anchor: end; font-size: 11px; }
+.mermaid-diagram .taskText0, .mermaid-diagram .taskText1, .mermaid-diagram .taskText2, .mermaid-diagram .taskText3 { fill: white; }
+.mermaid-diagram .task0, .mermaid-diagram .task1, .mermaid-diagram .task2, .mermaid-diagram .task3 { fill: rgb(138, 144, 221); stroke: rgb(83, 79, 188); }
+.mermaid-diagram .taskTextOutside0, .mermaid-diagram .taskTextOutside2 { fill: black; }
+.mermaid-diagram .taskTextOutside1, .mermaid-diagram .taskTextOutside3 { fill: black; }
+.mermaid-diagram .active0, .mermaid-diagram .active1, .mermaid-diagram .active2, .mermaid-diagram .active3 { fill: rgb(191, 199, 255); stroke: rgb(83, 79, 188); }
+.mermaid-diagram .activeText0, .mermaid-diagram .activeText1, .mermaid-diagram .activeText2, .mermaid-diagram .activeText3 { fill: black !important; }
+.mermaid-diagram .done0, .mermaid-diagram .done1, .mermaid-diagram .done2, .mermaid-diagram .done3 { stroke: grey; fill: lightgrey; stroke-width: 2; }
+.mermaid-diagram .doneText0, .mermaid-diagram .doneText1, .mermaid-diagram .doneText2, .mermaid-diagram .doneText3 { fill: black !important; }
+.mermaid-diagram .crit0, .mermaid-diagram .crit1, .mermaid-diagram .crit2, .mermaid-diagram .crit3 { stroke: rgb(255, 136, 136); fill: red; stroke-width: 2; }
+.mermaid-diagram .activeCrit0, .mermaid-diagram .activeCrit1, .mermaid-diagram .activeCrit2, .mermaid-diagram .activeCrit3 { stroke: rgb(255, 136, 136); fill: rgb(191, 199, 255); stroke-width: 2; }
+.mermaid-diagram .doneCrit0, .mermaid-diagram .doneCrit1, .mermaid-diagram .doneCrit2, .mermaid-diagram .doneCrit3 { stroke: rgb(255, 136, 136); fill: lightgrey; stroke-width: 2; cursor: pointer; shape-rendering: crispEdges; }
+.mermaid-diagram .doneCritText0, .mermaid-diagram .doneCritText1, .mermaid-diagram .doneCritText2, .mermaid-diagram .doneCritText3 { fill: black !important; }
+.mermaid-diagram .activeCritText0, .mermaid-diagram .activeCritText1, .mermaid-diagram .activeCritText2, .mermaid-diagram .activeCritText3 { fill: black !important; }
+.mermaid-diagram .titleText { text-anchor: middle; font-size: 18px; fill: black; }
+.mermaid-diagram .node text { font-family: "trebuchet ms", verdana, arial; font-size: 14px; }
+.mermaid-diagram div.mermaidTooltip { position: absolute; text-align: center; max-width: 200px; padding: 2px; font-family: "trebuchet ms", verdana, arial; font-size: 12px; background: rgb(255, 255, 222); border: 1px solid rgb(170, 170, 51); border-radius: 2px; pointer-events: none; z-index: 100; }
+.hljs-ln { border-collapse: collapse; }
+.hljs-ln td { padding: 0px; }
+.hljs-ln-n::before { content: attr(data-line-number); }
+.MathJax_Hover_Frame { border-radius: 0.25em; box-shadow: rgb(136, 51, 170) 0px 0px 15px; display: inline-block; position: absolute; border: 1px solid rgb(170, 102, 221) !important; }
+.MathJax_Menu_Button .MathJax_Hover_Arrow { position: absolute; cursor: pointer; display: inline-block; border: 2px solid rgb(170, 170, 170); border-radius: 4px; font-family: "Courier New", Courier; font-size: 9px; color: rgb(240, 240, 240); }
+.MathJax_Menu_Button .MathJax_Hover_Arrow span { display: block; background-color: rgb(170, 170, 170); border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px; }
+.MathJax_Hover_Arrow:hover { color: white !important; border: 2px solid rgb(204, 204, 204) !important; }
+.MathJax_Hover_Arrow:hover span { background-color: rgb(204, 204, 204) !important; }
+#MathJax_About { position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: rgb(221, 221, 221); color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; box-shadow: rgb(128, 128, 128) 0px 10px 20px; }
+#MathJax_About.MathJax_MousePost { outline: none; }
+.MathJax_Menu { position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid rgb(204, 204, 204); margin: 0px; cursor: default; font-style: normal; font-weight: normal; font-size: 15px; font-family: "Microsoft JhengHei UI"; font-stretch: normal; font-variant: normal; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: rgb(128, 128, 128) 0px 10px 20px; }
+.MathJax_MenuItem { padding: 2px 2em; background: transparent; }
+.MathJax_MenuArrow { position: absolute; right: 0.5em; padding-top: 0.25em; color: rgb(102, 102, 102); font-size: 0.75em; }
+.MathJax_MenuActive .MathJax_MenuArrow { color: white; }
+.MathJax_MenuArrow.RTL { left: 0.5em; right: auto; }
+.MathJax_MenuCheck { position: absolute; left: 0.7em; }
+.MathJax_MenuCheck.RTL { right: 0.7em; left: auto; }
+.MathJax_MenuRadioCheck { position: absolute; left: 1em; }
+.MathJax_MenuRadioCheck.RTL { right: 1em; left: auto; }
+.MathJax_MenuLabel { padding: 2px 2em 4px 1.33em; font-style: italic; }
+.MathJax_MenuRule { border-top: 1px solid rgb(204, 204, 204); margin: 4px 1px 0px; }
+.MathJax_MenuDisabled { color: graytext; }
+.MathJax_MenuActive { background-color: highlight; color: highlighttext; }
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus { background-color: rgb(232, 232, 232); }
+.MathJax_ContextMenu:focus { outline: none; }
+.MathJax_ContextMenu .MathJax_MenuItem:focus { outline: none; }
+#MathJax_AboutClose { top: 0.2em; right: 0.2em; }
+.MathJax_Menu .MathJax_MenuClose { top: -10px; left: -10px; }
+.MathJax_MenuClose { position: absolute; cursor: pointer; display: inline-block; border: 2px solid rgb(170, 170, 170); border-radius: 18px; font-family: "Courier New", Courier; font-size: 24px; color: rgb(240, 240, 240); }
+.MathJax_MenuClose span { display: block; background-color: rgb(170, 170, 170); border: 1.5px solid; border-radius: 18px; line-height: 0; padding: 8px 0px 6px; }
+.MathJax_MenuClose:hover { color: white !important; border: 2px solid rgb(204, 204, 204) !important; }
+.MathJax_MenuClose:hover span { background-color: rgb(204, 204, 204) !important; }
+.MathJax_MenuClose:hover:focus { outline: none; }
+.MathJax_Preview .MJXf-math { color: inherit !important; }
+.MJX_Assistive_MathML { top: 0px; left: 0px; clip: rect(1px 1px 1px 1px); user-select: none; position: absolute !important; padding: 1px 0px 0px !important; border: 0px !important; height: 1px !important; width: 1px !important; overflow: hidden !important; display: block !important; }
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block { width: 100% !important; }
+#MathJax_Zoom { position: absolute; background-color: rgb(240, 240, 240); overflow: auto; display: block; z-index: 301; padding: 0.5em; border: 1px solid black; margin: 0px; font-weight: normal; font-style: normal; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; box-sizing: content-box; box-shadow: rgb(170, 170, 170) 5px 5px 15px; }
+#MathJax_ZoomOverlay { position: absolute; left: 0px; top: 0px; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0px; padding: 0px; margin: 0px; background-color: white; opacity: 0; }
+#MathJax_ZoomFrame { position: relative; display: inline-block; height: 0px; width: 0px; }
+#MathJax_ZoomEventTrap { position: absolute; left: 0px; top: 0px; z-index: 302; display: inline-block; border: 0px; padding: 0px; margin: 0px; background-color: white; opacity: 0; }
+.MathJax_Preview { color: rgb(136, 136, 136); }
+#MathJax_Message { position: fixed; left: 1px; bottom: 2px; background-color: rgb(230, 230, 230); border: 1px solid rgb(149, 149, 149); margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap; }
+#MathJax_MSIE_Frame { position: absolute; top: 0px; left: 0px; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px; }
+.MathJax_Error { color: rgb(204, 0, 0); font-style: italic; }
+.MJXp-script { font-size: 0.8em; }
+.MJXp-right { transform-origin: right center 0px; }
+.MJXp-bold { font-weight: bold; }
+.MJXp-italic { font-style: italic; }
+.MJXp-scr { font-family: MathJax_Script, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-frak { font-family: MathJax_Fraktur, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-sf { font-family: MathJax_SansSerif, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-cal { font-family: MathJax_Caligraphic, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-mono { font-family: MathJax_Typewriter, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-largeop { font-size: 150%; }
+.MJXp-largeop.MJXp-int { vertical-align: -0.2em; }
+.MJXp-math { display: inline-block; line-height: 1.2; text-indent: 0px; font-family: "Times New Roman", Times, STIXGeneral, serif; white-space: nowrap; border-collapse: collapse; }
+.MJXp-display { display: block; text-align: center; margin: 1em 0px; }
+.MJXp-math span { display: inline-block; }
+.MJXp-box { text-align: center; display: block !important; }
+.MJXp-box::after { content: " "; }
+.MJXp-rule { margin-top: 0.1em; display: block !important; }
+.MJXp-char { display: block !important; }
+.MJXp-mo { margin: 0px 0.15em; }
+.MJXp-mfrac { margin: 0px 0.125em; vertical-align: 0.25em; }
+.MJXp-denom { width: 100%; display: inline-table !important; }
+.MJXp-denom > * { display: table-row !important; }
+.MJXp-surd { vertical-align: top; }
+.MJXp-surd > * { display: block !important; }
+.MJXp-script-box > * { height: 50%; display: table !important; }
+.MJXp-script-box > * > * { vertical-align: top; display: table-cell !important; }
+.MJXp-script-box > :last-child > * { vertical-align: bottom; }
+.MJXp-script-box > * > * > * { display: block !important; }
+.MJXp-mphantom { visibility: hidden; }
+.MJXp-munderover { display: inline-table !important; }
+.MJXp-over { text-align: center; display: inline-block !important; }
+.MJXp-over > * { display: block !important; }
+.MJXp-munderover > * { display: table-row !important; }
+.MJXp-mtable { vertical-align: 0.25em; margin: 0px 0.125em; }
+.MJXp-mtable > * { vertical-align: middle; display: inline-table !important; }
+.MJXp-mtr { display: table-row !important; }
+.MJXp-mtd { text-align: center; padding: 0.5em 0px 0px 0.5em; display: table-cell !important; }
+.MJXp-mtr > .MJXp-mtd:first-child { padding-left: 0px; }
+.MJXp-mtr:first-child > .MJXp-mtd { padding-top: 0px; }
+.MJXp-mlabeledtr { display: table-row !important; }
+.MJXp-mlabeledtr > .MJXp-mtd:first-child { padding-left: 0px; }
+.MJXp-mlabeledtr:first-child > .MJXp-mtd { padding-top: 0px; }
+.MJXp-merror { background-color: rgb(255, 255, 136); color: rgb(204, 0, 0); border: 1px solid rgb(204, 0, 0); padding: 1px 3px; font-style: normal; font-size: 90%; }
+.MJXp-scale0 { transform: scaleX(0); }
+.MJXp-scale1 { transform: scaleX(0.1); }
+.MJXp-scale2 { transform: scaleX(0.2); }
+.MJXp-scale3 { transform: scaleX(0.3); }
+.MJXp-scale4 { transform: scaleX(0.4); }
+.MJXp-scale5 { transform: scaleX(0.5); }
+.MJXp-scale6 { transform: scaleX(0.6); }
+.MJXp-scale7 { transform: scaleX(0.7); }
+.MJXp-scale8 { transform: scaleX(0.8); }
+.MJXp-scale9 { transform: scaleX(0.9); }
+.MathJax_PHTML .noError { font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid; }
+
+    </style>
+
+    <script type="text/javascript">
+var toc = [];
+
+var setVisible = function(node, visible) {
+    var cl = 'hide-none';
+    if (visible) {
+        node.classList.remove(cl);
+    } else {
+        node.classList.add(cl);
+    }
+};
+
+var isVisible = function(node) {
+    var cl = 'hide-none';
+    return !node.classList.contains(cl);
+};
+
+var setPostContentExpanded = function(node, expanded) {
+    var cl = 'col-expand';
+    if (expanded) {
+        node.classList.add(cl);
+    } else {
+        node.classList.remove(cl);
+    }
+};
+
+var setOutlinePanelVisible = function(visible) {
+    var outlinePanel = document.getElementById('outline-panel');
+    var postContent = document.getElementById('post-content');
+
+    setVisible(outlinePanel, visible);
+    setPostContentExpanded(postContent, !visible);
+};
+
+var isOutlinePanelVisible = function() {
+    var outlinePanel = document.getElementById('outline-panel');
+    return isVisible(outlinePanel);
+};
+
+window.addEventListener('load', function() {
+    var outlinePanel = document.getElementById('outline-panel');
+    outlinePanel.style.display = 'initial';
+
+    var floatingContainer = document.getElementById('container-floating');
+    floatingContainer.style.display = 'initial';
+
+    var outlineContent = document.getElementById('outline-content');
+    var postContent = document.getElementById('post-content');
+
+    // Escape @text to Html.
+    var escapeHtml = function(text) {
+        var map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    // Fetch the outline.
+    var headers = postContent.querySelectorAll("h1, h2, h3, h4, h5, h6");
+    toc = [];
+    for (var i = 0; i < headers.length; ++i) {
+        var header = headers[i];
+
+        toc.push({
+            level: parseInt(header.tagName.substr(1)),
+            anchor: header.id,
+            title: escapeHtml(header.textContent)
+        });
+    }
+
+    if (toc.length == 0) {
+        setOutlinePanelVisible(false);
+        setVisible(floatingContainer, false);
+        return;
+    }
+
+    var baseLevel = baseLevelOfToc(toc);
+    var tocTree = tocToTree(toPerfectToc(toc, baseLevel), baseLevel);
+
+    outlineContent.innerHTML = tocTree;
+    setOutlinePanelVisible(true);
+    setVisible(floatingContainer, true);
+});
+
+// Return the topest level of @toc, starting from 1.
+var baseLevelOfToc = function(p_toc) {
+    var level = -1;
+    for (i in p_toc) {
+        if (level == -1) {
+            level = p_toc[i].level;
+        } else if (level > p_toc[i].level) {
+            level = p_toc[i].level;
+        }
+    }
+
+    if (level == -1) {
+        level = 1;
+    }
+
+    return level;
+};
+
+// Handle wrong title levels, such as '#' followed by '###'
+var toPerfectToc = function(p_toc, p_baseLevel) {
+    var i;
+    var curLevel = p_baseLevel - 1;
+    var perfToc = [];
+    for (i in p_toc) {
+        var item = p_toc[i];
+
+        // Insert empty header.
+        while (item.level > curLevel + 1) {
+            curLevel += 1;
+            var tmp = { level: curLevel,
+                        anchor: '',
+                        title: '[EMPTY]'
+                      };
+            perfToc.push(tmp);
+        }
+
+        perfToc.push(item);
+        curLevel = item.level;
+    }
+
+    return perfToc;
+};
+
+var itemToHtml = function(item) {
+    return '<a href="#' + item.anchor + '" data="' + item.anchor + '">' + item.title + '</a>';
+};
+
+// Turn a perfect toc to a tree using <ul>
+var tocToTree = function(p_toc, p_baseLevel) {
+    var i;
+    var front = '<li>';
+    var ending = ['</li>'];
+    var curLevel = p_baseLevel;
+    for (i in p_toc) {
+        var item = p_toc[i];
+        if (item.level == curLevel) {
+            front += '</li>';
+            front += '<li>';
+            front += itemToHtml(item);
+        } else if (item.level > curLevel) {
+            // assert(item.level - curLevel == 1)
+            front += '<ul>';
+            ending.push('</ul>');
+            front += '<li>';
+            front += itemToHtml(item);
+            ending.push('</li>');
+            curLevel = item.level;
+        } else {
+            while (item.level < curLevel) {
+                var ele = ending.pop();
+                front += ele;
+                if (ele == '</ul>') {
+                    curLevel--;
+                }
+            }
+            front += '</li>';
+            front += '<li>';
+            front += itemToHtml(item);
+        }
+    }
+    while (ending.length > 0) {
+        front += ending.pop();
+    }
+    front = front.replace("<li></li>", "");
+    front = '<ul>' + front + '</ul>';
+    return front;
+};
+
+var toggleMore = function() {
+    if (toc.length == 0) {
+        return;
+    }
+
+    var p = document.getElementById('floating-more');
+    if (isOutlinePanelVisible()) {
+        p.textContent = '<';
+        setOutlinePanelVisible(false);
+    } else {
+        p.textContent = '>';
+        setOutlinePanelVisible(true);
+    }
+};
+
+window.addEventListener('scroll', function() {
+    if (toc.length == 0 || !isOutlinePanelVisible()) {
+        return;
+    }
+
+    var postContent = document.getElementById('post-content');
+    var scrollTop = document.documentElement.scrollTop
+                    || document.body.scrollTop
+                    || window.pageYOffset;
+    var eles = postContent.querySelectorAll("h1, h2, h3, h4, h5, h6");
+
+    if (eles.length == 0) {
+        return;
+    }
+
+    var idx = -1;
+    var biaScrollTop = scrollTop + 50;
+    for (var i = 0; i < eles.length; ++i) {
+        if (biaScrollTop >= eles[i].offsetTop) {
+            idx = i;
+        } else {
+            break;
+        }
+    }
+
+    var header = '';
+    if (idx != -1) {
+        header = eles[idx].id;
+    }
+
+    highlightItemOnlyInOutline(header);
+});
+
+var highlightItemOnlyInOutline = function(id) {
+    var cl = 'outline-bold';
+    var outlineContent = document.getElementById('outline-content');
+    var eles = outlineContent.querySelectorAll("a");
+    var target = null;
+    for (var i = 0; i < eles.length; ++i) {
+        var ele = eles[i];
+        if (ele.getAttribute('data') == id) {
+            target = ele;
+            ele.classList.add(cl);
+        } else {
+            ele.classList.remove(cl);
+        }
+    }
+
+    // TODO: scroll target into view within the outline panel scroll area.
+};
+
+</script>
+
+
+<!-- HEAD_PLACE_HOLDER -->
+</head>
+<body>
+<div class="container-fluid">
+<div class="row flex-xl-nowrap">
+    <div id="outline-panel" style="display:none;" class="d-none d-md-block d-xl-block col-md-3 col-xl-2 bd-toc">
+        <div id="outline-content" class="section-nav"></div>
+    </div>
+    <div id="post-content" class="col-12 col-md-9 col-xl-10 py-md-3 pl-md-5 bd-content">
+    <h1 id="toc_0">仲介者模式 Mediator<a class="vnote-anchor" href="#toc_0" data-anchor-icon="#"></a></h1>
+<h2 id="toc_1">講解<a class="vnote-anchor" href="#toc_1" data-anchor-icon="#"></a></h2>
+<ul>
+<li>
+<h3 id="toc_2">仲介者模式 就是讓某個類成為中間類，所有類跟類的訪問都通過他<a class="vnote-anchor" href="#toc_2" data-anchor-icon="#"></a></h3>
+</li>
+<li>優點 減少類跟類的耦合，因為都可以透過中介者來通知，新增的話只需更改中介者就行</li>
+</ul>
+<h3 id="toc_3">UML圖<a class="vnote-anchor" href="#toc_3" data-anchor-icon="#"></a></h3>
+<h4 id="toc_4">無中介者UML<a class="vnote-anchor" href="#toc_4" data-anchor-icon="#"></a></h4>
+<p>各Class之間過度耦合，違反"最少知識原則"<br>
+後期維護複雜</p>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="262.5px" preserveAspectRatio="none" style="width:322px;height:262px;" version="1.1" viewBox="0 0 322 262" width="322.5px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="fvc46rfh2vno" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><!--MD5=[149913fe794b3f7cafce514aba7da160]
+class SystemA--><rect fill="#FEFECE" filter="url(#fvc46rfh2vno)" height="72" id="SystemA" style="stroke: #A80036; stroke-width: 2.25;" width="120" x="10.5" y="12"></rect><ellipse cx="33" cy="36" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M39.1875,41.9297 Q38.6484,42.8672 37.3828,43.8281 Q35.2734,45.3516 31.1719,45.3516 Q27.8906,45.3516 25.6875,43.1484 Q23.1328,40.5938 23.1328,35.8125 Q23.1328,31.4063 25.6641,28.7109 Q27.9844,26.2734 31.3125,26.2734 Q34.125,26.2734 35.6016,26.7188 Q37.0781,27.1641 37.0781,27.1641 Q37.0781,27.1641 37.0781,26.3203 L38.6016,26.1797 L38.8359,32.2734 L36.8438,32.4609 Q35.625,27.0703 31.5234,27.0703 Q31.5234,27.0703 30.6328,27.4922 Q29.2734,28.0078 28.5,28.8281 Q26.4375,31.1484 26.4141,35.8594 Q26.3906,40.0313 28.6875,42.375 Q30.6328,44.3672 31.875,44.3672 Q34.9219,44.3672 38.2031,40.5234 L39.1875,41.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="72" x="54" y="44.8638">SystemA</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="12" x2="129" y1="60" y2="60"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="12" x2="129" y1="72" y2="72"></line><!--MD5=[671224af43726ee1a8f81bd7f50f65bc]
+class SystemB--><rect fill="#FEFECE" filter="url(#fvc46rfh2vno)" height="72" id="SystemB" style="stroke: #A80036; stroke-width: 2.25;" width="121.5" x="185.25" y="174"></rect><ellipse cx="207.75" cy="198" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M213.9375,203.9297 Q213.3984,204.8672 212.1328,205.8281 Q210.0234,207.3516 205.9219,207.3516 Q202.6406,207.3516 200.4375,205.1484 Q197.8828,202.5938 197.8828,197.8125 Q197.8828,193.4063 200.4141,190.7109 Q202.7344,188.2734 206.0625,188.2734 Q208.875,188.2734 210.3516,188.7188 Q211.8281,189.1641 211.8281,189.1641 Q211.8281,189.1641 211.8281,188.3203 L213.3516,188.1797 L213.5859,194.2734 L211.5938,194.4609 Q210.375,189.0703 206.2734,189.0703 Q206.2734,189.0703 205.3828,189.4922 Q204.0234,190.0078 203.25,190.8281 Q201.1875,193.1484 201.1641,197.8594 Q201.1406,202.0313 203.4375,204.375 Q205.3828,206.3672 206.625,206.3672 Q209.6719,206.3672 212.9531,202.5234 L213.9375,203.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="73.5" x="228.75" y="206.8638">SystemB</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="186.75" x2="305.25" y1="222" y2="222"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="186.75" x2="305.25" y1="234" y2="234"></line><!--MD5=[aaa73a23036fb8becdf1a66f3d1df0c5]
+class SystemC--><rect fill="#FEFECE" filter="url(#fvc46rfh2vno)" height="72" id="SystemC" style="stroke: #A80036; stroke-width: 2.25;" width="123" x="183" y="12"></rect><ellipse cx="205.5" cy="36" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M211.6875,41.9297 Q211.1484,42.8672 209.8828,43.8281 Q207.7734,45.3516 203.6719,45.3516 Q200.3906,45.3516 198.1875,43.1484 Q195.6328,40.5938 195.6328,35.8125 Q195.6328,31.4063 198.1641,28.7109 Q200.4844,26.2734 203.8125,26.2734 Q206.625,26.2734 208.1016,26.7188 Q209.5781,27.1641 209.5781,27.1641 Q209.5781,27.1641 209.5781,26.3203 L211.1016,26.1797 L211.3359,32.2734 L209.3438,32.4609 Q208.125,27.0703 204.0234,27.0703 Q204.0234,27.0703 203.1328,27.4922 Q201.7734,28.0078 201,28.8281 Q198.9375,31.1484 198.9141,35.8594 Q198.8906,40.0313 201.1875,42.375 Q203.1328,44.3672 204.375,44.3672 Q207.4219,44.3672 210.7031,40.5234 L211.6875,41.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="75" x="226.5" y="44.8638">SystemC</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="184.5" x2="304.5" y1="60" y2="60"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="184.5" x2="304.5" y1="72" y2="72"></line><!--MD5=[19ce5c5115adfccaf47edd48a2f9f8f9]
+class SystemD--><rect fill="#FEFECE" filter="url(#fvc46rfh2vno)" height="72" id="SystemD" style="stroke: #A80036; stroke-width: 2.25;" width="123" x="9" y="174"></rect><ellipse cx="31.5" cy="198" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M37.6875,203.9297 Q37.1484,204.8672 35.8828,205.8281 Q33.7734,207.3516 29.6719,207.3516 Q26.3906,207.3516 24.1875,205.1484 Q21.6328,202.5938 21.6328,197.8125 Q21.6328,193.4063 24.1641,190.7109 Q26.4844,188.2734 29.8125,188.2734 Q32.625,188.2734 34.1016,188.7188 Q35.5781,189.1641 35.5781,189.1641 Q35.5781,189.1641 35.5781,188.3203 L37.1016,188.1797 L37.3359,194.2734 L35.3438,194.4609 Q34.125,189.0703 30.0234,189.0703 Q30.0234,189.0703 29.1328,189.4922 Q27.7734,190.0078 27,190.8281 Q24.9375,193.1484 24.9141,197.8594 Q24.8906,202.0313 27.1875,204.375 Q29.1328,206.3672 30.375,206.3672 Q33.4219,206.3672 36.7031,202.5234 L37.6875,203.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="75" x="52.5" y="206.8638">SystemD</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="130.5" y1="222" y2="222"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="130.5" y1="234" y2="234"></line><!--MD5=[929e46e339f4e1be24952104934a296f]
+link SystemA to SystemB--><path d="M92.4921,84 C116.2266,108.9356 153.2259,142.6769 185.2995,168.7436 " fill="none" id="SystemA->SystemB" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="191.226,173.5176,184.4777,160.3757,185.3857,168.8122,176.9491,169.7202,191.226,173.5176" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[39509a722b3ca0903033d4dd75120a9c]
+link SystemB to SystemA--><path d="M224.499,173.5176 C200.8155,148.4702 163.7745,114.7223 131.5691,88.755 " fill="none" id="SystemB->SystemA" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="125.6162,84,132.4211,97.1127,131.4767,88.6801,139.9093,87.7357,125.6162,84" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[9e2aa52ea0c7938ae519b5fd9d426a4a]
+link SystemA to SystemC--><path d="M130.9922,72.4935 C145.7177,75.279 160.443,75.7425 175.1685,73.887 " fill="none" id="SystemA->SystemC" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="182.8695,72.7035,168.6154,68.8214,175.4563,73.8415,170.4362,80.6825,182.8695,72.7035" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[e225f09718e5dd293aef0e5c9fd75dba]
+link SystemC to SystemA--><path d="M182.8695,23.2965 C168.144,20.631 153.4181,20.286 138.6925,22.2615 " fill="none" id="SystemC->SystemA" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="130.9922,23.5065,145.2764,27.276,138.3961,22.31,143.362,15.4296,130.9922,23.5065" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[0156df5b392e8811cbc79a4e673dfdf9]
+link SystemA to SystemD--><path d="M54.4112,84 C50.7645,108.0045 50.4029,140.1692 53.3259,165.792 " fill="none" id="SystemA->SystemD" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="54.3386,173.5176,58.5331,159.3523,53.3638,166.0812,46.6349,160.9119,54.3386,173.5176" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[e5b88b5d9b9ed61f3801094cee99ace7]
+link SystemD to SystemA--><path d="M87.6122,173.5176 C91.4268,149.4056 91.7634,117.2307 88.622,91.6965 " fill="none" id="SystemD->SystemA" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="87.5352,84,83.4802,98.2059,88.5831,91.4264,95.3625,96.5293,87.5352,84" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[ba91efac3138b8f725228a46d9b5c415]
+link SystemB to SystemC--><path d="M262.782,173.5176 C266.37,149.4056 266.403,117.2307 263.0205,91.6965 " fill="none" id="SystemB->SystemC" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="261.861,84,257.9374,98.2427,262.9774,91.4164,269.8037,96.4564,261.861,84" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[1b5f28d9b1f07cdd28c586a1ba4026ec]
+link SystemC to SystemB--><path d="M228.7365,84 C225.3165,108.0045 225.258,140.1692 228.423,165.792 " fill="none" id="SystemC->SystemB" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="229.509,173.5176,233.5718,159.314,228.4652,166.0906,221.6886,160.984,229.509,173.5176" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[3edf774b866cca9d49987d6b61d4c399]
+link SystemB to SystemD--><path d="M185.0985,234.4723 C169.9455,237.3256 154.7918,237.7632 139.6382,235.7854 " fill="none" id="SystemB->SystemD" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="132.1992,234.6204,144.6081,242.6371,139.6089,235.7809,146.465,230.7816,132.1992,234.6204" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[d63f9e2e8798107604802cadb38d2fec]
+link SystemD to SystemB--><path d="M132.1992,185.3796 C147.3528,182.6112 162.507,182.2584 177.66,184.321 " fill="none" id="SystemD->SystemB" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="185.0985,185.5277,172.7347,177.4415,177.6955,184.3256,170.8114,189.2863,185.0985,185.5277" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[9b5dc026dc8ffdc6b8277034fd255ed7]
+link SystemC to SystemD--><path d="M190.656,84 C159.9675,108.6252 123.3369,141.8382 98.1356,167.7666 " fill="none" id="SystemC->SystemD" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="92.6211,173.5176,106.2952,167.9258,97.8118,168.104,97.6335,159.6206,92.6211,173.5176" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[9e43b7701b25eed97a2d135bef1760a1]
+link SystemD to SystemC--><path d="M125.8947,173.5176 C156.8774,148.782 193.485,115.5611 218.3475,89.7285 " fill="none" id="SystemD->SystemC" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="223.7805,84,210.1371,89.6663,218.6194,89.4418,218.8439,97.9241,223.7805,84" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[69af10bae9902ef588870b1015e34443]
+@startuml
+scale 1.5
+skinparam classAttributeIconSize 0
+
+
+
+class SystemA{
+}
+class SystemB{
+
+}
+class SystemC{
+}
+class SystemD{
+}
+
+SystemA - -> SystemB
+SystemA - -> SystemC
+SystemA - -> SystemD
+
+SystemB - -> SystemA
+SystemB - -> SystemC
+SystemB - -> SystemD
+
+SystemC - -> SystemB
+SystemC -> SystemA
+SystemC -> SystemD
+
+SystemD -> SystemB
+SystemD -> SystemC
+SystemD -> SystemA
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+<h4 id="toc_5">中介者模式UML<a class="vnote-anchor" href="#toc_5" data-anchor-icon="#"></a></h4>
+<p>全部只要透過ConcreteMediator轉發消息就可以<br>
+後期新增只要<br>
+修改ConcreteMediator<br>
+新增System</p>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="426px" preserveAspectRatio="none" style="width:1210px;height:426px;" version="1.1" viewBox="0 0 1210 426" width="1210.5px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="f1baatgm0tc9b4" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><!--MD5=[7bc5716ff34e8b57d97376709b158217]
+class Mediator--><rect fill="#FEFECE" filter="url(#f1baatgm0tc9b4)" height="95.5012" id="Mediator" style="stroke: #A80036; stroke-width: 2.25;" width="481.5" x="9" y="23.25"></rect><ellipse cx="208.125" cy="47.25" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M214.3125,53.1797 Q213.7734,54.1172 212.5078,55.0781 Q210.3984,56.6016 206.2969,56.6016 Q203.0156,56.6016 200.8125,54.3984 Q198.2578,51.8438 198.2578,47.0625 Q198.2578,42.6563 200.7891,39.9609 Q203.1094,37.5234 206.4375,37.5234 Q209.25,37.5234 210.7266,37.9688 Q212.2031,38.4141 212.2031,38.4141 Q212.2031,38.4141 212.2031,37.5703 L213.7266,37.4297 L213.9609,43.5234 L211.9688,43.7109 Q210.75,38.3203 206.6484,38.3203 Q206.6484,38.3203 205.7578,38.7422 Q204.3984,39.2578 203.625,40.0781 Q201.5625,42.3984 201.5391,47.1094 Q201.5156,51.2813 203.8125,53.625 Q205.7578,55.6172 207,55.6172 Q210.0469,55.6172 213.3281,51.7734 L214.3125,53.1797 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="70.5" x="238.875" y="56.1138">Mediator</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="489" y1="71.25" y2="71.25"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="489" y1="83.25" y2="83.25"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="463.5" x="18" y="109.1257">public abstract void Send(string message, Colleague colleague);</text><!--MD5=[57b036fc3adc6f308410e06146624c7b]
+class ConcreteMediator--><rect fill="#FEFECE" filter="url(#f1baatgm0tc9b4)" height="189.5061" id="ConcreteMediator" style="stroke: #A80036; stroke-width: 2.25;" width="216" x="141.75" y="220.5"></rect><ellipse cx="174.375" cy="244.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M180.5625,250.4297 Q180.0234,251.3672 178.7578,252.3281 Q176.6484,253.8516 172.5469,253.8516 Q169.2656,253.8516 167.0625,251.6484 Q164.5078,249.0938 164.5078,244.3125 Q164.5078,239.9063 167.0391,237.2109 Q169.3594,234.7734 172.6875,234.7734 Q175.5,234.7734 176.9766,235.2188 Q178.4531,235.6641 178.4531,235.6641 Q178.4531,235.6641 178.4531,234.8203 L179.9766,234.6797 L180.2109,240.7734 L178.2188,240.9609 Q177,235.5703 172.8984,235.5703 Q172.8984,235.5703 172.0078,235.9922 Q170.6484,236.5078 169.875,237.3281 Q167.8125,239.6484 167.7891,244.3594 Q167.7656,248.5313 170.0625,250.875 Q172.0078,252.8672 173.25,252.8672 Q176.2969,252.8672 179.5781,249.0234 L180.5625,250.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="145.5" x="197.625" y="253.3638">ConcreteMediator</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="143.25" x2="356.25" y1="268.5" y2="268.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="49.5" x="150.75" y="294.3757">中介者</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="99" x="150.75" y="317.877">負責傳送消息</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="154.5" x="150.75" y="341.3782">繼承過來的void Send</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="198" x="150.75" y="364.8794">就是負責處理消息傳到哪邊</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="79.5" x="150.75" y="388.3806">A-&gt;B B-&gt;A</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="143.25" x2="356.25" y1="398.0061" y2="398.0061"></line><!--MD5=[f766bb81e45917128943f43628675b40]
+class Collleague--><rect fill="#FEFECE" filter="url(#f1baatgm0tc9b4)" height="119.0024" id="Collleague" style="stroke: #A80036; stroke-width: 2.25;" width="274.5" x="543" y="12"></rect><ellipse cx="628.875" cy="36" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M635.0625,41.9297 Q634.5234,42.8672 633.2578,43.8281 Q631.1484,45.3516 627.0469,45.3516 Q623.7656,45.3516 621.5625,43.1484 Q619.0078,40.5938 619.0078,35.8125 Q619.0078,31.4063 621.5391,28.7109 Q623.8594,26.2734 627.1875,26.2734 Q630,26.2734 631.4766,26.7188 Q632.9531,27.1641 632.9531,27.1641 Q632.9531,27.1641 632.9531,26.3203 L634.4766,26.1797 L634.7109,32.2734 L632.7188,32.4609 Q631.5,27.0703 627.3984,27.0703 Q627.3984,27.0703 626.5078,27.4922 Q625.1484,28.0078 624.375,28.8281 Q622.3125,31.1484 622.2891,35.8594 Q622.2656,40.0313 624.5625,42.375 Q626.5078,44.3672 627.75,44.3672 Q630.7969,44.3672 634.0781,40.5234 L635.0625,41.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="90" x="659.625" y="44.8638">Collleague</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="544.5" x2="816" y1="60" y2="60"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="205.5" x="552" y="85.8757">protected Mediator mediator;</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="544.5" x2="816" y1="95.5012" y2="95.5012"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="256.5" x="552" y="121.377">public Colleague(Mediator mediator)</text><!--MD5=[149913fe794b3f7cafce514aba7da160]
+class SystemA--><rect fill="#FEFECE" filter="url(#f1baatgm0tc9b4)" height="166.0049" id="SystemA" style="stroke: #A80036; stroke-width: 2.25;" width="366" x="828.75" y="231.75"></rect><ellipse cx="969.375" cy="255.75" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M975.5625,261.6797 Q975.0234,262.6172 973.7578,263.5781 Q971.6484,265.1016 967.5469,265.1016 Q964.2656,265.1016 962.0625,262.8984 Q959.5078,260.3438 959.5078,255.5625 Q959.5078,251.1563 962.0391,248.4609 Q964.3594,246.0234 967.6875,246.0234 Q970.5,246.0234 971.9766,246.4688 Q973.4531,246.9141 973.4531,246.9141 Q973.4531,246.9141 973.4531,246.0703 L974.9766,245.9297 L975.2109,252.0234 L973.2188,252.2109 Q972,246.8203 967.8984,246.8203 Q967.8984,246.8203 967.0078,247.2422 Q965.6484,247.7578 964.875,248.5781 Q962.8125,250.8984 962.7891,255.6094 Q962.7656,259.7813 965.0625,262.125 Q967.0078,264.1172 968.25,264.1172 Q971.2969,264.1172 974.5781,260.2734 L975.5625,261.6797 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="72" x="1000.125" y="264.6138">SystemA</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="830.25" x2="1193.25" y1="279.75" y2="279.75"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="837.75" y="305.6257">發送消息者</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="139.5" x="837.75" y="329.127">透過繼承Collleague</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="304.5" x="837.75" y="352.6282">擁有Mediator變數獲取到ConcreteMediator</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="348" x="837.75" y="376.1294">就能透過ConcreteMediator的void Send發送消息</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="830.25" x2="1193.25" y1="385.7549" y2="385.7549"></line><!--MD5=[671224af43726ee1a8f81bd7f50f65bc]
+class SystemB--><rect fill="#FEFECE" filter="url(#f1baatgm0tc9b4)" height="166.0049" id="SystemB" style="stroke: #A80036; stroke-width: 2.25;" width="366" x="410.25" y="231.75"></rect><ellipse cx="550.125" cy="255.75" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M556.3125,261.6797 Q555.7734,262.6172 554.5078,263.5781 Q552.3984,265.1016 548.2969,265.1016 Q545.0156,265.1016 542.8125,262.8984 Q540.2578,260.3438 540.2578,255.5625 Q540.2578,251.1563 542.7891,248.4609 Q545.1094,246.0234 548.4375,246.0234 Q551.25,246.0234 552.7266,246.4688 Q554.2031,246.9141 554.2031,246.9141 Q554.2031,246.9141 554.2031,246.0703 L555.7266,245.9297 L555.9609,252.0234 L553.9688,252.2109 Q552.75,246.8203 548.6484,246.8203 Q548.6484,246.8203 547.7578,247.2422 Q546.3984,247.7578 545.625,248.5781 Q543.5625,250.8984 543.5391,255.6094 Q543.5156,259.7813 545.8125,262.125 Q547.7578,264.1172 549,264.1172 Q552.0469,264.1172 555.3281,260.2734 L556.3125,261.6797 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="73.5" x="580.875" y="264.6138">SystemB</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="411.75" x2="774.75" y1="279.75" y2="279.75"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="419.25" y="305.6257">發送消息者</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="139.5" x="419.25" y="329.127">透過繼承Collleague</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="304.5" x="419.25" y="352.6282">擁有Mediator變數獲取到ConcreteMediator</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="348" x="419.25" y="376.1294">就能透過ConcreteMediator的void Send發送消息</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="411.75" x2="774.75" y1="385.7549" y2="385.7549"></line><!--MD5=[8e81ab3b58f78fae49244c829d83e031]
+reverse link Mediator to ConcreteMediator--><path d="M249.75,149.9655 C249.75,172.3515 249.75,197.034 249.75,220.2885 " fill="none" id="Mediator<-ConcreteMediator" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="239.25,149.7405,249.75,119.7405,260.25,149.7405,239.25,149.7405" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[bbf5a1882a0339e40f7403a8b33f9549]
+reverse link Mediator to Collleague--><path d="M498.3405,71.25 C513.057,71.25 527.7735,71.25 542.49,71.25 " fill="none" id="Mediator<-Collleague" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="490.6455,71.25,504.1455,77.25,498.1455,71.25,504.1455,65.25,490.6455,71.25" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[0720415766757a89378915bf2f54aedf]
+reverse link Collleague to SystemA--><path d="M784.4055,148.392 C820.767,174.7995 861.738,204.555 898.782,231.4575 " fill="none" id="Collleague<-SystemA" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="778.1775,156.8475,760.074,130.722,790.518,139.8555,778.1775,156.8475" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[c5bebbcbb60e683b29b21a2537ae6a6f]
+reverse link Collleague to SystemB--><path d="M648.894,159.5205 C640.395,183.039 631.224,208.416 622.827,231.6525 " fill="none" id="Collleague<-SystemB" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="639.1185,155.6745,659.19,131.0295,658.869,162.8115,639.1185,155.6745" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[5d52841b30fdc87744192cb89f8aa3ce]
+link ConcreteMediator to SystemA--><path d="M336.8355,220.3635 C359.0595,202.035 384.2895,185.4495 411,175.5 C563.433,118.7145 620.1435,132.411 777,175.5 C817.023,186.495 857.1285,206.2845 892.5765,227.5695 " fill="none" id="ConcreteMediator->SystemA" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="899.1405,231.5595,890.7208,219.4204,892.7315,227.664,884.4879,229.6747,899.1405,231.5595" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[5a015eb25efbbc018c3842b8fffc3c69]
+link ConcreteMediator to SystemB--><path d="M357.765,315 C372.648,315 387.531,315 402.414,315 " fill="none" id="ConcreteMediator->SystemB" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="410.1975,315,396.6975,309,402.6975,315,396.6975,321,410.1975,315" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[51cff02213deba2d352aec57003a4313]
+@startuml
+scale 1.5
+class Mediator{
+
+public abstract void Send(string message, Colleague colleague);
+}
+
+class ConcreteMediator{
+中介者
+負責傳送消息
+繼承過來的void Send
+就是負責處理消息傳到哪邊
+A->B B->A
+__
+}
+
+class Collleague{
+protected Mediator mediator;
+public Colleague(Mediator mediator)
+}
+
+class SystemA{
+發送消息者
+透過繼承Collleague
+擁有Mediator變數獲取到ConcreteMediator
+就能透過ConcreteMediator的void Send發送消息
+__
+}
+
+class SystemB{
+發送消息者
+透過繼承Collleague
+擁有Mediator變數獲取到ConcreteMediator
+就能透過ConcreteMediator的void Send發送消息
+__
+}
+
+
+Mediator <|- - ConcreteMediator
+Mediator <- Collleague
+
+Collleague <|- - SystemA
+Collleague <|- - SystemB
+
+ConcreteMediator -> SystemA
+ConcreteMediator -> SystemB
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+<h4 id="toc_6">中介者模式時序圖<a class="vnote-anchor" href="#toc_6" data-anchor-icon="#"></a></h4>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="324px" preserveAspectRatio="none" style="width:468px;height:324px;" version="1.1" viewBox="0 0 468 324" width="468px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="f1pwdll6pryath" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="109.5" x2="109.5" y1="62.9106" y2="258.7332"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="277.5" x2="277.5" y1="62.9106" y2="258.7332"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="402" x2="402" y1="62.9106" y2="258.7332"></line><rect fill="#FEFECE" filter="url(#f1pwdll6pryath)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="190.5" x="12" y="4.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="169.5" x="22.5" y="40.2964">ConcreteMediator</text><rect fill="#FEFECE" filter="url(#f1pwdll6pryath)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="190.5" x="12" y="257.2332"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="169.5" x="22.5" y="293.0295">ConcreteMediator</text><rect fill="#FEFECE" filter="url(#f1pwdll6pryath)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="103.5" x="223.5" y="4.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="234" y="40.2964">SystemA</text><rect fill="#FEFECE" filter="url(#f1pwdll6pryath)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="103.5" x="223.5" y="257.2332"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="234" y="293.0295">SystemA</text><rect fill="#FEFECE" filter="url(#f1pwdll6pryath)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="103.5" x="348" y="4.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="358.5" y="40.2964">SystemB</text><rect fill="#FEFECE" filter="url(#f1pwdll6pryath)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="103.5" x="348" y="257.2332"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="358.5" y="293.0295">SystemB</text><polygon fill="#A80036" points="126.75,108.6848,111.75,114.6848,126.75,120.6848,120.75,114.6848" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="117.75" x2="276.75" y1="114.6848" y2="114.6848"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="135.75" y="107.4001">1</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="78" x="152.25" y="107.4001">傳送信息</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="110.25" x2="173.25" y1="163.459" y2="163.459"></line><line style="stroke: #A80036; stroke-width: 1.5;" x1="173.25" x2="173.25" y1="163.459" y2="182.959"></line><line style="stroke: #A80036; stroke-width: 1.5;" x1="111.75" x2="173.25" y1="182.959" y2="182.959"></line><polygon fill="#A80036" points="126.75,176.959,111.75,182.959,126.75,188.959,120.75,182.959" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="120.75" y="156.1743">2</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="78" x="137.25" y="156.1743">判斷給誰</text><polygon fill="#A80036" points="384.75,225.7332,399.75,231.7332,384.75,237.7332,390.75,231.7332" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="110.25" x2="393.75" y1="231.7332" y2="231.7332"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="120.75" y="224.4485">3</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="78" x="137.25" y="224.4485">轉發信息</text><!--MD5=[892403992e4d7127e121a875fdfaa89b]
+@startuml
+autonumber
+scale 1.5
+
+participant ConcreteMediator
+participant SystemA
+participant SystemB
+
+SystemA -> ConcreteMediator:傳送信息
+
+ConcreteMediator -> ConcreteMediator : 判斷給誰
+
+ConcreteMediator ->SystemB:轉發信息
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+<h2 id="toc_7">書中案例<a class="vnote-anchor" href="#toc_7" data-anchor-icon="#"></a></h2>
+<p>書中是把 中介者Class使用單例模式 變成<br>
+PBaseDefenseGame同時有"外觀模式"，"單例模式"，"中介者模式"<br>
+在這邊"單例模式"讓各個類能訪問<br>
+"中介者模式"控制UI和System兩大系統<br>
+"外觀模式"就是方便Client控制</p>
+<h4 id="toc_8">UML圖<a class="vnote-anchor" href="#toc_8" data-anchor-icon="#"></a></h4>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="309px" preserveAspectRatio="none" style="width:1195px;height:309px;" version="1.1" viewBox="0 0 1195 309" width="1195.5px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="f1dzf2y2emtnuw" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><!--MD5=[149913fe794b3f7cafce514aba7da160]
+class SystemA--><rect fill="#FEFECE" filter="url(#f1dzf2y2emtnuw)" height="72" id="SystemA" style="stroke: #A80036; stroke-width: 2.25;" width="120" x="884.25" y="220.5"></rect><ellipse cx="906.75" cy="244.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M912.9375,250.4297 Q912.3984,251.3672 911.1328,252.3281 Q909.0234,253.8516 904.9219,253.8516 Q901.6406,253.8516 899.4375,251.6484 Q896.8828,249.0938 896.8828,244.3125 Q896.8828,239.9063 899.4141,237.2109 Q901.7344,234.7734 905.0625,234.7734 Q907.875,234.7734 909.3516,235.2188 Q910.8281,235.6641 910.8281,235.6641 Q910.8281,235.6641 910.8281,234.8203 L912.3516,234.6797 L912.5859,240.7734 L910.5938,240.9609 Q909.375,235.5703 905.2734,235.5703 Q905.2734,235.5703 904.3828,235.9922 Q903.0234,236.5078 902.25,237.3281 Q900.1875,239.6484 900.1641,244.3594 Q900.1406,248.5313 902.4375,250.875 Q904.3828,252.8672 905.625,252.8672 Q908.6719,252.8672 911.9531,249.0234 L912.9375,250.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="72" x="927.75" y="253.3638">SystemA</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="885.75" x2="1002.75" y1="268.5" y2="268.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="885.75" x2="1002.75" y1="280.5" y2="280.5"></line><!--MD5=[671224af43726ee1a8f81bd7f50f65bc]
+class SystemB--><rect fill="#FEFECE" filter="url(#f1dzf2y2emtnuw)" height="72" id="SystemB" style="stroke: #A80036; stroke-width: 2.25;" width="121.5" x="1057.5" y="220.5"></rect><ellipse cx="1080" cy="244.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M1086.1875,250.4297 Q1085.6484,251.3672 1084.3828,252.3281 Q1082.2734,253.8516 1078.1719,253.8516 Q1074.8906,253.8516 1072.6875,251.6484 Q1070.1328,249.0938 1070.1328,244.3125 Q1070.1328,239.9063 1072.6641,237.2109 Q1074.9844,234.7734 1078.3125,234.7734 Q1081.125,234.7734 1082.6016,235.2188 Q1084.0781,235.6641 1084.0781,235.6641 Q1084.0781,235.6641 1084.0781,234.8203 L1085.6016,234.6797 L1085.8359,240.7734 L1083.8438,240.9609 Q1082.625,235.5703 1078.5234,235.5703 Q1078.5234,235.5703 1077.6328,235.9922 Q1076.2734,236.5078 1075.5,237.3281 Q1073.4375,239.6484 1073.4141,244.3594 Q1073.3906,248.5313 1075.6875,250.875 Q1077.6328,252.8672 1078.875,252.8672 Q1081.9219,252.8672 1085.2031,249.0234 L1086.1875,250.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="73.5" x="1101" y="253.3638">SystemB</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="1059" x2="1177.5" y1="268.5" y2="268.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="1059" x2="1177.5" y1="280.5" y2="280.5"></line><!--MD5=[aaa73a23036fb8becdf1a66f3d1df0c5]
+class SystemC--><rect fill="#FEFECE" filter="url(#f1dzf2y2emtnuw)" height="72" id="SystemC" style="stroke: #A80036; stroke-width: 2.25;" width="123" x="533.25" y="220.5"></rect><ellipse cx="555.75" cy="244.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M561.9375,250.4297 Q561.3984,251.3672 560.1328,252.3281 Q558.0234,253.8516 553.9219,253.8516 Q550.6406,253.8516 548.4375,251.6484 Q545.8828,249.0938 545.8828,244.3125 Q545.8828,239.9063 548.4141,237.2109 Q550.7344,234.7734 554.0625,234.7734 Q556.875,234.7734 558.3516,235.2188 Q559.8281,235.6641 559.8281,235.6641 Q559.8281,235.6641 559.8281,234.8203 L561.3516,234.6797 L561.5859,240.7734 L559.5938,240.9609 Q558.375,235.5703 554.2734,235.5703 Q554.2734,235.5703 553.3828,235.9922 Q552.0234,236.5078 551.25,237.3281 Q549.1875,239.6484 549.1641,244.3594 Q549.1406,248.5313 551.4375,250.875 Q553.3828,252.8672 554.625,252.8672 Q557.6719,252.8672 560.9531,249.0234 L561.9375,250.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="75" x="576.75" y="253.3638">SystemC</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="534.75" x2="654.75" y1="268.5" y2="268.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="534.75" x2="654.75" y1="280.5" y2="280.5"></line><!--MD5=[19ce5c5115adfccaf47edd48a2f9f8f9]
+class SystemD--><rect fill="#FEFECE" filter="url(#f1dzf2y2emtnuw)" height="72" id="SystemD" style="stroke: #A80036; stroke-width: 2.25;" width="123" x="708.75" y="220.5"></rect><ellipse cx="731.25" cy="244.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M737.4375,250.4297 Q736.8984,251.3672 735.6328,252.3281 Q733.5234,253.8516 729.4219,253.8516 Q726.1406,253.8516 723.9375,251.6484 Q721.3828,249.0938 721.3828,244.3125 Q721.3828,239.9063 723.9141,237.2109 Q726.2344,234.7734 729.5625,234.7734 Q732.375,234.7734 733.8516,235.2188 Q735.3281,235.6641 735.3281,235.6641 Q735.3281,235.6641 735.3281,234.8203 L736.8516,234.6797 L737.0859,240.7734 L735.0938,240.9609 Q733.875,235.5703 729.7734,235.5703 Q729.7734,235.5703 728.8828,235.9922 Q727.5234,236.5078 726.75,237.3281 Q724.6875,239.6484 724.6641,244.3594 Q724.6406,248.5313 726.9375,250.875 Q728.8828,252.8672 730.125,252.8672 Q733.1719,252.8672 736.4531,249.0234 L737.4375,250.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="75" x="752.25" y="253.3638">SystemD</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="710.25" x2="830.25" y1="268.5" y2="268.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="710.25" x2="830.25" y1="280.5" y2="280.5"></line><!--MD5=[4b050af507b95e224e3259f8883582e2]
+class UIA--><rect fill="#FEFECE" filter="url(#f1dzf2y2emtnuw)" height="72" id="UIA" style="stroke: #A80036; stroke-width: 2.25;" width="76.5" x="273" y="220.5"></rect><ellipse cx="295.5" cy="244.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M301.6875,250.4297 Q301.1484,251.3672 299.8828,252.3281 Q297.7734,253.8516 293.6719,253.8516 Q290.3906,253.8516 288.1875,251.6484 Q285.6328,249.0938 285.6328,244.3125 Q285.6328,239.9063 288.1641,237.2109 Q290.4844,234.7734 293.8125,234.7734 Q296.625,234.7734 298.1016,235.2188 Q299.5781,235.6641 299.5781,235.6641 Q299.5781,235.6641 299.5781,234.8203 L301.1016,234.6797 L301.3359,240.7734 L299.3438,240.9609 Q298.125,235.5703 294.0234,235.5703 Q294.0234,235.5703 293.1328,235.9922 Q291.7734,236.5078 291,237.3281 Q288.9375,239.6484 288.9141,244.3594 Q288.8906,248.5313 291.1875,250.875 Q293.1328,252.8672 294.375,252.8672 Q297.4219,252.8672 300.7031,249.0234 L301.6875,250.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="28.5" x="316.5" y="253.3638">UIA</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="274.5" x2="348" y1="268.5" y2="268.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="274.5" x2="348" y1="280.5" y2="280.5"></line><!--MD5=[5ea180c3336031c10b58ed879519f315]
+class UIB--><rect fill="#FEFECE" filter="url(#f1dzf2y2emtnuw)" height="72" id="UIB" style="stroke: #A80036; stroke-width: 2.25;" width="78" x="402.75" y="220.5"></rect><ellipse cx="425.25" cy="244.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M431.4375,250.4297 Q430.8984,251.3672 429.6328,252.3281 Q427.5234,253.8516 423.4219,253.8516 Q420.1406,253.8516 417.9375,251.6484 Q415.3828,249.0938 415.3828,244.3125 Q415.3828,239.9063 417.9141,237.2109 Q420.2344,234.7734 423.5625,234.7734 Q426.375,234.7734 427.8516,235.2188 Q429.3281,235.6641 429.3281,235.6641 Q429.3281,235.6641 429.3281,234.8203 L430.8516,234.6797 L431.0859,240.7734 L429.0938,240.9609 Q427.875,235.5703 423.7734,235.5703 Q423.7734,235.5703 422.8828,235.9922 Q421.5234,236.5078 420.75,237.3281 Q418.6875,239.6484 418.6641,244.3594 Q418.6406,248.5313 420.9375,250.875 Q422.8828,252.8672 424.125,252.8672 Q427.1719,252.8672 430.4531,249.0234 L431.4375,250.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="30" x="446.25" y="253.3638">UIB</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="404.25" x2="479.25" y1="268.5" y2="268.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="404.25" x2="479.25" y1="280.5" y2="280.5"></line><!--MD5=[067a7bc84b38c3d7ec0512f016b69582]
+class UIC--><rect fill="#FEFECE" filter="url(#f1dzf2y2emtnuw)" height="72" id="UIC" style="stroke: #A80036; stroke-width: 2.25;" width="79.5" x="9" y="220.5"></rect><ellipse cx="31.5" cy="244.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M37.6875,250.4297 Q37.1484,251.3672 35.8828,252.3281 Q33.7734,253.8516 29.6719,253.8516 Q26.3906,253.8516 24.1875,251.6484 Q21.6328,249.0938 21.6328,244.3125 Q21.6328,239.9063 24.1641,237.2109 Q26.4844,234.7734 29.8125,234.7734 Q32.625,234.7734 34.1016,235.2188 Q35.5781,235.6641 35.5781,235.6641 Q35.5781,235.6641 35.5781,234.8203 L37.1016,234.6797 L37.3359,240.7734 L35.3438,240.9609 Q34.125,235.5703 30.0234,235.5703 Q30.0234,235.5703 29.1328,235.9922 Q27.7734,236.5078 27,237.3281 Q24.9375,239.6484 24.9141,244.3594 Q24.8906,248.5313 27.1875,250.875 Q29.1328,252.8672 30.375,252.8672 Q33.4219,252.8672 36.7031,249.0234 L37.6875,250.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="31.5" x="52.5" y="253.3638">UIC</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="87" y1="268.5" y2="268.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="87" y1="280.5" y2="280.5"></line><!--MD5=[f6cbb717c07cd672984a570f3976b4f4]
+class UID--><rect fill="#FEFECE" filter="url(#f1dzf2y2emtnuw)" height="72" id="UID" style="stroke: #A80036; stroke-width: 2.25;" width="79.5" x="141" y="220.5"></rect><ellipse cx="163.5" cy="244.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M169.6875,250.4297 Q169.1484,251.3672 167.8828,252.3281 Q165.7734,253.8516 161.6719,253.8516 Q158.3906,253.8516 156.1875,251.6484 Q153.6328,249.0938 153.6328,244.3125 Q153.6328,239.9063 156.1641,237.2109 Q158.4844,234.7734 161.8125,234.7734 Q164.625,234.7734 166.1016,235.2188 Q167.5781,235.6641 167.5781,235.6641 Q167.5781,235.6641 167.5781,234.8203 L169.1016,234.6797 L169.3359,240.7734 L167.3438,240.9609 Q166.125,235.5703 162.0234,235.5703 Q162.0234,235.5703 161.1328,235.9922 Q159.7734,236.5078 159,237.3281 Q156.9375,239.6484 156.9141,244.3594 Q156.8906,248.5313 159.1875,250.875 Q161.1328,252.8672 162.375,252.8672 Q165.4219,252.8672 168.7031,249.0234 L169.6875,250.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="31.5" x="184.5" y="253.3638">UID</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="142.5" x2="219" y1="268.5" y2="268.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="142.5" x2="219" y1="280.5" y2="280.5"></line><!--MD5=[e0f4fd1e910ee198fea8d8fac8cb87a4]
+class IUserInterface--><rect fill="#FEFECE" filter="url(#f1dzf2y2emtnuw)" height="119.0024" id="IUserInterface" style="stroke: #A80036; stroke-width: 2.25;" width="183" x="192.75" y="12"></rect><ellipse cx="224.025" cy="36" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M230.2125,41.9297 Q229.6734,42.8672 228.4078,43.8281 Q226.2984,45.3516 222.1969,45.3516 Q218.9156,45.3516 216.7125,43.1484 Q214.1578,40.5938 214.1578,35.8125 Q214.1578,31.4063 216.6891,28.7109 Q219.0094,26.2734 222.3375,26.2734 Q225.15,26.2734 226.6266,26.7188 Q228.1031,27.1641 228.1031,27.1641 Q228.1031,27.1641 228.1031,26.3203 L229.6266,26.1797 L229.8609,32.2734 L227.8687,32.4609 Q226.65,27.0703 222.5484,27.0703 Q222.5484,27.0703 221.6578,27.4922 Q220.2984,28.0078 219.525,28.8281 Q217.4625,31.1484 217.4391,35.8594 Q217.4156,40.0313 219.7125,42.375 Q221.6578,44.3672 222.9,44.3672 Q225.9469,44.3672 229.2281,40.5234 L230.2125,41.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="115.5" x="246.975" y="44.8638">IUserInterface</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="194.25" x2="374.25" y1="60" y2="60"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="33" x="201.75" y="85.8757">父類</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="165" x="201.75" y="109.377">內部建構子綁定中介者</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="194.25" x2="374.25" y1="119.0024" y2="119.0024"></line><!--MD5=[a2095706ef28f253aad9920435f870b6]
+class IGameSystem--><rect fill="#FEFECE" filter="url(#f1dzf2y2emtnuw)" height="119.0024" id="IGameSystem" style="stroke: #A80036; stroke-width: 2.25;" width="183" x="705.75" y="12"></rect><ellipse cx="736.35" cy="36" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M742.5375,41.9297 Q741.9984,42.8672 740.7328,43.8281 Q738.6234,45.3516 734.5219,45.3516 Q731.2406,45.3516 729.0375,43.1484 Q726.4828,40.5938 726.4828,35.8125 Q726.4828,31.4063 729.0141,28.7109 Q731.3344,26.2734 734.6625,26.2734 Q737.475,26.2734 738.9516,26.7188 Q740.4281,27.1641 740.4281,27.1641 Q740.4281,27.1641 740.4281,26.3203 L741.9516,26.1797 L742.1859,32.2734 L740.1937,32.4609 Q738.975,27.0703 734.8734,27.0703 Q734.8734,27.0703 733.9828,27.4922 Q732.6234,28.0078 731.85,28.8281 Q729.7875,31.1484 729.7641,35.8594 Q729.7406,40.0313 732.0375,42.375 Q733.9828,44.3672 735.225,44.3672 Q738.2719,44.3672 741.5531,40.5234 L742.5375,41.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="117" x="759.15" y="44.8638">IGameSystem</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="707.25" x2="887.25" y1="60" y2="60"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="33" x="714.75" y="85.8757">父類</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="165" x="714.75" y="109.377">內部建構子綁定中介者</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="707.25" x2="887.25" y1="119.0024" y2="119.0024"></line><!--MD5=[d6e7d65f18a88d4a5988beef91fa8368]
+class PBaseDefenseGame--><rect fill="#FEFECE" filter="url(#f1dzf2y2emtnuw)" height="119.0024" id="PBaseDefenseGame" style="stroke: #A80036; stroke-width: 2.25;" width="225" x="428.25" y="12"></rect><ellipse cx="450.75" cy="36" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M456.9375,41.9297 Q456.3984,42.8672 455.1328,43.8281 Q453.0234,45.3516 448.9219,45.3516 Q445.6406,45.3516 443.4375,43.1484 Q440.8828,40.5938 440.8828,35.8125 Q440.8828,31.4063 443.4141,28.7109 Q445.7344,26.2734 449.0625,26.2734 Q451.875,26.2734 453.3516,26.7188 Q454.8281,27.1641 454.8281,27.1641 Q454.8281,27.1641 454.8281,26.3203 L456.3516,26.1797 L456.5859,32.2734 L454.5938,32.4609 Q453.375,27.0703 449.2734,27.0703 Q449.2734,27.0703 448.3828,27.4922 Q447.0234,28.0078 446.25,28.8281 Q444.1875,31.1484 444.1641,35.8594 Q444.1406,40.0313 446.4375,42.375 Q448.3828,44.3672 449.625,44.3672 Q452.6719,44.3672 455.9531,40.5234 L456.9375,41.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="177" x="471.75" y="44.8638">PBaseDefenseGame</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="429.75" x2="651.75" y1="60" y2="60"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="66" x="437.25" y="85.8757">中介者，</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="165" x="437.25" y="109.377">外觀模式控制全部系統</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="429.75" x2="651.75" y1="119.0024" y2="119.0024"></line><!--MD5=[aebcd6bd4c49f37430f74357c35eb347]
+link PBaseDefenseGame to IGameSystem--><path d="M653.469,71.25 C664.3515,71.25 675.234,71.25 686.115,71.25 " fill="none" id="PBaseDefenseGame->IGameSystem" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#FFFFFF" points="705.702,71.25,696.702,65.25,687.702,71.25,696.702,77.25,705.702,71.25" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[925209eb682a58233c0d7975628fa265]
+reverse link IUserInterface to PBaseDefenseGame--><path d="M395.4855,71.25 C406.35,71.25 417.2145,71.25 428.079,71.25 " fill="none" id="IUserInterface<-PBaseDefenseGame" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#FFFFFF" points="375.9285,71.25,384.9285,77.25,393.9285,71.25,384.9285,65.25,375.9285,71.25" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[b953972d55db90b6f594d02826598c58]
+reverse link IGameSystem to SystemA--><path d="M863.139,154.438 C881.769,177.5358 901.0575,201.4511 916.1505,220.1617 " fill="none" id="IGameSystem<-SystemA" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="854.8275,160.8591,844.1655,130.9155,871.173,147.675,854.8275,160.8591" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[3348cd0505c84688c31f91605c3bba04]
+reverse link IGameSystem to SystemB--><path d="M914.901,139.5465 C963.1215,166.9245 1016.91,197.4635 1057.05,220.253 " fill="none" id="IGameSystem<-SystemB" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="909.711,148.6746,888.8055,124.731,920.079,130.413,909.711,148.6746" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[56de332ae56b9af71cf3d3595d2b0513]
+reverse link IGameSystem to SystemC--><path d="M710.1255,151.1619 C683.352,175.2585 655.233,200.5647 633.459,220.1617 " fill="none" id="IGameSystem<-SystemC" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="703.2975,143.1805,732.621,130.9155,717.3465,158.7897,703.2975,143.1805" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[79a7c1375235bb08eae42e12ae4ad008]
+reverse link IGameSystem to SystemD--><path d="M784.173,161.0196 C781.062,182.0204 777.921,203.2236 775.4115,220.1617 " fill="none" id="IGameSystem<-SystemD" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="773.85,159.0534,788.6325,130.9155,794.6235,162.1311,773.85,159.0534" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[c04a48aa0726c4d5415412959637ca76]
+reverse link IUserInterface to UIA--><path d="M297.327,161.0196 C300.438,182.0204 303.579,203.2236 306.0885,220.1617 " fill="none" id="IUserInterface<-UIA" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="286.8765,162.1311,292.8675,130.9155,307.65,159.0534,286.8765,162.1311" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[99fc97d01ba6e85f250b251278f6e88b]
+reverse link IUserInterface to UIB--><path d="M354.2145,153.7089 C374.37,177.0318 395.3025,201.2541 411.6435,220.1617 " fill="none" id="IUserInterface<-UIB" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="346.188,160.4802,334.5165,130.9155,362.0775,146.7489,346.188,160.4802" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[f8dac689fb7b02b23018c4c11e402b42]
+reverse link IUserInterface to UIC--><path d="M185.046,149.5227 C151.2953,175.6418 115.4597,203.3744 89.0081,223.8448 " fill="none" id="IUserInterface<-UIC" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="178.938,140.973,209.0895,130.9155,191.79,157.5807,178.938,140.973" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[ef9c9bbd7220a5ff4ffb5e57aae678ba]
+reverse link IUserInterface to UID--><path d="M236.2005,157.3596 C223.6035,179.5404 210.7125,202.2388 200.535,220.1617 " fill="none" id="IUserInterface<-UID" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="227.2725,151.8179,251.217,130.9155,245.5335,162.1881,227.2725,151.8179" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[8e83c7decd8b5e2619c27e17cee21704]
+reverse link PBaseDefenseGame to SystemA--><path d="M671.514,131.8125 C742.902,164.0564 827.8785,202.4382 883.788,227.6907 " fill="none" id="PBaseDefenseGame<-SystemA" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="653.6835,123.759,659.4156,132.9319,670.0876,131.1688,664.3555,121.9959,653.6835,123.759" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[18902d82b76ce5edb123e64b72506a5b]
+reverse link PBaseDefenseGame to SystemB--><path d="M672.1365,128.244 C674.352,129.0135 676.5585,129.7665 678.75,130.5 C832.0725,181.8473 877.4505,170.5965 1031.25,220.5 C1039.7505,223.2582 1048.614,226.4235 1057.293,229.694 " fill="none" id="PBaseDefenseGame<-SystemB" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="653.583,121.53,660.0047,130.2341,670.5092,127.654,664.0874,118.95,653.583,121.53" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[f51d253fac8fc98eec39526a014c8bd7]
+reverse link PBaseDefenseGame to SystemC--><path d="M563.661,150.0729 C570.897,174.4941 578.5335,200.2694 584.427,220.1617 " fill="none" id="PBaseDefenseGame<-SystemC" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="557.985,130.9155,554.789,141.2492,563.0986,148.1739,566.2946,137.8401,557.985,130.9155" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[629fa8f622e8675ac22c480d08006fc3]
+reverse link PBaseDefenseGame to SystemD--><path d="M629.4945,143.2238 C662.7015,169.5933 698.973,198.3983 726.3795,220.1617 " fill="none" id="PBaseDefenseGame<-SystemD" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="613.9965,130.9155,617.3132,141.2111,628.0925,142.1094,624.7758,131.8138,613.9965,130.9155" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[60bd78dd9a43d2c18b240c4c87bb9a8d]
+reverse link PBaseDefenseGame to UIA--><path d="M452.0625,143.178 C416.6595,171.293 377.76,202.1831 349.8345,224.3591 " fill="none" id="PBaseDefenseGame<-UIA" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="467.5035,130.9155,456.7242,131.8138,453.4075,142.1094,464.1868,141.2111,467.5035,130.9155" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[82ceb3e95a3db5bb5720baa75a185019]
+reverse link PBaseDefenseGame to UIB--><path d="M499.5345,148.6238 C486.0375,173.4711 471.6945,199.8753 460.674,220.1617 " fill="none" id="PBaseDefenseGame<-UIB" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="509.154,130.9155,499.5858,135.9603,500.5626,146.7328,510.1307,141.688,509.154,130.9155" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[05dd1bd9d8c0e0c9ba6ab9e510741435]
+reverse link PBaseDefenseGame to UIC--><path d="M409.518,127.458 C406.7415,128.4915 403.983,129.507 401.25,130.5 C275.802,176.0699 238.0425,169.3845 114.75,220.5 C106.1507,224.0652 97.1678,228.354 88.6971,232.6773 " fill="none" id="PBaseDefenseGame<-UIC" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="428.019,120.405,417.472,118.005,411.2,126.8177,421.7471,129.2177,428.019,120.405" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[24f2c531e26861d6baae6a0321084e1c]
+reverse link PBaseDefenseGame to UID--><path d="M410.424,137.6865 C359.298,163.3061 300.1815,193.1112 246.75,220.5 C238.4655,224.7465 229.6215,229.3334 221.1855,233.7332 " fill="none" id="PBaseDefenseGame<-UID" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="428.1525,128.8095,417.4185,127.4749,412.0581,136.8699,422.7921,138.2045,428.1525,128.8095" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[e02afc64b5e2b26e7ebbca5025b3cf0b]
+@startuml
+skinparam classAttributeIconSize 0
+scale 1.5
+
+
+class SystemA{
+}
+class SystemB{
+
+}
+class SystemC{
+}
+class SystemD{
+}
+
+class UIA{
+}
+class UIB{
+
+}
+class UIC{
+}
+class UID{
+}
+
+class IUserInterface{
+父類
+內部建構子綁定中介者
+}
+class IGameSystem{
+父類
+內部建構子綁定中介者
+}
+class PBaseDefenseGame{
+中介者，
+外觀模式控制全部系統
+}
+
+PBaseDefenseGame -left-o IGameSystem
+PBaseDefenseGame -right-o IUserInterface
+
+IGameSystem <|- - SystemA
+IGameSystem <|- - SystemB
+IGameSystem <|- - SystemC
+IGameSystem <|- - SystemD
+
+IUserInterface <|- - UIA
+IUserInterface <|- - UIB
+IUserInterface <|- - UIC
+IUserInterface <|- - UID
+
+PBaseDefenseGame *- - SystemA
+PBaseDefenseGame *- - SystemB
+PBaseDefenseGame *- - SystemC
+PBaseDefenseGame *- - SystemD
+
+PBaseDefenseGame *- - UIA
+PBaseDefenseGame *- - UIB
+PBaseDefenseGame *- - UIC
+PBaseDefenseGame *- - UID
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+<h4 id="toc_9">時序圖<a class="vnote-anchor" href="#toc_9" data-anchor-icon="#"></a></h4>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="406.5px" preserveAspectRatio="none" style="width:574px;height:406px;" version="1.1" viewBox="0 0 574 406" width="574.5px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="f1ctsdk191ja4y" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="124.5" x2="124.5" y1="62.9106" y2="342.0557"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="384.75" x2="384.75" y1="62.9106" y2="342.0557"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="509.25" x2="509.25" y1="62.9106" y2="342.0557"></line><rect fill="#FEFECE" filter="url(#f1ctsdk191ja4y)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="219" x="12" y="4.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="198" x="22.5" y="40.2964">PBaseDefenseGame</text><rect fill="#FEFECE" filter="url(#f1ctsdk191ja4y)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="219" x="12" y="340.5557"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="198" x="22.5" y="376.3521">PBaseDefenseGame</text><rect fill="#FEFECE" filter="url(#f1ctsdk191ja4y)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="103.5" x="330.75" y="4.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="341.25" y="40.2964">SystemA</text><rect fill="#FEFECE" filter="url(#f1ctsdk191ja4y)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="103.5" x="330.75" y="340.5557"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="341.25" y="376.3521">SystemA</text><rect fill="#FEFECE" filter="url(#f1ctsdk191ja4y)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="103.5" x="455.25" y="4.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="465.75" y="40.2964">SystemB</text><rect fill="#FEFECE" filter="url(#f1ctsdk191ja4y)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="103.5" x="455.25" y="340.5557"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="465.75" y="376.3521">SystemB</text><polygon fill="#A80036" points="141,108.6848,126,114.6848,141,120.6848,135,114.6848" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="132" x2="384" y1="114.6848" y2="114.6848"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="150" y="107.4001">1</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="78" x="166.5" y="107.4001">傳送信息</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="124.5" x2="187.5" y1="246.7815" y2="246.7815"></line><line style="stroke: #A80036; stroke-width: 1.5;" x1="187.5" x2="187.5" y1="246.7815" y2="266.2815"></line><line style="stroke: #A80036; stroke-width: 1.5;" x1="126" x2="187.5" y1="266.2815" y2="266.2815"></line><polygon fill="#A80036" points="141,260.2815,126,266.2815,141,272.2815,135,266.2815" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="135" y="197.8356">2</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="78" x="151.5" y="156.1743">不用判斷</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="136.5" x="157.5" y="183.9485">因為包裝成Void</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="162" x="157.5" y="211.7227">經過Void 裡判斷後</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="217.5" x="157.5" y="239.4968">直接執行SystemB的函式</text><polygon fill="#A80036" points="492,309.0557,507,315.0557,492,321.0557,498,315.0557" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="124.5" x2="501" y1="315.0557" y2="315.0557"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="135" y="307.771">3</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="78" x="151.5" y="307.771">轉發信息</text><!--MD5=[fd84fc842f839245c2ade484fe298434]
+@startuml
+autonumber
+scale 1.5
+
+
+participant PBaseDefenseGame
+participant SystemA
+participant SystemB
+
+SystemA -> PBaseDefenseGame:傳送信息
+
+PBaseDefenseGame -> PBaseDefenseGame : 不用判斷 \n 因為包裝成Void \n 經過Void 裡判斷後 \n 直接執行SystemB的函式
+
+PBaseDefenseGame ->SystemB:轉發信息
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+
+    </div>
+</div>
+</div>
+
+<div id="container-floating" style="display:none;" class="d-none d-md-block d-xl-block">
+    <div id="floating-button" onclick="toggleMore()">
+        <p id="floating-more" class="more">&gt;</p>
+    </div>
+</div>
+
+<!--
+<div class="footer" id="vnote-footer">
+    <p>Generated by <em><a href="https://tamlok.github.io/vnote/">VNote</a></em>.</p>
+</div>
+-->
+</body>
+</html>

@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="VNote">
+
+    <title>06.橋接模式 Bridge</title>
+    <link rel="icon" href="https://github.com/tamlok/vnote/raw/master/src/resources/icons/vnote.ico">
+
+    <style type="text/css">
+    /* STYLE_GLOBAL_PLACE_HOLDER */
+    </style>
+
+    <style type="text/css">
+    *,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.container-fluid {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.col-12 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+@media (min-width: 768px) {
+    .col-md-3 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 25%;
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+}
+
+@media (min-width: 768px) {
+    .col-md-9 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 75%;
+        flex: 0 0 75%;
+        max-width: 75%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-xl-2 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 16.666667%;
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-xl-10 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 83.333333%;
+        flex: 0 0 83.333333%;
+        max-width: 83.333333%;
+    }
+}
+
+@media (min-width: 768px) {
+    .pt-md-3, .py-md-3 {
+        padding-top: 1rem!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .pb-md-3, .py-md-3 {
+        padding-bottom: 1rem!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .pl-md-5, .px-md-5 {
+        padding-left: 3rem!important;
+    }
+}
+
+.d-none {
+    display: none!important;
+}
+
+@media (min-width: 1200px) {
+    .d-xl-block {
+        display: block!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .d-md-block {
+        display: block!important;
+    }
+}
+
+.bd-content {
+    -webkit-box-ordinal-group: 1;
+    -ms-flex-order: 0;
+    order: 0;
+}
+
+.bd-toc {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 4rem;
+    height: calc(100vh - 10rem);
+    overflow-y: auto;
+}
+
+.bd-toc {
+    -webkit-box-ordinal-group: 2;
+    -ms-flex-order: 1;
+    order: 1;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    font-size: .875rem;
+}
+
+.section-nav {
+    padding-left: 0;
+}
+
+.section-nav ul {
+    font-size: .875rem;
+    list-style-type: none;
+}
+
+.section-nav li {
+    font-size: .875rem;
+}
+
+.section-nav a {
+    color: inherit !important;
+}
+
+.row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+@media (min-width: 1200px) {
+    .flex-xl-nowrap {
+        flex-wrap: nowrap !important;
+    }
+}
+
+#floating-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: #00897B;
+    position: fixed;
+    top: .5rem;
+    right: .5rem;
+    cursor: pointer;
+    box-shadow: 0px 2px 5px #666;
+}
+
+#floating-button .more {
+    color: #F5F5F5;
+    position: absolute;
+    top: 0;
+    display: block;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    line-height: 2.5rem;
+    font-size: 2rem;
+    font-family: 'monospace';
+    font-weight: 300;
+}
+
+.hide-none {
+    display: none !important;
+}
+
+.col-expand {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    padding-right: 3rem !important;
+}
+
+.outline-bold {
+    font-weight: bolder !important;
+}
+
+@media print {
+    #floating-button {
+        display: none !important;
+    }
+}
+
+    @keyframes flash { 
+  0% { color: rgb(128, 203, 196); }
+  10% { color: rgb(0, 137, 123); }
+  40% { color: rgb(0, 137, 123); }
+  50% { color: rgb(128, 203, 196); }
+  60% { color: rgb(0, 137, 123); }
+  90% { color: rgb(0, 137, 123); }
+}
+.highlighted-anchor { animation: flash 1s; }
+div.mark-rect { background: transparent; border: 5px solid rgb(87, 104, 196); border-radius: 2px; position: absolute; }
+#vnote-footer { width: 100%; text-align: center; opacity: 0.2; margin-top: 3rem; }
+#vnote-footer p { font-size: 0.8rem; }
+#vnote-footer a { color: inherit !important; }
+x-eqs { display: flex; flex-direction: row; align-content: space-between; align-items: center; }
+x-eqs > x-eqn { width: 100%; margin-left: 3rem; }
+x-eqs > span { text-align: right; }
+.view-image, .view-svg { transition: 0.3s; }
+.modal-box { display: none; position: fixed; z-index: 1000; padding-top: 50px; left: 0px; top: 0px; width: 100%; height: 100%; overflow: hidden; background-color: rgba(68, 68, 68, 0.952941); }
+.modal-content { margin: auto; display: block; width: auto; height: auto; cursor: move; }
+.modal-content { animation-name: zoom; animation-duration: 0.6s; }
+@-webkit-keyframes zoom { 
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+@keyframes zoom { 
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+span.modal-close { position: absolute; z-index: 1000; top: 15px; right: 35px; color: rgb(218, 218, 218); font-size: 40px; font-weight: bold; transition: 0.3s; }
+span.modal-close:hover, span.modal-close:focus { color: rgb(238, 238, 238); text-decoration: none; cursor: pointer; }
+@media print {
+  pre, pre code, td.hljs-ln-code { white-space: pre-wrap !important; word-break: break-all !important; }
+  code, a { word-break: break-all !important; }
+  div.flowchart-diagram, div.mermaid-diagram, div.plantuml-diagram { overflow: hidden !important; }
+  img { max-width: 100% !important; height: auto !important; }
+  #vnote-footer { display: none !important; }
+}
+.alert { position: relative; padding: 0.75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: 0.25rem; }
+.alert-primary { color: rgb(0, 64, 133); background-color: rgb(204, 229, 255); border-color: rgb(184, 218, 255); }
+.alert-secondary { color: rgb(56, 61, 65); background-color: rgb(226, 227, 229); border-color: rgb(214, 216, 219); }
+.alert-success { color: rgb(21, 87, 36); background-color: rgb(212, 237, 218); border-color: rgb(195, 230, 203); }
+.alert-info { color: rgb(12, 84, 96); background-color: rgb(209, 236, 241); border-color: rgb(190, 229, 235); }
+.alert-warning { color: rgb(133, 100, 4); background-color: rgb(255, 243, 205); border-color: rgb(255, 238, 186); }
+.alert-danger { color: rgb(114, 28, 36); background-color: rgb(248, 215, 218); border-color: rgb(245, 198, 203); }
+.alert-light { color: rgb(129, 129, 130); background-color: rgb(254, 254, 254); border-color: rgb(253, 253, 254); }
+.alert-dark { color: rgb(27, 30, 33); background-color: rgb(214, 216, 217); border-color: rgb(198, 200, 202); }
+.vnote-anchor { font-weight: 400; color: rgba(0, 123, 255, 0.498039); transition: color 0.16s linear; padding-left: 0.375em; -webkit-font-smoothing: antialiased; text-decoration: none; opacity: 0; }
+.vnote-anchor:hover { color: rgb(0, 123, 255); text-decoration: none; opacity: 1; }
+.vnote-anchor::after { content: attr(data-anchor-icon); }
+.vnote-btn { position: relative; display: inline-block; padding: 6px 12px; font-size: 13px; font-weight: 700; line-height: 20px; white-space: nowrap; vertical-align: middle; cursor: pointer; border: none; user-select: none; -webkit-appearance: none; }
+.vnote-copy-clipboard-btn { transition: opacity 0.3s ease-in-out; opacity: 0; padding: 2px 6px; position: absolute; top: 5px; right: 5px; }
+pre:hover .vnote-copy-clipboard-btn { opacity: 1; }
+pre.vnote-snippet { position: relative; }
+body { margin: 0px auto; font-family: "Segoe UI", Helvetica, sans-serif, Tahoma, Arial, Geneva, Georgia, Palatino, "Times New Roman", "Hiragino Sans GB", 冬青黑体, "Microsoft YaHei", 微软雅黑, "Microsoft YaHei UI", "WenQuanYi Micro Hei", 文泉驿雅黑, Dengxian, 等线体, STXihei, 华文细黑, "Liberation Sans", "Droid Sans", NSimSun, 新宋体, SimSun, 宋体; color: rgb(34, 34, 34); line-height: 1.5; padding: 15px; background: rgb(238, 238, 238); font-size: 16px; }
+h1, h2, h3, h4, h5, h6 { color: rgb(34, 34, 34); font-weight: bold; margin-top: 20px; margin-bottom: 10px; padding: 0px; }
+p { padding: 0px; margin-top: 16px; margin-bottom: 16px; }
+h1 { font-size: 26px; }
+h2 { font-size: 24px; }
+h3 { font-size: 22px; }
+h4 { font-size: 20px; }
+h5 { font-size: 19px; }
+h6 { font-size: 18px; }
+a { color: rgb(0, 153, 255); margin: 0px; padding: 0px; vertical-align: baseline; text-decoration: none; word-break: break-word; }
+a:hover { text-decoration: underline; color: rgb(255, 102, 0); }
+a:visited { color: purple; }
+ul, ol { padding: 0px 0px 0px 24px; }
+li { line-height: 24px; }
+li ul, li ol { margin-left: 16px; }
+p, ul, ol { font-size: 16px; line-height: 24px; }
+pre { display: block; overflow-y: hidden; overflow-x: auto; tab-size: 4; }
+code { font-family: Consolas, Monaco, monospace, Courier; color: rgb(142, 36, 170); word-break: break-word; }
+pre code { display: block; overflow-x: auto; padding: 0.5em; color: rgb(34, 34, 34); background-color: rgb(224, 224, 224); border-left: 0.5em solid rgb(0, 137, 123); line-height: 1.5; font-family: Consolas, Monaco, monospace, Courier; white-space: pre; tab-size: 4; }
+pre code.markdown-metadata { border-left: 0.5em solid rgb(128, 203, 196); }
+aside { display: block; float: right; width: 390px; }
+blockquote { color: rgb(102, 102, 102); border-left: 0.5em solid rgb(122, 122, 122); padding: 0px 1em; margin-left: 0px; }
+blockquote p { color: rgb(102, 102, 102); }
+hr { display: block; text-align: left; margin: 1em 0px; border: none; height: 2px; background: rgb(153, 153, 153); }
+table { padding: 0px; margin: 1rem 0.5rem; border-collapse: collapse; }
+table tr { border-top: 2px solid rgb(204, 204, 204); background-color: white; margin: 0px; padding: 0px; }
+table tr:nth-child(2n) { background-color: rgb(248, 248, 248); }
+table tr th { font-weight: bold; border: 2px solid rgb(204, 204, 204); margin: 0px; padding: 6px 13px; }
+table tr td { border: 2px solid rgb(204, 204, 204); margin: 0px; padding: 6px 13px; }
+table tr th :first-child, table tr td :first-child { margin-top: 0px; }
+table tr th :last-child, table tr td :last-child { margin-bottom: 0px; }
+div.mermaid-diagram { margin: 16px 0px; overflow-y: hidden; }
+div.flowchart-diagram { padding: 0px 5px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+div.wavedrom-diagram { padding: 0px 5px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+div.plantuml-diagram { padding: 5px 5px 0px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+.img-package { text-align: center; }
+img.img-center { display: block; margin-left: auto; margin-right: auto; }
+span.img-caption { min-width: 20%; max-width: 80%; display: inline-block; padding: 10px; margin: 0px auto; border-bottom: 1px solid rgb(192, 192, 192); color: rgb(108, 108, 108); text-align: center; line-height: 1.5; }
+.emoji_zero, .emoji_one, .emoji_two, .emoji_three, .emoji_four, .emoji_five, .emoji_six, .emoji_seven, .emoji_eight, .emoji_nine { margin-left: 5px; margin-right: 8px; }
+div.preview-hint { opacity: 0.5; margin-top: 30%; margin-bottom: 30%; align-items: center; display: flex; flex-direction: column; justify-content: center; }
+table.hljs-ln tr { border: none; background-color: transparent; }
+table.hljs-ln tr td { border: none; background-color: transparent; }
+table.hljs-ln tr td.hljs-ln-numbers { user-select: none; text-align: center; color: rgb(170, 170, 170); border-right: 1px solid rgb(204, 204, 204); vertical-align: top; padding-right: 5px; white-space: nowrap; }
+table.hljs-ln tr td.hljs-ln-code { padding-left: 10px; }
+::-webkit-scrollbar { background-color: rgb(234, 234, 234); width: 14px; height: 14px; border: none; }
+::-webkit-scrollbar-corner { background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-button { height: 14px; width: 14px; background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-button:hover { background-color: rgb(208, 208, 208); }
+::-webkit-scrollbar-button:active { background-color: rgb(178, 178, 178); }
+::-webkit-scrollbar-track { background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-thumb { border: none; background-color: rgb(218, 218, 218); }
+::-webkit-scrollbar-thumb:hover { background-color: rgb(208, 208, 208); }
+::-webkit-scrollbar-thumb:active { background-color: rgb(178, 178, 178); }
+::-webkit-scrollbar-button:horizontal:increment { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(-90 256.00000000000006,256) " id="svg_1">   <polygon fill="%23333333" id="svg_2" points="128,192 256,320 384,192  "/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:horizontal:decrement { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(90 255.99999999999997,256.00000000000006) " id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:vertical:increment { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="null" id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:vertical:decrement { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(180 255.99999999999997,256) " id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::selection { background: rgb(25, 118, 210); color: rgb(238, 238, 238); }
+.modal-box { background-color: rgba(234, 234, 234, 0.952941); }
+span.modal-close { color: rgb(102, 102, 102); }
+span.modal-close:hover, span.modal-close:focus { color: rgb(34, 34, 34); }
+.hljs { display: block; overflow-x: auto; padding: 0.5em; background: rgb(224, 224, 224); }
+.hljs, .hljs-subst { color: rgb(54, 54, 54); }
+.hljs-comment { color: rgb(118, 118, 118); }
+.hljs-keyword, .hljs-attribute, .hljs-selector-tag, .hljs-meta-keyword, .hljs-doctag, .hljs-name { color: rgb(0, 0, 238); }
+.hljs-type, .hljs-string, .hljs-number, .hljs-selector-id, .hljs-selector-class, .hljs-quote, .hljs-template-tag, .hljs-deletion { color: rgb(136, 0, 0); }
+.hljs-title, .hljs-section { color: rgb(136, 0, 0); font-weight: bold; }
+.hljs-regexp, .hljs-symbol, .hljs-variable, .hljs-template-variable, .hljs-link, .hljs-selector-attr, .hljs-selector-pseudo { color: rgb(188, 96, 96); }
+.hljs-literal { color: rgb(175, 0, 215); }
+.hljs-built_in, .hljs-bullet, .hljs-code, .hljs-addition { color: rgb(0, 135, 0); }
+.hljs-meta { color: rgb(31, 113, 153); }
+.hljs-meta-string { color: rgb(77, 153, 191); }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: bold; }
+.mermaid-diagram .mermaid .label { color: rgb(51, 51, 51); }
+.mermaid-diagram .node rect, .mermaid-diagram .node circle, .mermaid-diagram .node ellipse, .mermaid-diagram .node polygon { fill: rgb(236, 236, 255); stroke: rgb(204, 204, 255); stroke-width: 1px; }
+.mermaid-diagram .edgePath .path { stroke: rgb(51, 51, 51); }
+.mermaid-diagram .edgeLabel { background-color: rgb(232, 232, 232); }
+.mermaid-diagram .cluster rect { fill: rgb(255, 255, 222) !important; rx: 4 !important; stroke: rgb(170, 170, 51) !important; stroke-width: 1px !important; }
+.mermaid-diagram .cluster text { fill: rgb(51, 51, 51); }
+.mermaid-diagram .actor { stroke: rgb(204, 204, 255); fill: rgb(236, 236, 255); }
+.mermaid-diagram text.actor { fill: black; stroke: none; }
+.mermaid-diagram .actor-line { stroke: grey; }
+.mermaid-diagram .messageLine0 { stroke-width: 1.5; stroke: rgb(51, 51, 51); }
+.mermaid-diagram .messageLine1 { stroke-width: 1.5; stroke: rgb(51, 51, 51); }
+.mermaid-diagram #arrowhead { fill: rgb(51, 51, 51); }
+.mermaid-diagram #crosshead path { fill: rgb(51, 51, 51) !important; stroke: rgb(51, 51, 51) !important; }
+.mermaid-diagram .messageText { fill: rgb(51, 51, 51); stroke: none; }
+.mermaid-diagram .labelBox { stroke: rgb(204, 204, 255); fill: rgb(236, 236, 255); }
+.mermaid-diagram .labelText { fill: black; stroke: none; }
+.mermaid-diagram .loopText { fill: black; stroke: none; }
+.mermaid-diagram .loopLine { stroke-width: 2; stroke: rgb(204, 204, 255); }
+.mermaid-diagram .note { stroke: rgb(170, 170, 51); fill: rgb(255, 245, 173); }
+.mermaid-diagram .noteText { fill: black; stroke: none; font-family: "trebuchet ms", verdana, arial; font-size: 14px; }
+.mermaid-diagram .section { stroke: none; opacity: 0.2; }
+.mermaid-diagram .section0 { fill: rgba(102, 102, 255, 0.490196); }
+.mermaid-diagram .section2 { fill: rgb(255, 244, 0); }
+.mermaid-diagram .section1, .mermaid-diagram .section3 { fill: white; opacity: 0.2; }
+.mermaid-diagram .sectionTitle0 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle1 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle2 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle3 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle { text-anchor: start; font-size: 11px; }
+.mermaid-diagram .grid .tick { stroke: lightgrey; opacity: 0.3; shape-rendering: crispEdges; }
+.mermaid-diagram .grid path { stroke-width: 0; }
+.mermaid-diagram .today { fill: none; stroke: red; stroke-width: 2px; }
+.mermaid-diagram .task { stroke-width: 2; }
+.mermaid-diagram .taskText { text-anchor: middle; font-size: 11px; }
+.mermaid-diagram .taskTextOutsideRight { fill: black; text-anchor: start; font-size: 11px; }
+.mermaid-diagram .taskTextOutsideLeft { fill: black; text-anchor: end; font-size: 11px; }
+.mermaid-diagram .taskText0, .mermaid-diagram .taskText1, .mermaid-diagram .taskText2, .mermaid-diagram .taskText3 { fill: white; }
+.mermaid-diagram .task0, .mermaid-diagram .task1, .mermaid-diagram .task2, .mermaid-diagram .task3 { fill: rgb(138, 144, 221); stroke: rgb(83, 79, 188); }
+.mermaid-diagram .taskTextOutside0, .mermaid-diagram .taskTextOutside2 { fill: black; }
+.mermaid-diagram .taskTextOutside1, .mermaid-diagram .taskTextOutside3 { fill: black; }
+.mermaid-diagram .active0, .mermaid-diagram .active1, .mermaid-diagram .active2, .mermaid-diagram .active3 { fill: rgb(191, 199, 255); stroke: rgb(83, 79, 188); }
+.mermaid-diagram .activeText0, .mermaid-diagram .activeText1, .mermaid-diagram .activeText2, .mermaid-diagram .activeText3 { fill: black !important; }
+.mermaid-diagram .done0, .mermaid-diagram .done1, .mermaid-diagram .done2, .mermaid-diagram .done3 { stroke: grey; fill: lightgrey; stroke-width: 2; }
+.mermaid-diagram .doneText0, .mermaid-diagram .doneText1, .mermaid-diagram .doneText2, .mermaid-diagram .doneText3 { fill: black !important; }
+.mermaid-diagram .crit0, .mermaid-diagram .crit1, .mermaid-diagram .crit2, .mermaid-diagram .crit3 { stroke: rgb(255, 136, 136); fill: red; stroke-width: 2; }
+.mermaid-diagram .activeCrit0, .mermaid-diagram .activeCrit1, .mermaid-diagram .activeCrit2, .mermaid-diagram .activeCrit3 { stroke: rgb(255, 136, 136); fill: rgb(191, 199, 255); stroke-width: 2; }
+.mermaid-diagram .doneCrit0, .mermaid-diagram .doneCrit1, .mermaid-diagram .doneCrit2, .mermaid-diagram .doneCrit3 { stroke: rgb(255, 136, 136); fill: lightgrey; stroke-width: 2; cursor: pointer; shape-rendering: crispEdges; }
+.mermaid-diagram .doneCritText0, .mermaid-diagram .doneCritText1, .mermaid-diagram .doneCritText2, .mermaid-diagram .doneCritText3 { fill: black !important; }
+.mermaid-diagram .activeCritText0, .mermaid-diagram .activeCritText1, .mermaid-diagram .activeCritText2, .mermaid-diagram .activeCritText3 { fill: black !important; }
+.mermaid-diagram .titleText { text-anchor: middle; font-size: 18px; fill: black; }
+.mermaid-diagram .node text { font-family: "trebuchet ms", verdana, arial; font-size: 14px; }
+.mermaid-diagram div.mermaidTooltip { position: absolute; text-align: center; max-width: 200px; padding: 2px; font-family: "trebuchet ms", verdana, arial; font-size: 12px; background: rgb(255, 255, 222); border: 1px solid rgb(170, 170, 51); border-radius: 2px; pointer-events: none; z-index: 100; }
+.hljs-ln { border-collapse: collapse; }
+.hljs-ln td { padding: 0px; }
+.hljs-ln-n::before { content: attr(data-line-number); }
+.MathJax_Hover_Frame { border-radius: 0.25em; box-shadow: rgb(136, 51, 170) 0px 0px 15px; display: inline-block; position: absolute; border: 1px solid rgb(170, 102, 221) !important; }
+.MathJax_Menu_Button .MathJax_Hover_Arrow { position: absolute; cursor: pointer; display: inline-block; border: 2px solid rgb(170, 170, 170); border-radius: 4px; font-family: "Courier New", Courier; font-size: 9px; color: rgb(240, 240, 240); }
+.MathJax_Menu_Button .MathJax_Hover_Arrow span { display: block; background-color: rgb(170, 170, 170); border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px; }
+.MathJax_Hover_Arrow:hover { color: white !important; border: 2px solid rgb(204, 204, 204) !important; }
+.MathJax_Hover_Arrow:hover span { background-color: rgb(204, 204, 204) !important; }
+#MathJax_About { position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: rgb(221, 221, 221); color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; box-shadow: rgb(128, 128, 128) 0px 10px 20px; }
+#MathJax_About.MathJax_MousePost { outline: none; }
+.MathJax_Menu { position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid rgb(204, 204, 204); margin: 0px; cursor: default; font-style: normal; font-weight: normal; font-size: 15px; font-family: "Microsoft JhengHei UI"; font-stretch: normal; font-variant: normal; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: rgb(128, 128, 128) 0px 10px 20px; }
+.MathJax_MenuItem { padding: 2px 2em; background: transparent; }
+.MathJax_MenuArrow { position: absolute; right: 0.5em; padding-top: 0.25em; color: rgb(102, 102, 102); font-size: 0.75em; }
+.MathJax_MenuActive .MathJax_MenuArrow { color: white; }
+.MathJax_MenuArrow.RTL { left: 0.5em; right: auto; }
+.MathJax_MenuCheck { position: absolute; left: 0.7em; }
+.MathJax_MenuCheck.RTL { right: 0.7em; left: auto; }
+.MathJax_MenuRadioCheck { position: absolute; left: 1em; }
+.MathJax_MenuRadioCheck.RTL { right: 1em; left: auto; }
+.MathJax_MenuLabel { padding: 2px 2em 4px 1.33em; font-style: italic; }
+.MathJax_MenuRule { border-top: 1px solid rgb(204, 204, 204); margin: 4px 1px 0px; }
+.MathJax_MenuDisabled { color: graytext; }
+.MathJax_MenuActive { background-color: highlight; color: highlighttext; }
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus { background-color: rgb(232, 232, 232); }
+.MathJax_ContextMenu:focus { outline: none; }
+.MathJax_ContextMenu .MathJax_MenuItem:focus { outline: none; }
+#MathJax_AboutClose { top: 0.2em; right: 0.2em; }
+.MathJax_Menu .MathJax_MenuClose { top: -10px; left: -10px; }
+.MathJax_MenuClose { position: absolute; cursor: pointer; display: inline-block; border: 2px solid rgb(170, 170, 170); border-radius: 18px; font-family: "Courier New", Courier; font-size: 24px; color: rgb(240, 240, 240); }
+.MathJax_MenuClose span { display: block; background-color: rgb(170, 170, 170); border: 1.5px solid; border-radius: 18px; line-height: 0; padding: 8px 0px 6px; }
+.MathJax_MenuClose:hover { color: white !important; border: 2px solid rgb(204, 204, 204) !important; }
+.MathJax_MenuClose:hover span { background-color: rgb(204, 204, 204) !important; }
+.MathJax_MenuClose:hover:focus { outline: none; }
+.MathJax_Preview .MJXf-math { color: inherit !important; }
+.MJX_Assistive_MathML { top: 0px; left: 0px; clip: rect(1px 1px 1px 1px); user-select: none; position: absolute !important; padding: 1px 0px 0px !important; border: 0px !important; height: 1px !important; width: 1px !important; overflow: hidden !important; display: block !important; }
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block { width: 100% !important; }
+#MathJax_Zoom { position: absolute; background-color: rgb(240, 240, 240); overflow: auto; display: block; z-index: 301; padding: 0.5em; border: 1px solid black; margin: 0px; font-weight: normal; font-style: normal; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; box-sizing: content-box; box-shadow: rgb(170, 170, 170) 5px 5px 15px; }
+#MathJax_ZoomOverlay { position: absolute; left: 0px; top: 0px; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0px; padding: 0px; margin: 0px; background-color: white; opacity: 0; }
+#MathJax_ZoomFrame { position: relative; display: inline-block; height: 0px; width: 0px; }
+#MathJax_ZoomEventTrap { position: absolute; left: 0px; top: 0px; z-index: 302; display: inline-block; border: 0px; padding: 0px; margin: 0px; background-color: white; opacity: 0; }
+.MathJax_Preview { color: rgb(136, 136, 136); }
+#MathJax_Message { position: fixed; left: 1px; bottom: 2px; background-color: rgb(230, 230, 230); border: 1px solid rgb(149, 149, 149); margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap; }
+#MathJax_MSIE_Frame { position: absolute; top: 0px; left: 0px; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px; }
+.MathJax_Error { color: rgb(204, 0, 0); font-style: italic; }
+.MJXp-script { font-size: 0.8em; }
+.MJXp-right { transform-origin: right center 0px; }
+.MJXp-bold { font-weight: bold; }
+.MJXp-italic { font-style: italic; }
+.MJXp-scr { font-family: MathJax_Script, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-frak { font-family: MathJax_Fraktur, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-sf { font-family: MathJax_SansSerif, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-cal { font-family: MathJax_Caligraphic, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-mono { font-family: MathJax_Typewriter, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-largeop { font-size: 150%; }
+.MJXp-largeop.MJXp-int { vertical-align: -0.2em; }
+.MJXp-math { display: inline-block; line-height: 1.2; text-indent: 0px; font-family: "Times New Roman", Times, STIXGeneral, serif; white-space: nowrap; border-collapse: collapse; }
+.MJXp-display { display: block; text-align: center; margin: 1em 0px; }
+.MJXp-math span { display: inline-block; }
+.MJXp-box { text-align: center; display: block !important; }
+.MJXp-box::after { content: " "; }
+.MJXp-rule { margin-top: 0.1em; display: block !important; }
+.MJXp-char { display: block !important; }
+.MJXp-mo { margin: 0px 0.15em; }
+.MJXp-mfrac { margin: 0px 0.125em; vertical-align: 0.25em; }
+.MJXp-denom { width: 100%; display: inline-table !important; }
+.MJXp-denom > * { display: table-row !important; }
+.MJXp-surd { vertical-align: top; }
+.MJXp-surd > * { display: block !important; }
+.MJXp-script-box > * { height: 50%; display: table !important; }
+.MJXp-script-box > * > * { vertical-align: top; display: table-cell !important; }
+.MJXp-script-box > :last-child > * { vertical-align: bottom; }
+.MJXp-script-box > * > * > * { display: block !important; }
+.MJXp-mphantom { visibility: hidden; }
+.MJXp-munderover { display: inline-table !important; }
+.MJXp-over { text-align: center; display: inline-block !important; }
+.MJXp-over > * { display: block !important; }
+.MJXp-munderover > * { display: table-row !important; }
+.MJXp-mtable { vertical-align: 0.25em; margin: 0px 0.125em; }
+.MJXp-mtable > * { vertical-align: middle; display: inline-table !important; }
+.MJXp-mtr { display: table-row !important; }
+.MJXp-mtd { text-align: center; padding: 0.5em 0px 0px 0.5em; display: table-cell !important; }
+.MJXp-mtr > .MJXp-mtd:first-child { padding-left: 0px; }
+.MJXp-mtr:first-child > .MJXp-mtd { padding-top: 0px; }
+.MJXp-mlabeledtr { display: table-row !important; }
+.MJXp-mlabeledtr > .MJXp-mtd:first-child { padding-left: 0px; }
+.MJXp-mlabeledtr:first-child > .MJXp-mtd { padding-top: 0px; }
+.MJXp-merror { background-color: rgb(255, 255, 136); color: rgb(204, 0, 0); border: 1px solid rgb(204, 0, 0); padding: 1px 3px; font-style: normal; font-size: 90%; }
+.MJXp-scale0 { transform: scaleX(0); }
+.MJXp-scale1 { transform: scaleX(0.1); }
+.MJXp-scale2 { transform: scaleX(0.2); }
+.MJXp-scale3 { transform: scaleX(0.3); }
+.MJXp-scale4 { transform: scaleX(0.4); }
+.MJXp-scale5 { transform: scaleX(0.5); }
+.MJXp-scale6 { transform: scaleX(0.6); }
+.MJXp-scale7 { transform: scaleX(0.7); }
+.MJXp-scale8 { transform: scaleX(0.8); }
+.MJXp-scale9 { transform: scaleX(0.9); }
+.MathJax_PHTML .noError { font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid; }
+
+    </style>
+
+    <script type="text/javascript">
+var toc = [];
+
+var setVisible = function(node, visible) {
+    var cl = 'hide-none';
+    if (visible) {
+        node.classList.remove(cl);
+    } else {
+        node.classList.add(cl);
+    }
+};
+
+var isVisible = function(node) {
+    var cl = 'hide-none';
+    return !node.classList.contains(cl);
+};
+
+var setPostContentExpanded = function(node, expanded) {
+    var cl = 'col-expand';
+    if (expanded) {
+        node.classList.add(cl);
+    } else {
+        node.classList.remove(cl);
+    }
+};
+
+var setOutlinePanelVisible = function(visible) {
+    var outlinePanel = document.getElementById('outline-panel');
+    var postContent = document.getElementById('post-content');
+
+    setVisible(outlinePanel, visible);
+    setPostContentExpanded(postContent, !visible);
+};
+
+var isOutlinePanelVisible = function() {
+    var outlinePanel = document.getElementById('outline-panel');
+    return isVisible(outlinePanel);
+};
+
+window.addEventListener('load', function() {
+    var outlinePanel = document.getElementById('outline-panel');
+    outlinePanel.style.display = 'initial';
+
+    var floatingContainer = document.getElementById('container-floating');
+    floatingContainer.style.display = 'initial';
+
+    var outlineContent = document.getElementById('outline-content');
+    var postContent = document.getElementById('post-content');
+
+    // Escape @text to Html.
+    var escapeHtml = function(text) {
+        var map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    // Fetch the outline.
+    var headers = postContent.querySelectorAll("h1, h2, h3, h4, h5, h6");
+    toc = [];
+    for (var i = 0; i < headers.length; ++i) {
+        var header = headers[i];
+
+        toc.push({
+            level: parseInt(header.tagName.substr(1)),
+            anchor: header.id,
+            title: escapeHtml(header.textContent)
+        });
+    }
+
+    if (toc.length == 0) {
+        setOutlinePanelVisible(false);
+        setVisible(floatingContainer, false);
+        return;
+    }
+
+    var baseLevel = baseLevelOfToc(toc);
+    var tocTree = tocToTree(toPerfectToc(toc, baseLevel), baseLevel);
+
+    outlineContent.innerHTML = tocTree;
+    setOutlinePanelVisible(true);
+    setVisible(floatingContainer, true);
+});
+
+// Return the topest level of @toc, starting from 1.
+var baseLevelOfToc = function(p_toc) {
+    var level = -1;
+    for (i in p_toc) {
+        if (level == -1) {
+            level = p_toc[i].level;
+        } else if (level > p_toc[i].level) {
+            level = p_toc[i].level;
+        }
+    }
+
+    if (level == -1) {
+        level = 1;
+    }
+
+    return level;
+};
+
+// Handle wrong title levels, such as '#' followed by '###'
+var toPerfectToc = function(p_toc, p_baseLevel) {
+    var i;
+    var curLevel = p_baseLevel - 1;
+    var perfToc = [];
+    for (i in p_toc) {
+        var item = p_toc[i];
+
+        // Insert empty header.
+        while (item.level > curLevel + 1) {
+            curLevel += 1;
+            var tmp = { level: curLevel,
+                        anchor: '',
+                        title: '[EMPTY]'
+                      };
+            perfToc.push(tmp);
+        }
+
+        perfToc.push(item);
+        curLevel = item.level;
+    }
+
+    return perfToc;
+};
+
+var itemToHtml = function(item) {
+    return '<a href="#' + item.anchor + '" data="' + item.anchor + '">' + item.title + '</a>';
+};
+
+// Turn a perfect toc to a tree using <ul>
+var tocToTree = function(p_toc, p_baseLevel) {
+    var i;
+    var front = '<li>';
+    var ending = ['</li>'];
+    var curLevel = p_baseLevel;
+    for (i in p_toc) {
+        var item = p_toc[i];
+        if (item.level == curLevel) {
+            front += '</li>';
+            front += '<li>';
+            front += itemToHtml(item);
+        } else if (item.level > curLevel) {
+            // assert(item.level - curLevel == 1)
+            front += '<ul>';
+            ending.push('</ul>');
+            front += '<li>';
+            front += itemToHtml(item);
+            ending.push('</li>');
+            curLevel = item.level;
+        } else {
+            while (item.level < curLevel) {
+                var ele = ending.pop();
+                front += ele;
+                if (ele == '</ul>') {
+                    curLevel--;
+                }
+            }
+            front += '</li>';
+            front += '<li>';
+            front += itemToHtml(item);
+        }
+    }
+    while (ending.length > 0) {
+        front += ending.pop();
+    }
+    front = front.replace("<li></li>", "");
+    front = '<ul>' + front + '</ul>';
+    return front;
+};
+
+var toggleMore = function() {
+    if (toc.length == 0) {
+        return;
+    }
+
+    var p = document.getElementById('floating-more');
+    if (isOutlinePanelVisible()) {
+        p.textContent = '<';
+        setOutlinePanelVisible(false);
+    } else {
+        p.textContent = '>';
+        setOutlinePanelVisible(true);
+    }
+};
+
+window.addEventListener('scroll', function() {
+    if (toc.length == 0 || !isOutlinePanelVisible()) {
+        return;
+    }
+
+    var postContent = document.getElementById('post-content');
+    var scrollTop = document.documentElement.scrollTop
+                    || document.body.scrollTop
+                    || window.pageYOffset;
+    var eles = postContent.querySelectorAll("h1, h2, h3, h4, h5, h6");
+
+    if (eles.length == 0) {
+        return;
+    }
+
+    var idx = -1;
+    var biaScrollTop = scrollTop + 50;
+    for (var i = 0; i < eles.length; ++i) {
+        if (biaScrollTop >= eles[i].offsetTop) {
+            idx = i;
+        } else {
+            break;
+        }
+    }
+
+    var header = '';
+    if (idx != -1) {
+        header = eles[idx].id;
+    }
+
+    highlightItemOnlyInOutline(header);
+});
+
+var highlightItemOnlyInOutline = function(id) {
+    var cl = 'outline-bold';
+    var outlineContent = document.getElementById('outline-content');
+    var eles = outlineContent.querySelectorAll("a");
+    var target = null;
+    for (var i = 0; i < eles.length; ++i) {
+        var ele = eles[i];
+        if (ele.getAttribute('data') == id) {
+            target = ele;
+            ele.classList.add(cl);
+        } else {
+            ele.classList.remove(cl);
+        }
+    }
+
+    // TODO: scroll target into view within the outline panel scroll area.
+};
+
+</script>
+
+
+<!-- HEAD_PLACE_HOLDER -->
+</head>
+<body>
+<div class="container-fluid">
+<div class="row flex-xl-nowrap">
+    <div id="outline-panel" style="display:none;" class="d-none d-md-block d-xl-block col-md-3 col-xl-2 bd-toc">
+        <div id="outline-content" class="section-nav"></div>
+    </div>
+    <div id="post-content" class="col-12 col-md-9 col-xl-10 py-md-3 pl-md-5 bd-content">
+    <h1 id="toc_0">06.橋接模式 Bridge<a class="vnote-anchor" href="#toc_0" data-anchor-icon="#"></a></h1>
+<h2 id="toc_1">講解<a class="vnote-anchor" href="#toc_1" data-anchor-icon="#"></a></h2>
+<h3 id="toc_2">橋接模式<a class="vnote-anchor" href="#toc_2" data-anchor-icon="#"></a></h3>
+<p>橋接模式，是讓兩個"介面"接再一起，實現已組合代替繼承的作法<br>
+例子:手機品牌與手機軟體<br>
+這兩個是分開的項目，若是用繼承方式，會變成過多的類別，所以用組合方式實現</p>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="424.5px" preserveAspectRatio="none" style="width:1225px;height:424px;" version="1.1" viewBox="0 0 1225 424" width="1225.5px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="fva6ikccbepm7" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><!--MD5=[40a931184c2e323ee4688f0a1ba594f2]
+class 手機軟體--><rect fill="#FEFECE" filter="url(#fva6ikccbepm7)" height="72" id="手機軟體" style="stroke: #A80036; stroke-width: 2.25;" width="120" x="522.75" y="12"></rect><ellipse cx="545.25" cy="36" fill="#A9DCDF" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M554.6016,43.1484 L547.2188,43.1484 L547.2188,42.6563 Q548.1797,42.5859 548.5781,42.4453 Q549.2109,42.1641 549.2109,41.3906 Q549.2109,40.7813 548.7656,39.6094 L547.875,37.1484 L542.4141,37.1484 L541.1719,40.3125 Q540.9609,40.8047 540.9609,41.3906 Q540.9609,42.1875 541.5703,42.4453 Q541.8281,42.5859 542.6016,42.6563 L542.6016,43.1484 L536.5547,43.1484 L536.5547,42.6563 Q536.8828,42.5859 537.1875,42.5156 Q537.4922,42.4453 537.7734,42.0938 Q538.4766,41.2031 539.5781,38.1563 L544.6172,24.4922 L546.2109,24.4922 L552.1172,40.1953 Q552.6563,41.6953 553.3125,42.2344 Q553.6875,42.5156 554.6016,42.6563 L554.6016,43.1484 Z M547.5469,36.2109 L544.875,28.3594 L542.625,36.2109 L547.5469,36.2109 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="72" x="566.25" y="44.8638">手機軟體</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="524.25" x2="641.25" y1="60" y2="60"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="524.25" x2="641.25" y1="72" y2="72"></line><!--MD5=[b94037d5b952da368f764b987337d682]
+class 通訊錄--><rect fill="#FEFECE" filter="url(#fva6ikccbepm7)" height="72" id="通訊錄" style="stroke: #A80036; stroke-width: 2.25;" width="102" x="333.75" y="174"></rect><ellipse cx="356.25" cy="198" fill="#A9DCDF" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M365.6016,205.1484 L358.2188,205.1484 L358.2188,204.6563 Q359.1797,204.5859 359.5781,204.4453 Q360.2109,204.1641 360.2109,203.3906 Q360.2109,202.7813 359.7656,201.6094 L358.875,199.1484 L353.4141,199.1484 L352.1719,202.3125 Q351.9609,202.8047 351.9609,203.3906 Q351.9609,204.1875 352.5703,204.4453 Q352.8281,204.5859 353.6016,204.6563 L353.6016,205.1484 L347.5547,205.1484 L347.5547,204.6563 Q347.8828,204.5859 348.1875,204.5156 Q348.4922,204.4453 348.7734,204.0938 Q349.4766,203.2031 350.5781,200.1563 L355.6172,186.4922 L357.2109,186.4922 L363.1172,202.1953 Q363.6563,203.6953 364.3125,204.2344 Q364.6875,204.5156 365.6016,204.6563 L365.6016,205.1484 Z M358.5469,198.2109 L355.875,190.3594 L353.625,198.2109 L358.5469,198.2109 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="54" x="377.25" y="206.8638">通訊錄</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="335.25" x2="434.25" y1="222" y2="222"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="335.25" x2="434.25" y1="234" y2="234"></line><!--MD5=[1e15cd98d01c868cfc28bc53a259e033]
+class 遊戲--><rect fill="#FEFECE" filter="url(#fva6ikccbepm7)" height="72" id="遊戲" style="stroke: #A80036; stroke-width: 2.25;" width="84" x="732.75" y="174"></rect><ellipse cx="755.25" cy="198" fill="#A9DCDF" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M764.6016,205.1484 L757.2188,205.1484 L757.2188,204.6563 Q758.1797,204.5859 758.5781,204.4453 Q759.2109,204.1641 759.2109,203.3906 Q759.2109,202.7813 758.7656,201.6094 L757.875,199.1484 L752.4141,199.1484 L751.1719,202.3125 Q750.9609,202.8047 750.9609,203.3906 Q750.9609,204.1875 751.5703,204.4453 Q751.8281,204.5859 752.6016,204.6563 L752.6016,205.1484 L746.5547,205.1484 L746.5547,204.6563 Q746.8828,204.5859 747.1875,204.5156 Q747.4922,204.4453 747.7734,204.0938 Q748.4766,203.2031 749.5781,200.1563 L754.6172,186.4922 L756.2109,186.4922 L762.1172,202.1953 Q762.6563,203.6953 763.3125,204.2344 Q763.6875,204.5156 764.6016,204.6563 L764.6016,205.1484 Z M757.5469,198.2109 L754.875,190.3594 L752.625,198.2109 L757.5469,198.2109 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="36" x="776.25" y="206.8638">遊戲</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="734.25" x2="815.25" y1="222" y2="222"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="734.25" x2="815.25" y1="234" y2="234"></line><!--MD5=[af2d9815857089c1937dc1d6f0ce45a1]
+class A品牌遊戲--><rect fill="#FEFECE" filter="url(#fva6ikccbepm7)" height="72" id="A品牌遊戲" style="stroke: #A80036; stroke-width: 2.25;" width="130.5" x="618" y="336"></rect><ellipse cx="640.5" cy="360" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M646.6875,365.9297 Q646.1484,366.8672 644.8828,367.8281 Q642.7734,369.3516 638.6719,369.3516 Q635.3906,369.3516 633.1875,367.1484 Q630.6328,364.5938 630.6328,359.8125 Q630.6328,355.4063 633.1641,352.7109 Q635.4844,350.2734 638.8125,350.2734 Q641.625,350.2734 643.1016,350.7188 Q644.5781,351.1641 644.5781,351.1641 Q644.5781,351.1641 644.5781,350.3203 L646.1016,350.1797 L646.3359,356.2734 L644.3438,356.4609 Q643.125,351.0703 639.0234,351.0703 Q639.0234,351.0703 638.1328,351.4922 Q636.7734,352.0078 636,352.8281 Q633.9375,355.1484 633.9141,359.8594 Q633.8906,364.0313 636.1875,366.375 Q638.1328,368.3672 639.375,368.3672 Q642.4219,368.3672 645.7031,364.5234 L646.6875,365.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="661.5" y="368.8638">A品牌遊戲</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="619.5" x2="747" y1="384" y2="384"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="619.5" x2="747" y1="396" y2="396"></line><!--MD5=[3ee3c5769010887b829b56123c9ae9f7]
+class B品牌遊戲--><rect fill="#FEFECE" filter="url(#fva6ikccbepm7)" height="72" id="B品牌遊戲" style="stroke: #A80036; stroke-width: 2.25;" width="132" x="801.75" y="336"></rect><ellipse cx="824.25" cy="360" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M830.4375,365.9297 Q829.8984,366.8672 828.6328,367.8281 Q826.5234,369.3516 822.4219,369.3516 Q819.1406,369.3516 816.9375,367.1484 Q814.3828,364.5938 814.3828,359.8125 Q814.3828,355.4063 816.9141,352.7109 Q819.2344,350.2734 822.5625,350.2734 Q825.375,350.2734 826.8516,350.7188 Q828.3281,351.1641 828.3281,351.1641 Q828.3281,351.1641 828.3281,350.3203 L829.8516,350.1797 L830.0859,356.2734 L828.0938,356.4609 Q826.875,351.0703 822.7734,351.0703 Q822.7734,351.0703 821.8828,351.4922 Q820.5234,352.0078 819.75,352.8281 Q817.6875,355.1484 817.6641,359.8594 Q817.6406,364.0313 819.9375,366.375 Q821.8828,368.3672 823.125,368.3672 Q826.1719,368.3672 829.4531,364.5234 L830.4375,365.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="84" x="845.25" y="368.8638">B品牌遊戲</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="803.25" x2="932.25" y1="384" y2="384"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="803.25" x2="932.25" y1="396" y2="396"></line><!--MD5=[36a5f6c14a92565de6290b9dca4ea2e5]
+class C品牌遊戲--><rect fill="#FEFECE" filter="url(#fva6ikccbepm7)" height="72" id="C品牌遊戲" style="stroke: #A80036; stroke-width: 2.25;" width="133.5" x="987" y="336"></rect><ellipse cx="1009.5" cy="360" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M1015.6875,365.9297 Q1015.1484,366.8672 1013.8828,367.8281 Q1011.7734,369.3516 1007.6719,369.3516 Q1004.3906,369.3516 1002.1875,367.1484 Q999.6328,364.5938 999.6328,359.8125 Q999.6328,355.4063 1002.1641,352.7109 Q1004.4844,350.2734 1007.8125,350.2734 Q1010.625,350.2734 1012.1016,350.7188 Q1013.5781,351.1641 1013.5781,351.1641 Q1013.5781,351.1641 1013.5781,350.3203 L1015.1016,350.1797 L1015.3359,356.2734 L1013.3438,356.4609 Q1012.125,351.0703 1008.0234,351.0703 Q1008.0234,351.0703 1007.1328,351.4922 Q1005.7734,352.0078 1005,352.8281 Q1002.9375,355.1484 1002.9141,359.8594 Q1002.8906,364.0313 1005.1875,366.375 Q1007.1328,368.3672 1008.375,368.3672 Q1011.4219,368.3672 1014.7031,364.5234 L1015.6875,365.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="85.5" x="1030.5" y="368.8638">C品牌遊戲</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="988.5" x2="1119" y1="384" y2="384"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="988.5" x2="1119" y1="396" y2="396"></line><!--MD5=[1b80bf0c43968f7205fe656698469925]
+class A品牌通訊錄--><rect fill="#FEFECE" filter="url(#fva6ikccbepm7)" height="72" id="A品牌通訊錄" style="stroke: #A80036; stroke-width: 2.25;" width="148.5" x="9" y="336"></rect><ellipse cx="31.5" cy="360" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M37.6875,365.9297 Q37.1484,366.8672 35.8828,367.8281 Q33.7734,369.3516 29.6719,369.3516 Q26.3906,369.3516 24.1875,367.1484 Q21.6328,364.5938 21.6328,359.8125 Q21.6328,355.4063 24.1641,352.7109 Q26.4844,350.2734 29.8125,350.2734 Q32.625,350.2734 34.1016,350.7188 Q35.5781,351.1641 35.5781,351.1641 Q35.5781,351.1641 35.5781,350.3203 L37.1016,350.1797 L37.3359,356.2734 L35.3438,356.4609 Q34.125,351.0703 30.0234,351.0703 Q30.0234,351.0703 29.1328,351.4922 Q27.7734,352.0078 27,352.8281 Q24.9375,355.1484 24.9141,359.8594 Q24.8906,364.0313 27.1875,366.375 Q29.1328,368.3672 30.375,368.3672 Q33.4219,368.3672 36.7031,364.5234 L37.6875,365.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="100.5" x="52.5" y="368.8638">A品牌通訊錄</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="156" y1="384" y2="384"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="156" y1="396" y2="396"></line><!--MD5=[8e554dae87c3b4d1b4a0505a3bdee794]
+class B品牌通訊錄--><rect fill="#FEFECE" filter="url(#fva6ikccbepm7)" height="72" id="B品牌通訊錄" style="stroke: #A80036; stroke-width: 2.25;" width="150" x="210.75" y="336"></rect><ellipse cx="233.25" cy="360" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M239.4375,365.9297 Q238.8984,366.8672 237.6328,367.8281 Q235.5234,369.3516 231.4219,369.3516 Q228.1406,369.3516 225.9375,367.1484 Q223.3828,364.5938 223.3828,359.8125 Q223.3828,355.4063 225.9141,352.7109 Q228.2344,350.2734 231.5625,350.2734 Q234.375,350.2734 235.8516,350.7188 Q237.3281,351.1641 237.3281,351.1641 Q237.3281,351.1641 237.3281,350.3203 L238.8516,350.1797 L239.0859,356.2734 L237.0938,356.4609 Q235.875,351.0703 231.7734,351.0703 Q231.7734,351.0703 230.8828,351.4922 Q229.5234,352.0078 228.75,352.8281 Q226.6875,355.1484 226.6641,359.8594 Q226.6406,364.0313 228.9375,366.375 Q230.8828,368.3672 232.125,368.3672 Q235.1719,368.3672 238.4531,364.5234 L239.4375,365.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="102" x="254.25" y="368.8638">B品牌通訊錄</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="212.25" x2="359.25" y1="384" y2="384"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="212.25" x2="359.25" y1="396" y2="396"></line><!--MD5=[f2d93d2c574b806e783500bb6e4f0535]
+class C品牌通訊錄--><rect fill="#FEFECE" filter="url(#fva6ikccbepm7)" height="72" id="C品牌通訊錄" style="stroke: #A80036; stroke-width: 2.25;" width="151.5" x="414" y="336"></rect><ellipse cx="436.5" cy="360" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M442.6875,365.9297 Q442.1484,366.8672 440.8828,367.8281 Q438.7734,369.3516 434.6719,369.3516 Q431.3906,369.3516 429.1875,367.1484 Q426.6328,364.5938 426.6328,359.8125 Q426.6328,355.4063 429.1641,352.7109 Q431.4844,350.2734 434.8125,350.2734 Q437.625,350.2734 439.1016,350.7188 Q440.5781,351.1641 440.5781,351.1641 Q440.5781,351.1641 440.5781,350.3203 L442.1016,350.1797 L442.3359,356.2734 L440.3438,356.4609 Q439.125,351.0703 435.0234,351.0703 Q435.0234,351.0703 434.1328,351.4922 Q432.7734,352.0078 432,352.8281 Q429.9375,355.1484 429.9141,359.8594 Q429.8906,364.0313 432.1875,366.375 Q434.1328,368.3672 435.375,368.3672 Q438.4219,368.3672 441.7031,364.5234 L442.6875,365.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="103.5" x="457.5" y="368.8638">C品牌通訊錄</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="415.5" x2="564" y1="384" y2="384"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="415.5" x2="564" y1="396" y2="396"></line><path d="M696,12.75 L696,83.2983 L1207.5,83.2983 L1207.5,27.75 L1192.5,12.75 L696,12.75 " fill="#FBFB77" filter="url(#fva6ikccbepm7)" style="stroke: #A80036; stroke-width: 1.5;"></path><path d="M1192.5,12.75 L1192.5,27.75 L1207.5,27.75 L1192.5,12.75 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.5;"></path><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="480" x="705" y="43.7395">若是以繼承實現功能，一旦多個角色(這邊以多品牌舉例)</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="322.5" x="705" y="71.5137">就會變成每個功能都要多寫很多Class</text><!--MD5=[1156ca495254bac1768a43e678c6f65b]
+reverse link 手機軟體 to 通訊錄--><path d="M516.186,102.9525 C487.2105,126.2205 454.068,152.835 428.313,173.517 " fill="none" id="手機軟體<-通訊錄" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="509.8215,94.5975,539.787,84,522.9705,110.9715,509.8215,94.5975" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[dc68878e8bfce0ae15d23d67024c18d4]
+reverse link 手機軟體 to 遊戲--><path d="M647.721,103.3035 C675.717,126.4875 707.658,152.9385 732.507,173.517 " fill="none" id="手機軟體<-遊戲" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="640.8195,111.222,624.411,84,654.2145,95.0475,640.8195,111.222" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[455c3f3435b8833d76aae55db18141dc]
+reverse link 遊戲 to A品牌遊戲--><path d="M739.692,272.42 C727.4055,293.7719 714.027,317.0178 703.3815,335.5176 " fill="none" id="遊戲<-A品牌遊戲" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="730.8315,266.7654,754.896,246,749.0325,277.2398,730.8315,266.7654" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[109f537cbe3f65a032fc6e99c344abd3]
+reverse link 遊戲 to B品牌遊戲--><path d="M810.3825,272.42 C822.8715,293.7719 836.4675,317.0178 847.2885,335.5176 " fill="none" id="遊戲<-B品牌遊戲" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="801.012,277.1976,794.9295,246,819.1395,266.595,801.012,277.1976" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[b43c32c82a3bf4606b192a8d0d3d35eb]
+reverse link 遊戲 to C品牌遊戲--><path d="M843.5595,250.713 C889.296,276.7785 948.8115,310.6961 992.832,335.7833 " fill="none" id="遊戲<-C品牌遊戲" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="837.99,259.6253,817.1235,235.6485,848.388,241.38,837.99,259.6253" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[2850c572ebd71c6323ba9f3d5c56d321]
+reverse link 通訊錄 to A品牌通訊錄--><path d="M306.5565,252.7365 C257.61,278.5485 195.264,311.4279 148.8946,335.8815 " fill="none" id="通訊錄<-A品牌通訊錄" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="302.1705,243.1785,333.6045,238.4715,311.967,261.7541,302.1705,243.1785" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[8cee0768e359843a26906344a90910d5]
+reverse link 通訊錄 to B品牌通訊錄--><path d="M347.2665,271.701 C333.8505,293.2488 319.179,316.8099 307.5315,335.5176 " fill="none" id="通訊錄<-B品牌通訊錄" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="338.4975,265.9176,363.2685,246,356.325,277.0174,338.4975,265.9176" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[f59fa6dce32c7beff92bd74edd43d2a9]
+reverse link 通訊錄 to C品牌通訊錄--><path d="M424.506,271.701 C438.735,293.2488 454.2945,316.8099 466.6485,335.5176 " fill="none" id="通訊錄<-C品牌通訊錄" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="415.3035,276.8208,407.5335,246,432.8265,265.2485,415.3035,276.8208" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[f273249b64591afd4d71055695aa4ab7]
+@startuml
+scale 1.5
+skinparam classAttributeIconSize 0
+
+abstract class 手機軟體{
+}
+
+abstract class 通訊錄{
+}
+
+abstract class 遊戲{
+}
+
+手機軟體 <|- - 通訊錄
+手機軟體 <|- - 遊戲
+
+遊戲 <|- - A品牌遊戲
+遊戲 <|- - B品牌遊戲
+遊戲 <|- - C品牌遊戲
+
+通訊錄 <|- - A品牌通訊錄
+通訊錄 <|- - B品牌通訊錄
+通訊錄 <|- - C品牌通訊錄
+
+note as N1
+ 若是以繼承實現功能，一旦多個角色(這邊以多品牌舉例)
+ 就會變成每個功能都要多寫很多Class
+end note
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="538.5px" preserveAspectRatio="none" style="width:1695px;height:538px;" version="1.1" viewBox="0 0 1695 538" width="1695px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="f1neg9a5bbxadt" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><!--MD5=[40a931184c2e323ee4688f0a1ba594f2]
+class 手機軟體--><rect fill="#FEFECE" filter="url(#f1neg9a5bbxadt)" height="95.5012" id="手機軟體" style="stroke: #A80036; stroke-width: 2.25;" width="301.5" x="515.25" y="138"></rect><ellipse cx="623.625" cy="162" fill="#A9DCDF" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M632.9766,169.1484 L625.5938,169.1484 L625.5938,168.6563 Q626.5547,168.5859 626.9531,168.4453 Q627.5859,168.1641 627.5859,167.3906 Q627.5859,166.7813 627.1406,165.6094 L626.25,163.1484 L620.7891,163.1484 L619.5469,166.3125 Q619.3359,166.8047 619.3359,167.3906 Q619.3359,168.1875 619.9453,168.4453 Q620.2031,168.5859 620.9766,168.6563 L620.9766,169.1484 L614.9297,169.1484 L614.9297,168.6563 Q615.2578,168.5859 615.5625,168.5156 Q615.8672,168.4453 616.1484,168.0938 Q616.8516,167.2031 617.9531,164.1563 L622.9922,150.4922 L624.5859,150.4922 L630.4922,166.1953 Q631.0313,167.6953 631.6875,168.2344 Q632.0625,168.5156 632.9766,168.6563 L632.9766,169.1484 Z M625.9219,162.2109 L623.25,154.3594 L621,162.2109 L625.9219,162.2109 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="72" x="654.375" y="170.8638">手機軟體</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="516.75" x2="815.25" y1="186" y2="186"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="516.75" x2="815.25" y1="198" y2="198"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="283.5" x="524.25" y="223.8757">public abstract void Run()==&gt;軟體運行;</text><!--MD5=[2f817229b4301932a90e9f5933bcc26d]
+class 手機品牌--><rect fill="#FEFECE" filter="url(#f1neg9a5bbxadt)" height="142.5037" id="手機品牌" style="stroke: #A80036; stroke-width: 2.25;" width="441" x="9" y="114.75"></rect><ellipse cx="187.125" cy="138.75" fill="#A9DCDF" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M196.4766,145.8984 L189.0938,145.8984 L189.0938,145.4063 Q190.0547,145.3359 190.4531,145.1953 Q191.0859,144.9141 191.0859,144.1406 Q191.0859,143.5313 190.6406,142.3594 L189.75,139.8984 L184.2891,139.8984 L183.0469,143.0625 Q182.8359,143.5547 182.8359,144.1406 Q182.8359,144.9375 183.4453,145.1953 Q183.7031,145.3359 184.4766,145.4063 L184.4766,145.8984 L178.4297,145.8984 L178.4297,145.4063 Q178.7578,145.3359 179.0625,145.2656 Q179.3672,145.1953 179.6484,144.8438 Q180.3516,143.9531 181.4531,140.9063 L186.4922,127.2422 L188.0859,127.2422 L193.9922,142.9453 Q194.5313,144.4453 195.1875,144.9844 Q195.5625,145.2656 196.4766,145.4063 L196.4766,145.8984 Z M189.4219,138.9609 L186.75,131.1094 L184.5,138.9609 L189.4219,138.9609 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="72" x="217.875" y="147.6138">手機品牌</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="448.5" y1="162.75" y2="162.75"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="201" x="18" y="188.6257">protected HandsetSoft soft;</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="448.5" y1="198.2512" y2="198.2512"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="423" x="18" y="224.127">public void SetHandsetSoft(HandsetSoft soft)==&gt;設定軟體</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="283.5" x="18" y="247.6282">public abstract void Run()==&gt;品牌運行;</text><!--MD5=[b94037d5b952da368f764b987337d682]
+class 通訊錄--><rect fill="#FEFECE" filter="url(#f1neg9a5bbxadt)" height="72" id="通訊錄" style="stroke: #A80036; stroke-width: 2.25;" width="102" x="475.5" y="450"></rect><ellipse cx="498" cy="474" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M504.1875,479.9297 Q503.6484,480.8672 502.3828,481.8281 Q500.2734,483.3516 496.1719,483.3516 Q492.8906,483.3516 490.6875,481.1484 Q488.1328,478.5938 488.1328,473.8125 Q488.1328,469.4063 490.6641,466.7109 Q492.9844,464.2734 496.3125,464.2734 Q499.125,464.2734 500.6016,464.7188 Q502.0781,465.1641 502.0781,465.1641 Q502.0781,465.1641 502.0781,464.3203 L503.6016,464.1797 L503.8359,470.2734 L501.8438,470.4609 Q500.625,465.0703 496.5234,465.0703 Q496.5234,465.0703 495.6328,465.4922 Q494.2734,466.0078 493.5,466.8281 Q491.4375,469.1484 491.4141,473.8594 Q491.3906,478.0313 493.6875,480.375 Q495.6328,482.3672 496.875,482.3672 Q499.9219,482.3672 503.2031,478.5234 L504.1875,479.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="54" x="519" y="482.8638">通訊錄</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="477" x2="576" y1="498" y2="498"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="477" x2="576" y1="510" y2="510"></line><!--MD5=[1e15cd98d01c868cfc28bc53a259e033]
+class 遊戲--><rect fill="#FEFECE" filter="url(#f1neg9a5bbxadt)" height="72" id="遊戲" style="stroke: #A80036; stroke-width: 2.25;" width="84" x="630" y="450"></rect><ellipse cx="652.5" cy="474" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M658.6875,479.9297 Q658.1484,480.8672 656.8828,481.8281 Q654.7734,483.3516 650.6719,483.3516 Q647.3906,483.3516 645.1875,481.1484 Q642.6328,478.5938 642.6328,473.8125 Q642.6328,469.4063 645.1641,466.7109 Q647.4844,464.2734 650.8125,464.2734 Q653.625,464.2734 655.1016,464.7188 Q656.5781,465.1641 656.5781,465.1641 Q656.5781,465.1641 656.5781,464.3203 L658.1016,464.1797 L658.3359,470.2734 L656.3438,470.4609 Q655.125,465.0703 651.0234,465.0703 Q651.0234,465.0703 650.1328,465.4922 Q648.7734,466.0078 648,466.8281 Q645.9375,469.1484 645.9141,473.8594 Q645.8906,478.0313 648.1875,480.375 Q650.1328,482.3672 651.375,482.3672 Q654.4219,482.3672 657.7031,478.5234 L658.6875,479.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="36" x="673.5" y="482.8638">遊戲</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="631.5" x2="712.5" y1="498" y2="498"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="631.5" x2="712.5" y1="510" y2="510"></line><!--MD5=[2e6c291d424e3117a5620ff0ec82ac81]
+class MP3--><rect fill="#FEFECE" filter="url(#f1neg9a5bbxadt)" height="72" id="MP3" style="stroke: #A80036; stroke-width: 2.25;" width="84" x="766.5" y="450"></rect><ellipse cx="789" cy="474" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M795.1875,479.9297 Q794.6484,480.8672 793.3828,481.8281 Q791.2734,483.3516 787.1719,483.3516 Q783.8906,483.3516 781.6875,481.1484 Q779.1328,478.5938 779.1328,473.8125 Q779.1328,469.4063 781.6641,466.7109 Q783.9844,464.2734 787.3125,464.2734 Q790.125,464.2734 791.6016,464.7188 Q793.0781,465.1641 793.0781,465.1641 Q793.0781,465.1641 793.0781,464.3203 L794.6016,464.1797 L794.8359,470.2734 L792.8438,470.4609 Q791.625,465.0703 787.5234,465.0703 Q787.5234,465.0703 786.6328,465.4922 Q785.2734,466.0078 784.5,466.8281 Q782.4375,469.1484 782.4141,473.8594 Q782.3906,478.0313 784.6875,480.375 Q786.6328,482.3672 787.875,482.3672 Q790.9219,482.3672 794.2031,478.5234 L795.1875,479.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="36" x="810" y="482.8638">MP3</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="768" x2="849" y1="498" y2="498"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="768" x2="849" y1="510" y2="510"></line><!--MD5=[fa431eff23f1f95522c08ece7fc3c4b4]
+class A品牌--><rect fill="#FEFECE" filter="url(#f1neg9a5bbxadt)" height="72" id="A品牌" style="stroke: #A80036; stroke-width: 2.25;" width="94.5" x="27.75" y="450"></rect><ellipse cx="50.25" cy="474" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M56.4375,479.9297 Q55.8984,480.8672 54.6328,481.8281 Q52.5234,483.3516 48.4219,483.3516 Q45.1406,483.3516 42.9375,481.1484 Q40.3828,478.5938 40.3828,473.8125 Q40.3828,469.4063 42.9141,466.7109 Q45.2344,464.2734 48.5625,464.2734 Q51.375,464.2734 52.8516,464.7188 Q54.3281,465.1641 54.3281,465.1641 Q54.3281,465.1641 54.3281,464.3203 L55.8516,464.1797 L56.0859,470.2734 L54.0938,470.4609 Q52.875,465.0703 48.7734,465.0703 Q48.7734,465.0703 47.8828,465.4922 Q46.5234,466.0078 45.75,466.8281 Q43.6875,469.1484 43.6641,473.8594 Q43.6406,478.0313 45.9375,480.375 Q47.8828,482.3672 49.125,482.3672 Q52.1719,482.3672 55.4531,478.5234 L56.4375,479.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="46.5" x="71.25" y="482.8638">A品牌</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="29.25" x2="120.75" y1="498" y2="498"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="29.25" x2="120.75" y1="510" y2="510"></line><!--MD5=[f8116dc6157acaf0560539911b5e8f42]
+class B品牌--><rect fill="#FEFECE" filter="url(#f1neg9a5bbxadt)" height="72" id="B品牌" style="stroke: #A80036; stroke-width: 2.25;" width="96" x="175.5" y="450"></rect><ellipse cx="198" cy="474" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M204.1875,479.9297 Q203.6484,480.8672 202.3828,481.8281 Q200.2734,483.3516 196.1719,483.3516 Q192.8906,483.3516 190.6875,481.1484 Q188.1328,478.5938 188.1328,473.8125 Q188.1328,469.4063 190.6641,466.7109 Q192.9844,464.2734 196.3125,464.2734 Q199.125,464.2734 200.6016,464.7188 Q202.0781,465.1641 202.0781,465.1641 Q202.0781,465.1641 202.0781,464.3203 L203.6016,464.1797 L203.8359,470.2734 L201.8438,470.4609 Q200.625,465.0703 196.5234,465.0703 Q196.5234,465.0703 195.6328,465.4922 Q194.2734,466.0078 193.5,466.8281 Q191.4375,469.1484 191.4141,473.8594 Q191.3906,478.0313 193.6875,480.375 Q195.6328,482.3672 196.875,482.3672 Q199.9219,482.3672 203.2031,478.5234 L204.1875,479.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="48" x="219" y="482.8638">B品牌</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="177" x2="270" y1="498" y2="498"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="177" x2="270" y1="510" y2="510"></line><!--MD5=[a9977e49942b0c5a13ce42bd8a835d0a]
+class C品牌--><rect fill="#FEFECE" filter="url(#f1neg9a5bbxadt)" height="72" id="C品牌" style="stroke: #A80036; stroke-width: 2.25;" width="97.5" x="324.75" y="450"></rect><ellipse cx="347.25" cy="474" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M353.4375,479.9297 Q352.8984,480.8672 351.6328,481.8281 Q349.5234,483.3516 345.4219,483.3516 Q342.1406,483.3516 339.9375,481.1484 Q337.3828,478.5938 337.3828,473.8125 Q337.3828,469.4063 339.9141,466.7109 Q342.2344,464.2734 345.5625,464.2734 Q348.375,464.2734 349.8516,464.7188 Q351.3281,465.1641 351.3281,465.1641 Q351.3281,465.1641 351.3281,464.3203 L352.8516,464.1797 L353.0859,470.2734 L351.0938,470.4609 Q349.875,465.0703 345.7734,465.0703 Q345.7734,465.0703 344.8828,465.4922 Q343.5234,466.0078 342.75,466.8281 Q340.6875,469.1484 340.6641,473.8594 Q340.6406,478.0313 342.9375,480.375 Q344.8828,482.3672 346.125,482.3672 Q349.1719,482.3672 352.4531,478.5234 L353.4375,479.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="49.5" x="368.25" y="482.8638">C品牌</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="326.25" x2="420.75" y1="498" y2="498"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="326.25" x2="420.75" y1="510" y2="510"></line><path d="M870,12 L870,360.29 L1677,360.29 L1677,27 L1662,12 L870,12 " fill="#FBFB77" filter="url(#f1neg9a5bbxadt)" style="stroke: #A80036; stroke-width: 1.5;"></path><path d="M1662,12 L1662,27 L1677,27 L1662,12 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.5;"></path><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="156" x="879" y="42.9895">利用組合代替繼承</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="331.5" x="879" y="70.7637">這樣品牌與軟件分成兩個類別分別開發</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="331.5" x="879" y="98.5378">並且即使新增也只需要新增對應的類別</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="97.5" x="879" y="126.312">但有個問題</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="0" x="885" y="154.0862"></text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="331.5" x="879" y="181.8604">如果放在一般軟體沒問題，但在遊戲中</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="351" x="879" y="209.6345">時常會突然改遊戲機制，這時就出現麻煩</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="580.5" x="879" y="237.4087">因為就必須更動"手機品牌(角色)"或是"手機軟件(武器系統)"這些父類</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="390" x="879" y="265.1829">那旗下所有子類就必須更動到，所以必須注意</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="775.5" x="879" y="292.957">同時因為兩類解耦，所以必須注意，"手機品牌(角色)"跟"手機軟件(武器系統)"之間無法溝通</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="25.5" x="879" y="320.7312">例:</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="580.5" x="879" y="348.5054">"手機軟件(武器系統)"無法拿到"手機品牌(角色)"上的狀態，反之亦然</text><!--MD5=[f46b2d86138c882437c477b13e68bb16]
+reverse link 手機品牌 to 手機軟體--><path d="M470.0745,186 C485.1105,186 500.148,186 515.184,186 " fill="none" id="手機品牌<-手機軟體" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="450.3075,186,459.3075,192,468.3075,186,459.3075,180,450.3075,186" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[1156ca495254bac1768a43e678c6f65b]
+reverse link 手機軟體 to 通訊錄--><path d="M630.978,262.0635 C602.7555,322.149 564.3495,403.9175 542.835,449.7237 " fill="none" id="手機軟體<-通訊錄" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="621.6375,257.25,643.896,234.561,640.6455,266.178,621.6375,257.25" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[dc68878e8bfce0ae15d23d67024c18d4]
+reverse link 手機軟體 to 遊戲--><path d="M667.5645,264.9465 C668.772,324.7425 670.3875,404.6462 671.298,449.7237 " fill="none" id="手機軟體<-遊戲" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="657.0585,264.7665,666.951,234.561,678.054,264.342,657.0585,264.7665" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[4294cb89cb86a64b1c0eacf7c97db576]
+reverse link 手機軟體 to MP3--><path d="M701.5785,261.654 C730.4265,321.777 769.7865,403.8133 791.814,449.7237 " fill="none" id="手機軟體<-MP3" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="692.091,266.151,688.5795,234.561,711.024,257.0655,692.091,266.151" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[2de6d251c0beed97835ed694b42f7898]
+reverse link 手機品牌 to A品牌--><path d="M179.1315,284.3235 C149.55,341.19 113.9592,409.6076 92.979,449.9385 " fill="none" id="手機品牌<-A品牌" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="169.9215,279.2775,193.0815,257.5095,188.5515,288.969,169.9215,279.2775" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[7e357a95a96dfe253e3a704681faddc7]
+reverse link 手機品牌 to B品牌--><path d="M227.4735,287.8275 C226.3395,343.977 224.997,410.4326 224.1975,449.9385 " fill="none" id="手機品牌<-B品牌" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="216.981,287.2905,228.0855,257.5095,237.978,287.715,216.981,287.2905" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[98e7a09831045ba5d99217734c43949a]
+reverse link 手機品牌 to C品牌--><path d="M276.633,284.712 C304.167,341.5005 337.233,409.6992 356.7435,449.9385 " fill="none" id="手機品牌<-C品牌" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="267.084,289.0845,263.4435,257.5095,285.9795,279.9225,267.084,289.0845" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[4afbbd5fde435a4d12153b318521a957]
+@startuml
+skinparam classAttributeIconSize 0
+scale 1.5
+abstract class 手機軟體{
+ public abstract void Run()==>軟體運行;
+}
+
+abstract class 手機品牌{
+protected HandsetSoft soft;
+public void SetHandsetSoft(HandsetSoft soft)==>設定軟體
+public abstract void Run()==>品牌運行;
+}
+
+手機品牌 *-right- 手機軟體
+
+手機軟體 <|- - 通訊錄
+手機軟體 <|- - 遊戲
+手機軟體 <|- - MP3
+
+手機品牌 <|- - A品牌
+手機品牌 <|- - B品牌
+手機品牌 <|- - C品牌
+
+note as N1
+利用組合代替繼承
+這樣品牌與軟件分成兩個類別分別開發
+並且即使新增也只需要新增對應的類別
+但有個問題
+
+如果放在一般軟體沒問題，但在遊戲中
+時常會突然改遊戲機制，這時就出現麻煩
+因為就必須更動"手機品牌(角色)"或是"手機軟件(武器系統)"這些父類
+那旗下所有子類就必須更動到，所以必須注意
+同時因為兩類解耦，所以必須注意，"手機品牌(角色)"跟"手機軟件(武器系統)"之間無法溝通
+例:
+"手機軟件(武器系統)"無法拿到"手機品牌(角色)"上的狀態，反之亦然
+end note
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+<h3 id="toc_3">書中案例<a class="vnote-anchor" href="#toc_3" data-anchor-icon="#"></a></h3>
+<p>在書中橋接模式是用在角色跟武器系統上，將兩個系統分開來<br>
+創建角色時就能為角色換上不同武器</p>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="309px" preserveAspectRatio="none" style="width:942px;height:309px;" version="1.1" viewBox="0 0 942 309" width="942px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="fnoh6fdvtfg93" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><!--MD5=[a1908832394178c0f507a77908d0ff4a]
+class ICharacter--><rect fill="#FEFECE" filter="url(#fnoh6fdvtfg93)" height="119.0024" id="ICharacter" style="stroke: #A80036; stroke-width: 2.25;" width="151.5" x="152.25" y="12"></rect><ellipse cx="182.175" cy="36" fill="#A9DCDF" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M191.5266,43.1484 L184.1438,43.1484 L184.1438,42.6563 Q185.1047,42.5859 185.5031,42.4453 Q186.1359,42.1641 186.1359,41.3906 Q186.1359,40.7813 185.6906,39.6094 L184.8,37.1484 L179.3391,37.1484 L178.0969,40.3125 Q177.8859,40.8047 177.8859,41.3906 Q177.8859,42.1875 178.4953,42.4453 Q178.7531,42.5859 179.5266,42.6563 L179.5266,43.1484 L173.4797,43.1484 L173.4797,42.6563 Q173.8078,42.5859 174.1125,42.5156 Q174.4172,42.4453 174.6984,42.0938 Q175.4016,41.2031 176.5031,38.1563 L181.5422,24.4922 L183.1359,24.4922 L189.0422,40.1953 Q189.5813,41.6953 190.2375,42.2344 Q190.6125,42.5156 191.5266,42.6563 L191.5266,43.1484 Z M184.4719,36.2109 L181.8,28.3594 L179.55,36.2109 L184.4719,36.2109 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="87" x="204.825" y="44.8638">ICharacter</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="153.75" x2="302.25" y1="60" y2="60"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="133.5" x="161.25" y="85.8757">protector IWeapon</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="153.75" x2="302.25" y1="95.5012" y2="95.5012"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="93" x="161.25" y="121.377">void Attack()</text><!--MD5=[bbfad1d37da2db032274317489871dea]
+class IWeapon--><rect fill="#FEFECE" filter="url(#fnoh6fdvtfg93)" height="95.5012" id="IWeapon" style="stroke: #A80036; stroke-width: 2.25;" width="123" x="457.5" y="23.25"></rect><ellipse cx="480" cy="47.25" fill="#A9DCDF" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M489.3516,54.3984 L481.9688,54.3984 L481.9688,53.9063 Q482.9297,53.8359 483.3281,53.6953 Q483.9609,53.4141 483.9609,52.6406 Q483.9609,52.0313 483.5156,50.8594 L482.625,48.3984 L477.1641,48.3984 L475.9219,51.5625 Q475.7109,52.0547 475.7109,52.6406 Q475.7109,53.4375 476.3203,53.6953 Q476.5781,53.8359 477.3516,53.9063 L477.3516,54.3984 L471.3047,54.3984 L471.3047,53.9063 Q471.6328,53.8359 471.9375,53.7656 Q472.2422,53.6953 472.5234,53.3438 Q473.2266,52.4531 474.3281,49.4063 L479.3672,35.7422 L480.9609,35.7422 L486.8672,51.4453 Q487.4063,52.9453 488.0625,53.4844 Q488.4375,53.7656 489.3516,53.9063 L489.3516,54.3984 Z M482.2969,47.4609 L479.625,39.6094 L477.375,47.4609 L482.2969,47.4609 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="75" x="501" y="56.1138">IWeapon</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="459" x2="579" y1="71.25" y2="71.25"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="459" x2="579" y1="83.25" y2="83.25"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="39" x="466.5" y="109.1257">Fire()</text><!--MD5=[32ae9a990512fd79ac437b89e0cdcf39]
+class ISoldier--><rect fill="#FEFECE" filter="url(#fnoh6fdvtfg93)" height="72" id="ISoldier" style="stroke: #A80036; stroke-width: 2.25;" width="111" x="9" y="220.5"></rect><ellipse cx="31.5" cy="244.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M37.6875,250.4297 Q37.1484,251.3672 35.8828,252.3281 Q33.7734,253.8516 29.6719,253.8516 Q26.3906,253.8516 24.1875,251.6484 Q21.6328,249.0938 21.6328,244.3125 Q21.6328,239.9063 24.1641,237.2109 Q26.4844,234.7734 29.8125,234.7734 Q32.625,234.7734 34.1016,235.2188 Q35.5781,235.6641 35.5781,235.6641 Q35.5781,235.6641 35.5781,234.8203 L37.1016,234.6797 L37.3359,240.7734 L35.3438,240.9609 Q34.125,235.5703 30.0234,235.5703 Q30.0234,235.5703 29.1328,235.9922 Q27.7734,236.5078 27,237.3281 Q24.9375,239.6484 24.9141,244.3594 Q24.8906,248.5313 27.1875,250.875 Q29.1328,252.8672 30.375,252.8672 Q33.4219,252.8672 36.7031,249.0234 L37.6875,250.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="63" x="52.5" y="253.3638">ISoldier</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="118.5" y1="268.5" y2="268.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="118.5" y1="280.5" y2="280.5"></line><!--MD5=[6c9afd200c147b205c0a7326c0169cfa]
+class IEnemy--><rect fill="#FEFECE" filter="url(#fnoh6fdvtfg93)" height="72" id="IEnemy" style="stroke: #A80036; stroke-width: 2.25;" width="109.5" x="173.25" y="220.5"></rect><ellipse cx="195.75" cy="244.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M201.9375,250.4297 Q201.3984,251.3672 200.1328,252.3281 Q198.0234,253.8516 193.9219,253.8516 Q190.6406,253.8516 188.4375,251.6484 Q185.8828,249.0938 185.8828,244.3125 Q185.8828,239.9063 188.4141,237.2109 Q190.7344,234.7734 194.0625,234.7734 Q196.875,234.7734 198.3516,235.2188 Q199.8281,235.6641 199.8281,235.6641 Q199.8281,235.6641 199.8281,234.8203 L201.3516,234.6797 L201.5859,240.7734 L199.5938,240.9609 Q198.375,235.5703 194.2734,235.5703 Q194.2734,235.5703 193.3828,235.9922 Q192.0234,236.5078 191.25,237.3281 Q189.1875,239.6484 189.1641,244.3594 Q189.1406,248.5313 191.4375,250.875 Q193.3828,252.8672 194.625,252.8672 Q197.6719,252.8672 200.9531,249.0234 L201.9375,250.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="61.5" x="216.75" y="253.3638">IEnemy</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="174.75" x2="281.25" y1="268.5" y2="268.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="174.75" x2="281.25" y1="280.5" y2="280.5"></line><!--MD5=[e72f557fdc029a0310b38be1b7f5749b]
+class WeaponGun--><rect fill="#FEFECE" filter="url(#fnoh6fdvtfg93)" height="72" id="WeaponGun" style="stroke: #A80036; stroke-width: 2.25;" width="151.5" x="335.25" y="220.5"></rect><ellipse cx="357.75" cy="244.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M363.9375,250.4297 Q363.3984,251.3672 362.1328,252.3281 Q360.0234,253.8516 355.9219,253.8516 Q352.6406,253.8516 350.4375,251.6484 Q347.8828,249.0938 347.8828,244.3125 Q347.8828,239.9063 350.4141,237.2109 Q352.7344,234.7734 356.0625,234.7734 Q358.875,234.7734 360.3516,235.2188 Q361.8281,235.6641 361.8281,235.6641 Q361.8281,235.6641 361.8281,234.8203 L363.3516,234.6797 L363.5859,240.7734 L361.5938,240.9609 Q360.375,235.5703 356.2734,235.5703 Q356.2734,235.5703 355.3828,235.9922 Q354.0234,236.5078 353.25,237.3281 Q351.1875,239.6484 351.1641,244.3594 Q351.1406,248.5313 353.4375,250.875 Q355.3828,252.8672 356.625,252.8672 Q359.6719,252.8672 362.9531,249.0234 L363.9375,250.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="103.5" x="378.75" y="253.3638">WeaponGun</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="336.75" x2="485.25" y1="268.5" y2="268.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="336.75" x2="485.25" y1="280.5" y2="280.5"></line><!--MD5=[ec0b72c9d57f5ffc7b4845ace0e8b72d]
+class WeaponRifile--><rect fill="#FEFECE" filter="url(#fnoh6fdvtfg93)" height="72" id="WeaponRifile" style="stroke: #A80036; stroke-width: 2.25;" width="159" x="540" y="220.5"></rect><ellipse cx="562.5" cy="244.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M568.6875,250.4297 Q568.1484,251.3672 566.8828,252.3281 Q564.7734,253.8516 560.6719,253.8516 Q557.3906,253.8516 555.1875,251.6484 Q552.6328,249.0938 552.6328,244.3125 Q552.6328,239.9063 555.1641,237.2109 Q557.4844,234.7734 560.8125,234.7734 Q563.625,234.7734 565.1016,235.2188 Q566.5781,235.6641 566.5781,235.6641 Q566.5781,235.6641 566.5781,234.8203 L568.1016,234.6797 L568.3359,240.7734 L566.3438,240.9609 Q565.125,235.5703 561.0234,235.5703 Q561.0234,235.5703 560.1328,235.9922 Q558.7734,236.5078 558,237.3281 Q555.9375,239.6484 555.9141,244.3594 Q555.8906,248.5313 558.1875,250.875 Q560.1328,252.8672 561.375,252.8672 Q564.4219,252.8672 567.7031,249.0234 L568.6875,250.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="111" x="583.5" y="253.3638">WeaponRifile</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="541.5" x2="697.5" y1="268.5" y2="268.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="541.5" x2="697.5" y1="280.5" y2="280.5"></line><!--MD5=[3828a8bc5bc82b8be01b48fa10ab1364]
+class WeaponRocket--><rect fill="#FEFECE" filter="url(#fnoh6fdvtfg93)" height="72" id="WeaponRocket" style="stroke: #A80036; stroke-width: 2.25;" width="174" x="751.5" y="220.5"></rect><ellipse cx="774" cy="244.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M780.1875,250.4297 Q779.6484,251.3672 778.3828,252.3281 Q776.2734,253.8516 772.1719,253.8516 Q768.8906,253.8516 766.6875,251.6484 Q764.1328,249.0938 764.1328,244.3125 Q764.1328,239.9063 766.6641,237.2109 Q768.9844,234.7734 772.3125,234.7734 Q775.125,234.7734 776.6016,235.2188 Q778.0781,235.6641 778.0781,235.6641 Q778.0781,235.6641 778.0781,234.8203 L779.6016,234.6797 L779.8359,240.7734 L777.8438,240.9609 Q776.625,235.5703 772.5234,235.5703 Q772.5234,235.5703 771.6328,235.9922 Q770.2734,236.5078 769.5,237.3281 Q767.4375,239.6484 767.4141,244.3594 Q767.3906,248.5313 769.6875,250.875 Q771.6328,252.8672 772.875,252.8672 Q775.9219,252.8672 779.2031,249.0234 L780.1875,250.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="126" x="795" y="253.3638">WeaponRocket</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="753" x2="924" y1="268.5" y2="268.5"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="753" x2="924" y1="280.5" y2="280.5"></line><!--MD5=[064eab02486ca0807bab172217c556e8]
+reverse link ICharacter to IWeapon--><path d="M323.9025,71.25 C368.3745,71.25 412.8465,71.25 457.317,71.25 " fill="none" id="ICharacter<-IWeapon" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="304.1595,71.25,313.1595,77.25,322.1595,71.25,313.1595,65.25,304.1595,71.25" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[292f6744eb05886de80ed43ed5f8c1be]
+reverse link ICharacter to ISoldier--><path d="M155.3702,153.7089 C134.4468,177.0318 112.7165,201.2541 95.754,220.1617 " fill="none" id="ICharacter<-ISoldier" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="147.9689,146.2353,175.818,130.9155,163.6005,160.2587,147.9689,146.2353" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[82f5edbb55fd784eea6bdbccc1650440]
+reverse link ICharacter to IEnemy--><path d="M228,161.0196 C228,182.0204 228,203.2236 228,220.1617 " fill="none" id="ICharacter<-IEnemy" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="217.5,160.9161,228,130.9155,238.5,160.9161,217.5,160.9161" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[39a387d2769fd7f316752c5b8e8809b6]
+reverse link IWeapon to WeaponGun--><path d="M475.665,145.8785 C460.437,171.5751 444.0315,199.2603 431.5545,220.3148 " fill="none" id="IWeapon<-WeaponGun" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="466.86,140.139,491.187,119.6835,484.926,150.8456,466.86,140.139" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[57101bca35b27d5d2406c6fd26a65db1]
+reverse link IWeapon to WeaponRifile--><path d="M559.551,146.2865 C573.657,171.8679 588.825,199.3718 600.3735,220.3148 " fill="none" id="IWeapon<-WeaponRifile" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="550.173,151.0248,544.881,119.6835,568.563,140.8845,550.173,151.0248" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[d9d0d47b00a615a15c168d95e802b300]
+reverse link IWeapon to WeaponRocket--><path d="M606.7395,122.799 C660.999,153.7496 729.2745,192.6953 777.6285,220.2777 " fill="none" id="IWeapon<-WeaponRocket" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="601.4595,131.874,580.6035,107.889,611.8635,113.634,601.4595,131.874" style="stroke: #A80036; stroke-width: 1.5;"></polygon><!--MD5=[62ea0a8cd780c19d387dfcdda6683200]
+@startuml
+scale 1.5
+skinparam classAttributeIconSize 0
+
+abstract class ICharacter{
+ protector IWeapon
+ void Attack()
+}
+
+abstract class IWeapon{
+Fire()
+}
+
+ICharacter *-right- IWeapon
+
+ICharacter <|- - ISoldier
+ICharacter <|- - IEnemy
+
+IWeapon <|- - WeaponGun
+IWeapon <|- - WeaponRifile
+IWeapon <|- - WeaponRocket
+
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+<h3 id="toc_4">總結下<a class="vnote-anchor" href="#toc_4" data-anchor-icon="#"></a></h3>
+<p>透過橋接模式，能將角色和武器數據分割<br>
+武器所要執行的"粒子"，"判定"，"模型"<br>
+都可以和角色數據分開，不用為了新增角色，而增加許多繼承類<br>
+這樣透過<strong>組合</strong>方式代替<strong>繼承</strong></p>
+
+    </div>
+</div>
+</div>
+
+<div id="container-floating" style="display:none;" class="d-none d-md-block d-xl-block">
+    <div id="floating-button" onclick="toggleMore()">
+        <p id="floating-more" class="more">&gt;</p>
+    </div>
+</div>
+
+<!--
+<div class="footer" id="vnote-footer">
+    <p>Generated by <em><a href="https://tamlok.github.io/vnote/">VNote</a></em>.</p>
+</div>
+-->
+</body>
+</html>

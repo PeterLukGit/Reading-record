@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="VNote">
+
+    <title>01.狀態模式 State</title>
+    <link rel="icon" href="https://github.com/tamlok/vnote/raw/master/src/resources/icons/vnote.ico">
+
+    <style type="text/css">
+    /* STYLE_GLOBAL_PLACE_HOLDER */
+    </style>
+
+    <style type="text/css">
+    *,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.container-fluid {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.col-12 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+@media (min-width: 768px) {
+    .col-md-3 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 25%;
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+}
+
+@media (min-width: 768px) {
+    .col-md-9 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 75%;
+        flex: 0 0 75%;
+        max-width: 75%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-xl-2 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 16.666667%;
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-xl-10 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 83.333333%;
+        flex: 0 0 83.333333%;
+        max-width: 83.333333%;
+    }
+}
+
+@media (min-width: 768px) {
+    .pt-md-3, .py-md-3 {
+        padding-top: 1rem!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .pb-md-3, .py-md-3 {
+        padding-bottom: 1rem!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .pl-md-5, .px-md-5 {
+        padding-left: 3rem!important;
+    }
+}
+
+.d-none {
+    display: none!important;
+}
+
+@media (min-width: 1200px) {
+    .d-xl-block {
+        display: block!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .d-md-block {
+        display: block!important;
+    }
+}
+
+.bd-content {
+    -webkit-box-ordinal-group: 1;
+    -ms-flex-order: 0;
+    order: 0;
+}
+
+.bd-toc {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 4rem;
+    height: calc(100vh - 10rem);
+    overflow-y: auto;
+}
+
+.bd-toc {
+    -webkit-box-ordinal-group: 2;
+    -ms-flex-order: 1;
+    order: 1;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    font-size: .875rem;
+}
+
+.section-nav {
+    padding-left: 0;
+}
+
+.section-nav ul {
+    font-size: .875rem;
+    list-style-type: none;
+}
+
+.section-nav li {
+    font-size: .875rem;
+}
+
+.section-nav a {
+    color: inherit !important;
+}
+
+.row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+@media (min-width: 1200px) {
+    .flex-xl-nowrap {
+        flex-wrap: nowrap !important;
+    }
+}
+
+#floating-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: #00897B;
+    position: fixed;
+    top: .5rem;
+    right: .5rem;
+    cursor: pointer;
+    box-shadow: 0px 2px 5px #666;
+}
+
+#floating-button .more {
+    color: #F5F5F5;
+    position: absolute;
+    top: 0;
+    display: block;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    line-height: 2.5rem;
+    font-size: 2rem;
+    font-family: 'monospace';
+    font-weight: 300;
+}
+
+.hide-none {
+    display: none !important;
+}
+
+.col-expand {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    padding-right: 3rem !important;
+}
+
+.outline-bold {
+    font-weight: bolder !important;
+}
+
+@media print {
+    #floating-button {
+        display: none !important;
+    }
+}
+
+    @keyframes flash { 
+  0% { color: rgb(128, 203, 196); }
+  10% { color: rgb(0, 137, 123); }
+  40% { color: rgb(0, 137, 123); }
+  50% { color: rgb(128, 203, 196); }
+  60% { color: rgb(0, 137, 123); }
+  90% { color: rgb(0, 137, 123); }
+}
+.highlighted-anchor { animation: flash 1s; }
+div.mark-rect { background: transparent; border: 5px solid rgb(87, 104, 196); border-radius: 2px; position: absolute; }
+#vnote-footer { width: 100%; text-align: center; opacity: 0.2; margin-top: 3rem; }
+#vnote-footer p { font-size: 0.8rem; }
+#vnote-footer a { color: inherit !important; }
+x-eqs { display: flex; flex-direction: row; align-content: space-between; align-items: center; }
+x-eqs > x-eqn { width: 100%; margin-left: 3rem; }
+x-eqs > span { text-align: right; }
+.view-image, .view-svg { transition: 0.3s; }
+.modal-box { display: none; position: fixed; z-index: 1000; padding-top: 50px; left: 0px; top: 0px; width: 100%; height: 100%; overflow: hidden; background-color: rgba(68, 68, 68, 0.952941); }
+.modal-content { margin: auto; display: block; width: auto; height: auto; cursor: move; }
+.modal-content { animation-name: zoom; animation-duration: 0.6s; }
+@-webkit-keyframes zoom { 
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+@keyframes zoom { 
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+span.modal-close { position: absolute; z-index: 1000; top: 15px; right: 35px; color: rgb(218, 218, 218); font-size: 40px; font-weight: bold; transition: 0.3s; }
+span.modal-close:hover, span.modal-close:focus { color: rgb(238, 238, 238); text-decoration: none; cursor: pointer; }
+@media print {
+  pre, pre code, td.hljs-ln-code { white-space: pre-wrap !important; word-break: break-all !important; }
+  code, a { word-break: break-all !important; }
+  div.flowchart-diagram, div.mermaid-diagram, div.plantuml-diagram { overflow: hidden !important; }
+  img { max-width: 100% !important; height: auto !important; }
+  #vnote-footer { display: none !important; }
+}
+.alert { position: relative; padding: 0.75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: 0.25rem; }
+.alert-primary { color: rgb(0, 64, 133); background-color: rgb(204, 229, 255); border-color: rgb(184, 218, 255); }
+.alert-secondary { color: rgb(56, 61, 65); background-color: rgb(226, 227, 229); border-color: rgb(214, 216, 219); }
+.alert-success { color: rgb(21, 87, 36); background-color: rgb(212, 237, 218); border-color: rgb(195, 230, 203); }
+.alert-info { color: rgb(12, 84, 96); background-color: rgb(209, 236, 241); border-color: rgb(190, 229, 235); }
+.alert-warning { color: rgb(133, 100, 4); background-color: rgb(255, 243, 205); border-color: rgb(255, 238, 186); }
+.alert-danger { color: rgb(114, 28, 36); background-color: rgb(248, 215, 218); border-color: rgb(245, 198, 203); }
+.alert-light { color: rgb(129, 129, 130); background-color: rgb(254, 254, 254); border-color: rgb(253, 253, 254); }
+.alert-dark { color: rgb(27, 30, 33); background-color: rgb(214, 216, 217); border-color: rgb(198, 200, 202); }
+.vnote-anchor { font-weight: 400; color: rgba(0, 123, 255, 0.498039); transition: color 0.16s linear; padding-left: 0.375em; -webkit-font-smoothing: antialiased; text-decoration: none; opacity: 0; }
+.vnote-anchor:hover { color: rgb(0, 123, 255); text-decoration: none; opacity: 1; }
+.vnote-anchor::after { content: attr(data-anchor-icon); }
+.vnote-btn { position: relative; display: inline-block; padding: 6px 12px; font-size: 13px; font-weight: 700; line-height: 20px; white-space: nowrap; vertical-align: middle; cursor: pointer; border: none; user-select: none; -webkit-appearance: none; }
+.vnote-copy-clipboard-btn { transition: opacity 0.3s ease-in-out; opacity: 0; padding: 2px 6px; position: absolute; top: 5px; right: 5px; }
+pre:hover .vnote-copy-clipboard-btn { opacity: 1; }
+pre.vnote-snippet { position: relative; }
+body { margin: 0px auto; font-family: "Segoe UI", Helvetica, sans-serif, Tahoma, Arial, Geneva, Georgia, Palatino, "Times New Roman", "Hiragino Sans GB", 冬青黑体, "Microsoft YaHei", 微软雅黑, "Microsoft YaHei UI", "WenQuanYi Micro Hei", 文泉驿雅黑, Dengxian, 等线体, STXihei, 华文细黑, "Liberation Sans", "Droid Sans", NSimSun, 新宋体, SimSun, 宋体; color: rgb(34, 34, 34); line-height: 1.5; padding: 15px; background: rgb(238, 238, 238); font-size: 16px; }
+h1, h2, h3, h4, h5, h6 { color: rgb(34, 34, 34); font-weight: bold; margin-top: 20px; margin-bottom: 10px; padding: 0px; }
+p { padding: 0px; margin-top: 16px; margin-bottom: 16px; }
+h1 { font-size: 26px; }
+h2 { font-size: 24px; }
+h3 { font-size: 22px; }
+h4 { font-size: 20px; }
+h5 { font-size: 19px; }
+h6 { font-size: 18px; }
+a { color: rgb(0, 153, 255); margin: 0px; padding: 0px; vertical-align: baseline; text-decoration: none; word-break: break-word; }
+a:hover { text-decoration: underline; color: rgb(255, 102, 0); }
+a:visited { color: purple; }
+ul, ol { padding: 0px 0px 0px 24px; }
+li { line-height: 24px; }
+li ul, li ol { margin-left: 16px; }
+p, ul, ol { font-size: 16px; line-height: 24px; }
+pre { display: block; overflow-y: hidden; overflow-x: auto; tab-size: 4; }
+code { font-family: Consolas, Monaco, monospace, Courier; color: rgb(142, 36, 170); word-break: break-word; }
+pre code { display: block; overflow-x: auto; padding: 0.5em; color: rgb(34, 34, 34); background-color: rgb(224, 224, 224); border-left: 0.5em solid rgb(0, 137, 123); line-height: 1.5; font-family: Consolas, Monaco, monospace, Courier; white-space: pre; tab-size: 4; }
+pre code.markdown-metadata { border-left: 0.5em solid rgb(128, 203, 196); }
+aside { display: block; float: right; width: 390px; }
+blockquote { color: rgb(102, 102, 102); border-left: 0.5em solid rgb(122, 122, 122); padding: 0px 1em; margin-left: 0px; }
+blockquote p { color: rgb(102, 102, 102); }
+hr { display: block; text-align: left; margin: 1em 0px; border: none; height: 2px; background: rgb(153, 153, 153); }
+table { padding: 0px; margin: 1rem 0.5rem; border-collapse: collapse; }
+table tr { border-top: 2px solid rgb(204, 204, 204); background-color: white; margin: 0px; padding: 0px; }
+table tr:nth-child(2n) { background-color: rgb(248, 248, 248); }
+table tr th { font-weight: bold; border: 2px solid rgb(204, 204, 204); margin: 0px; padding: 6px 13px; }
+table tr td { border: 2px solid rgb(204, 204, 204); margin: 0px; padding: 6px 13px; }
+table tr th :first-child, table tr td :first-child { margin-top: 0px; }
+table tr th :last-child, table tr td :last-child { margin-bottom: 0px; }
+div.mermaid-diagram { margin: 16px 0px; overflow-y: hidden; }
+div.flowchart-diagram { padding: 0px 5px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+div.wavedrom-diagram { padding: 0px 5px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+div.plantuml-diagram { padding: 5px 5px 0px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+.img-package { text-align: center; }
+img.img-center { display: block; margin-left: auto; margin-right: auto; }
+span.img-caption { min-width: 20%; max-width: 80%; display: inline-block; padding: 10px; margin: 0px auto; border-bottom: 1px solid rgb(192, 192, 192); color: rgb(108, 108, 108); text-align: center; line-height: 1.5; }
+.emoji_zero, .emoji_one, .emoji_two, .emoji_three, .emoji_four, .emoji_five, .emoji_six, .emoji_seven, .emoji_eight, .emoji_nine { margin-left: 5px; margin-right: 8px; }
+div.preview-hint { opacity: 0.5; margin-top: 30%; margin-bottom: 30%; align-items: center; display: flex; flex-direction: column; justify-content: center; }
+table.hljs-ln tr { border: none; background-color: transparent; }
+table.hljs-ln tr td { border: none; background-color: transparent; }
+table.hljs-ln tr td.hljs-ln-numbers { user-select: none; text-align: center; color: rgb(170, 170, 170); border-right: 1px solid rgb(204, 204, 204); vertical-align: top; padding-right: 5px; white-space: nowrap; }
+table.hljs-ln tr td.hljs-ln-code { padding-left: 10px; }
+::-webkit-scrollbar { background-color: rgb(234, 234, 234); width: 14px; height: 14px; border: none; }
+::-webkit-scrollbar-corner { background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-button { height: 14px; width: 14px; background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-button:hover { background-color: rgb(208, 208, 208); }
+::-webkit-scrollbar-button:active { background-color: rgb(178, 178, 178); }
+::-webkit-scrollbar-track { background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-thumb { border: none; background-color: rgb(218, 218, 218); }
+::-webkit-scrollbar-thumb:hover { background-color: rgb(208, 208, 208); }
+::-webkit-scrollbar-thumb:active { background-color: rgb(178, 178, 178); }
+::-webkit-scrollbar-button:horizontal:increment { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(-90 256.00000000000006,256) " id="svg_1">   <polygon fill="%23333333" id="svg_2" points="128,192 256,320 384,192  "/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:horizontal:decrement { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(90 255.99999999999997,256.00000000000006) " id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:vertical:increment { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="null" id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:vertical:decrement { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(180 255.99999999999997,256) " id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::selection { background: rgb(25, 118, 210); color: rgb(238, 238, 238); }
+.modal-box { background-color: rgba(234, 234, 234, 0.952941); }
+span.modal-close { color: rgb(102, 102, 102); }
+span.modal-close:hover, span.modal-close:focus { color: rgb(34, 34, 34); }
+.hljs { display: block; overflow-x: auto; padding: 0.5em; background: rgb(224, 224, 224); }
+.hljs, .hljs-subst { color: rgb(54, 54, 54); }
+.hljs-comment { color: rgb(118, 118, 118); }
+.hljs-keyword, .hljs-attribute, .hljs-selector-tag, .hljs-meta-keyword, .hljs-doctag, .hljs-name { color: rgb(0, 0, 238); }
+.hljs-type, .hljs-string, .hljs-number, .hljs-selector-id, .hljs-selector-class, .hljs-quote, .hljs-template-tag, .hljs-deletion { color: rgb(136, 0, 0); }
+.hljs-title, .hljs-section { color: rgb(136, 0, 0); font-weight: bold; }
+.hljs-regexp, .hljs-symbol, .hljs-variable, .hljs-template-variable, .hljs-link, .hljs-selector-attr, .hljs-selector-pseudo { color: rgb(188, 96, 96); }
+.hljs-literal { color: rgb(175, 0, 215); }
+.hljs-built_in, .hljs-bullet, .hljs-code, .hljs-addition { color: rgb(0, 135, 0); }
+.hljs-meta { color: rgb(31, 113, 153); }
+.hljs-meta-string { color: rgb(77, 153, 191); }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: bold; }
+.mermaid-diagram .mermaid .label { color: rgb(51, 51, 51); }
+.mermaid-diagram .node rect, .mermaid-diagram .node circle, .mermaid-diagram .node ellipse, .mermaid-diagram .node polygon { fill: rgb(236, 236, 255); stroke: rgb(204, 204, 255); stroke-width: 1px; }
+.mermaid-diagram .edgePath .path { stroke: rgb(51, 51, 51); }
+.mermaid-diagram .edgeLabel { background-color: rgb(232, 232, 232); }
+.mermaid-diagram .cluster rect { fill: rgb(255, 255, 222) !important; rx: 4 !important; stroke: rgb(170, 170, 51) !important; stroke-width: 1px !important; }
+.mermaid-diagram .cluster text { fill: rgb(51, 51, 51); }
+.mermaid-diagram .actor { stroke: rgb(204, 204, 255); fill: rgb(236, 236, 255); }
+.mermaid-diagram text.actor { fill: black; stroke: none; }
+.mermaid-diagram .actor-line { stroke: grey; }
+.mermaid-diagram .messageLine0 { stroke-width: 1.5; stroke: rgb(51, 51, 51); }
+.mermaid-diagram .messageLine1 { stroke-width: 1.5; stroke: rgb(51, 51, 51); }
+.mermaid-diagram #arrowhead { fill: rgb(51, 51, 51); }
+.mermaid-diagram #crosshead path { fill: rgb(51, 51, 51) !important; stroke: rgb(51, 51, 51) !important; }
+.mermaid-diagram .messageText { fill: rgb(51, 51, 51); stroke: none; }
+.mermaid-diagram .labelBox { stroke: rgb(204, 204, 255); fill: rgb(236, 236, 255); }
+.mermaid-diagram .labelText { fill: black; stroke: none; }
+.mermaid-diagram .loopText { fill: black; stroke: none; }
+.mermaid-diagram .loopLine { stroke-width: 2; stroke: rgb(204, 204, 255); }
+.mermaid-diagram .note { stroke: rgb(170, 170, 51); fill: rgb(255, 245, 173); }
+.mermaid-diagram .noteText { fill: black; stroke: none; font-family: "trebuchet ms", verdana, arial; font-size: 14px; }
+.mermaid-diagram .section { stroke: none; opacity: 0.2; }
+.mermaid-diagram .section0 { fill: rgba(102, 102, 255, 0.490196); }
+.mermaid-diagram .section2 { fill: rgb(255, 244, 0); }
+.mermaid-diagram .section1, .mermaid-diagram .section3 { fill: white; opacity: 0.2; }
+.mermaid-diagram .sectionTitle0 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle1 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle2 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle3 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle { text-anchor: start; font-size: 11px; }
+.mermaid-diagram .grid .tick { stroke: lightgrey; opacity: 0.3; shape-rendering: crispEdges; }
+.mermaid-diagram .grid path { stroke-width: 0; }
+.mermaid-diagram .today { fill: none; stroke: red; stroke-width: 2px; }
+.mermaid-diagram .task { stroke-width: 2; }
+.mermaid-diagram .taskText { text-anchor: middle; font-size: 11px; }
+.mermaid-diagram .taskTextOutsideRight { fill: black; text-anchor: start; font-size: 11px; }
+.mermaid-diagram .taskTextOutsideLeft { fill: black; text-anchor: end; font-size: 11px; }
+.mermaid-diagram .taskText0, .mermaid-diagram .taskText1, .mermaid-diagram .taskText2, .mermaid-diagram .taskText3 { fill: white; }
+.mermaid-diagram .task0, .mermaid-diagram .task1, .mermaid-diagram .task2, .mermaid-diagram .task3 { fill: rgb(138, 144, 221); stroke: rgb(83, 79, 188); }
+.mermaid-diagram .taskTextOutside0, .mermaid-diagram .taskTextOutside2 { fill: black; }
+.mermaid-diagram .taskTextOutside1, .mermaid-diagram .taskTextOutside3 { fill: black; }
+.mermaid-diagram .active0, .mermaid-diagram .active1, .mermaid-diagram .active2, .mermaid-diagram .active3 { fill: rgb(191, 199, 255); stroke: rgb(83, 79, 188); }
+.mermaid-diagram .activeText0, .mermaid-diagram .activeText1, .mermaid-diagram .activeText2, .mermaid-diagram .activeText3 { fill: black !important; }
+.mermaid-diagram .done0, .mermaid-diagram .done1, .mermaid-diagram .done2, .mermaid-diagram .done3 { stroke: grey; fill: lightgrey; stroke-width: 2; }
+.mermaid-diagram .doneText0, .mermaid-diagram .doneText1, .mermaid-diagram .doneText2, .mermaid-diagram .doneText3 { fill: black !important; }
+.mermaid-diagram .crit0, .mermaid-diagram .crit1, .mermaid-diagram .crit2, .mermaid-diagram .crit3 { stroke: rgb(255, 136, 136); fill: red; stroke-width: 2; }
+.mermaid-diagram .activeCrit0, .mermaid-diagram .activeCrit1, .mermaid-diagram .activeCrit2, .mermaid-diagram .activeCrit3 { stroke: rgb(255, 136, 136); fill: rgb(191, 199, 255); stroke-width: 2; }
+.mermaid-diagram .doneCrit0, .mermaid-diagram .doneCrit1, .mermaid-diagram .doneCrit2, .mermaid-diagram .doneCrit3 { stroke: rgb(255, 136, 136); fill: lightgrey; stroke-width: 2; cursor: pointer; shape-rendering: crispEdges; }
+.mermaid-diagram .doneCritText0, .mermaid-diagram .doneCritText1, .mermaid-diagram .doneCritText2, .mermaid-diagram .doneCritText3 { fill: black !important; }
+.mermaid-diagram .activeCritText0, .mermaid-diagram .activeCritText1, .mermaid-diagram .activeCritText2, .mermaid-diagram .activeCritText3 { fill: black !important; }
+.mermaid-diagram .titleText { text-anchor: middle; font-size: 18px; fill: black; }
+.mermaid-diagram .node text { font-family: "trebuchet ms", verdana, arial; font-size: 14px; }
+.mermaid-diagram div.mermaidTooltip { position: absolute; text-align: center; max-width: 200px; padding: 2px; font-family: "trebuchet ms", verdana, arial; font-size: 12px; background: rgb(255, 255, 222); border: 1px solid rgb(170, 170, 51); border-radius: 2px; pointer-events: none; z-index: 100; }
+.hljs-ln { border-collapse: collapse; }
+.hljs-ln td { padding: 0px; }
+.hljs-ln-n::before { content: attr(data-line-number); }
+.MathJax_Hover_Frame { border-radius: 0.25em; box-shadow: rgb(136, 51, 170) 0px 0px 15px; display: inline-block; position: absolute; border: 1px solid rgb(170, 102, 221) !important; }
+.MathJax_Menu_Button .MathJax_Hover_Arrow { position: absolute; cursor: pointer; display: inline-block; border: 2px solid rgb(170, 170, 170); border-radius: 4px; font-family: "Courier New", Courier; font-size: 9px; color: rgb(240, 240, 240); }
+.MathJax_Menu_Button .MathJax_Hover_Arrow span { display: block; background-color: rgb(170, 170, 170); border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px; }
+.MathJax_Hover_Arrow:hover { color: white !important; border: 2px solid rgb(204, 204, 204) !important; }
+.MathJax_Hover_Arrow:hover span { background-color: rgb(204, 204, 204) !important; }
+#MathJax_About { position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: rgb(221, 221, 221); color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; box-shadow: rgb(128, 128, 128) 0px 10px 20px; }
+#MathJax_About.MathJax_MousePost { outline: none; }
+.MathJax_Menu { position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid rgb(204, 204, 204); margin: 0px; cursor: default; font-style: normal; font-weight: normal; font-size: 15px; font-family: "Microsoft JhengHei UI"; font-stretch: normal; font-variant: normal; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: rgb(128, 128, 128) 0px 10px 20px; }
+.MathJax_MenuItem { padding: 2px 2em; background: transparent; }
+.MathJax_MenuArrow { position: absolute; right: 0.5em; padding-top: 0.25em; color: rgb(102, 102, 102); font-size: 0.75em; }
+.MathJax_MenuActive .MathJax_MenuArrow { color: white; }
+.MathJax_MenuArrow.RTL { left: 0.5em; right: auto; }
+.MathJax_MenuCheck { position: absolute; left: 0.7em; }
+.MathJax_MenuCheck.RTL { right: 0.7em; left: auto; }
+.MathJax_MenuRadioCheck { position: absolute; left: 1em; }
+.MathJax_MenuRadioCheck.RTL { right: 1em; left: auto; }
+.MathJax_MenuLabel { padding: 2px 2em 4px 1.33em; font-style: italic; }
+.MathJax_MenuRule { border-top: 1px solid rgb(204, 204, 204); margin: 4px 1px 0px; }
+.MathJax_MenuDisabled { color: graytext; }
+.MathJax_MenuActive { background-color: highlight; color: highlighttext; }
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus { background-color: rgb(232, 232, 232); }
+.MathJax_ContextMenu:focus { outline: none; }
+.MathJax_ContextMenu .MathJax_MenuItem:focus { outline: none; }
+#MathJax_AboutClose { top: 0.2em; right: 0.2em; }
+.MathJax_Menu .MathJax_MenuClose { top: -10px; left: -10px; }
+.MathJax_MenuClose { position: absolute; cursor: pointer; display: inline-block; border: 2px solid rgb(170, 170, 170); border-radius: 18px; font-family: "Courier New", Courier; font-size: 24px; color: rgb(240, 240, 240); }
+.MathJax_MenuClose span { display: block; background-color: rgb(170, 170, 170); border: 1.5px solid; border-radius: 18px; line-height: 0; padding: 8px 0px 6px; }
+.MathJax_MenuClose:hover { color: white !important; border: 2px solid rgb(204, 204, 204) !important; }
+.MathJax_MenuClose:hover span { background-color: rgb(204, 204, 204) !important; }
+.MathJax_MenuClose:hover:focus { outline: none; }
+.MathJax_Preview .MJXf-math { color: inherit !important; }
+.MJX_Assistive_MathML { top: 0px; left: 0px; clip: rect(1px 1px 1px 1px); user-select: none; position: absolute !important; padding: 1px 0px 0px !important; border: 0px !important; height: 1px !important; width: 1px !important; overflow: hidden !important; display: block !important; }
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block { width: 100% !important; }
+#MathJax_Zoom { position: absolute; background-color: rgb(240, 240, 240); overflow: auto; display: block; z-index: 301; padding: 0.5em; border: 1px solid black; margin: 0px; font-weight: normal; font-style: normal; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; box-sizing: content-box; box-shadow: rgb(170, 170, 170) 5px 5px 15px; }
+#MathJax_ZoomOverlay { position: absolute; left: 0px; top: 0px; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0px; padding: 0px; margin: 0px; background-color: white; opacity: 0; }
+#MathJax_ZoomFrame { position: relative; display: inline-block; height: 0px; width: 0px; }
+#MathJax_ZoomEventTrap { position: absolute; left: 0px; top: 0px; z-index: 302; display: inline-block; border: 0px; padding: 0px; margin: 0px; background-color: white; opacity: 0; }
+.MathJax_Preview { color: rgb(136, 136, 136); }
+#MathJax_Message { position: fixed; left: 1px; bottom: 2px; background-color: rgb(230, 230, 230); border: 1px solid rgb(149, 149, 149); margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap; }
+#MathJax_MSIE_Frame { position: absolute; top: 0px; left: 0px; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px; }
+.MathJax_Error { color: rgb(204, 0, 0); font-style: italic; }
+.MJXp-script { font-size: 0.8em; }
+.MJXp-right { transform-origin: right center 0px; }
+.MJXp-bold { font-weight: bold; }
+.MJXp-italic { font-style: italic; }
+.MJXp-scr { font-family: MathJax_Script, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-frak { font-family: MathJax_Fraktur, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-sf { font-family: MathJax_SansSerif, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-cal { font-family: MathJax_Caligraphic, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-mono { font-family: MathJax_Typewriter, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-largeop { font-size: 150%; }
+.MJXp-largeop.MJXp-int { vertical-align: -0.2em; }
+.MJXp-math { display: inline-block; line-height: 1.2; text-indent: 0px; font-family: "Times New Roman", Times, STIXGeneral, serif; white-space: nowrap; border-collapse: collapse; }
+.MJXp-display { display: block; text-align: center; margin: 1em 0px; }
+.MJXp-math span { display: inline-block; }
+.MJXp-box { text-align: center; display: block !important; }
+.MJXp-box::after { content: " "; }
+.MJXp-rule { margin-top: 0.1em; display: block !important; }
+.MJXp-char { display: block !important; }
+.MJXp-mo { margin: 0px 0.15em; }
+.MJXp-mfrac { margin: 0px 0.125em; vertical-align: 0.25em; }
+.MJXp-denom { width: 100%; display: inline-table !important; }
+.MJXp-denom > * { display: table-row !important; }
+.MJXp-surd { vertical-align: top; }
+.MJXp-surd > * { display: block !important; }
+.MJXp-script-box > * { height: 50%; display: table !important; }
+.MJXp-script-box > * > * { vertical-align: top; display: table-cell !important; }
+.MJXp-script-box > :last-child > * { vertical-align: bottom; }
+.MJXp-script-box > * > * > * { display: block !important; }
+.MJXp-mphantom { visibility: hidden; }
+.MJXp-munderover { display: inline-table !important; }
+.MJXp-over { text-align: center; display: inline-block !important; }
+.MJXp-over > * { display: block !important; }
+.MJXp-munderover > * { display: table-row !important; }
+.MJXp-mtable { vertical-align: 0.25em; margin: 0px 0.125em; }
+.MJXp-mtable > * { vertical-align: middle; display: inline-table !important; }
+.MJXp-mtr { display: table-row !important; }
+.MJXp-mtd { text-align: center; padding: 0.5em 0px 0px 0.5em; display: table-cell !important; }
+.MJXp-mtr > .MJXp-mtd:first-child { padding-left: 0px; }
+.MJXp-mtr:first-child > .MJXp-mtd { padding-top: 0px; }
+.MJXp-mlabeledtr { display: table-row !important; }
+.MJXp-mlabeledtr > .MJXp-mtd:first-child { padding-left: 0px; }
+.MJXp-mlabeledtr:first-child > .MJXp-mtd { padding-top: 0px; }
+.MJXp-merror { background-color: rgb(255, 255, 136); color: rgb(204, 0, 0); border: 1px solid rgb(204, 0, 0); padding: 1px 3px; font-style: normal; font-size: 90%; }
+.MJXp-scale0 { transform: scaleX(0); }
+.MJXp-scale1 { transform: scaleX(0.1); }
+.MJXp-scale2 { transform: scaleX(0.2); }
+.MJXp-scale3 { transform: scaleX(0.3); }
+.MJXp-scale4 { transform: scaleX(0.4); }
+.MJXp-scale5 { transform: scaleX(0.5); }
+.MJXp-scale6 { transform: scaleX(0.6); }
+.MJXp-scale7 { transform: scaleX(0.7); }
+.MJXp-scale8 { transform: scaleX(0.8); }
+.MJXp-scale9 { transform: scaleX(0.9); }
+.MathJax_PHTML .noError { font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid; }
+
+    </style>
+
+    <script type="text/javascript">
+var toc = [];
+
+var setVisible = function(node, visible) {
+    var cl = 'hide-none';
+    if (visible) {
+        node.classList.remove(cl);
+    } else {
+        node.classList.add(cl);
+    }
+};
+
+var isVisible = function(node) {
+    var cl = 'hide-none';
+    return !node.classList.contains(cl);
+};
+
+var setPostContentExpanded = function(node, expanded) {
+    var cl = 'col-expand';
+    if (expanded) {
+        node.classList.add(cl);
+    } else {
+        node.classList.remove(cl);
+    }
+};
+
+var setOutlinePanelVisible = function(visible) {
+    var outlinePanel = document.getElementById('outline-panel');
+    var postContent = document.getElementById('post-content');
+
+    setVisible(outlinePanel, visible);
+    setPostContentExpanded(postContent, !visible);
+};
+
+var isOutlinePanelVisible = function() {
+    var outlinePanel = document.getElementById('outline-panel');
+    return isVisible(outlinePanel);
+};
+
+window.addEventListener('load', function() {
+    var outlinePanel = document.getElementById('outline-panel');
+    outlinePanel.style.display = 'initial';
+
+    var floatingContainer = document.getElementById('container-floating');
+    floatingContainer.style.display = 'initial';
+
+    var outlineContent = document.getElementById('outline-content');
+    var postContent = document.getElementById('post-content');
+
+    // Escape @text to Html.
+    var escapeHtml = function(text) {
+        var map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    // Fetch the outline.
+    var headers = postContent.querySelectorAll("h1, h2, h3, h4, h5, h6");
+    toc = [];
+    for (var i = 0; i < headers.length; ++i) {
+        var header = headers[i];
+
+        toc.push({
+            level: parseInt(header.tagName.substr(1)),
+            anchor: header.id,
+            title: escapeHtml(header.textContent)
+        });
+    }
+
+    if (toc.length == 0) {
+        setOutlinePanelVisible(false);
+        setVisible(floatingContainer, false);
+        return;
+    }
+
+    var baseLevel = baseLevelOfToc(toc);
+    var tocTree = tocToTree(toPerfectToc(toc, baseLevel), baseLevel);
+
+    outlineContent.innerHTML = tocTree;
+    setOutlinePanelVisible(true);
+    setVisible(floatingContainer, true);
+});
+
+// Return the topest level of @toc, starting from 1.
+var baseLevelOfToc = function(p_toc) {
+    var level = -1;
+    for (i in p_toc) {
+        if (level == -1) {
+            level = p_toc[i].level;
+        } else if (level > p_toc[i].level) {
+            level = p_toc[i].level;
+        }
+    }
+
+    if (level == -1) {
+        level = 1;
+    }
+
+    return level;
+};
+
+// Handle wrong title levels, such as '#' followed by '###'
+var toPerfectToc = function(p_toc, p_baseLevel) {
+    var i;
+    var curLevel = p_baseLevel - 1;
+    var perfToc = [];
+    for (i in p_toc) {
+        var item = p_toc[i];
+
+        // Insert empty header.
+        while (item.level > curLevel + 1) {
+            curLevel += 1;
+            var tmp = { level: curLevel,
+                        anchor: '',
+                        title: '[EMPTY]'
+                      };
+            perfToc.push(tmp);
+        }
+
+        perfToc.push(item);
+        curLevel = item.level;
+    }
+
+    return perfToc;
+};
+
+var itemToHtml = function(item) {
+    return '<a href="#' + item.anchor + '" data="' + item.anchor + '">' + item.title + '</a>';
+};
+
+// Turn a perfect toc to a tree using <ul>
+var tocToTree = function(p_toc, p_baseLevel) {
+    var i;
+    var front = '<li>';
+    var ending = ['</li>'];
+    var curLevel = p_baseLevel;
+    for (i in p_toc) {
+        var item = p_toc[i];
+        if (item.level == curLevel) {
+            front += '</li>';
+            front += '<li>';
+            front += itemToHtml(item);
+        } else if (item.level > curLevel) {
+            // assert(item.level - curLevel == 1)
+            front += '<ul>';
+            ending.push('</ul>');
+            front += '<li>';
+            front += itemToHtml(item);
+            ending.push('</li>');
+            curLevel = item.level;
+        } else {
+            while (item.level < curLevel) {
+                var ele = ending.pop();
+                front += ele;
+                if (ele == '</ul>') {
+                    curLevel--;
+                }
+            }
+            front += '</li>';
+            front += '<li>';
+            front += itemToHtml(item);
+        }
+    }
+    while (ending.length > 0) {
+        front += ending.pop();
+    }
+    front = front.replace("<li></li>", "");
+    front = '<ul>' + front + '</ul>';
+    return front;
+};
+
+var toggleMore = function() {
+    if (toc.length == 0) {
+        return;
+    }
+
+    var p = document.getElementById('floating-more');
+    if (isOutlinePanelVisible()) {
+        p.textContent = '<';
+        setOutlinePanelVisible(false);
+    } else {
+        p.textContent = '>';
+        setOutlinePanelVisible(true);
+    }
+};
+
+window.addEventListener('scroll', function() {
+    if (toc.length == 0 || !isOutlinePanelVisible()) {
+        return;
+    }
+
+    var postContent = document.getElementById('post-content');
+    var scrollTop = document.documentElement.scrollTop
+                    || document.body.scrollTop
+                    || window.pageYOffset;
+    var eles = postContent.querySelectorAll("h1, h2, h3, h4, h5, h6");
+
+    if (eles.length == 0) {
+        return;
+    }
+
+    var idx = -1;
+    var biaScrollTop = scrollTop + 50;
+    for (var i = 0; i < eles.length; ++i) {
+        if (biaScrollTop >= eles[i].offsetTop) {
+            idx = i;
+        } else {
+            break;
+        }
+    }
+
+    var header = '';
+    if (idx != -1) {
+        header = eles[idx].id;
+    }
+
+    highlightItemOnlyInOutline(header);
+});
+
+var highlightItemOnlyInOutline = function(id) {
+    var cl = 'outline-bold';
+    var outlineContent = document.getElementById('outline-content');
+    var eles = outlineContent.querySelectorAll("a");
+    var target = null;
+    for (var i = 0; i < eles.length; ++i) {
+        var ele = eles[i];
+        if (ele.getAttribute('data') == id) {
+            target = ele;
+            ele.classList.add(cl);
+        } else {
+            ele.classList.remove(cl);
+        }
+    }
+
+    // TODO: scroll target into view within the outline panel scroll area.
+};
+
+</script>
+
+
+<!-- HEAD_PLACE_HOLDER -->
+</head>
+<body>
+<div class="container-fluid">
+<div class="row flex-xl-nowrap">
+    <div id="outline-panel" style="display:none;" class="d-none d-md-block d-xl-block col-md-3 col-xl-2 bd-toc">
+        <div id="outline-content" class="section-nav"></div>
+    </div>
+    <div id="post-content" class="col-12 col-md-9 col-xl-10 py-md-3 pl-md-5 bd-content">
+    <h1 id="toc_0">狀態模式 State<a class="vnote-anchor" href="#toc_0" data-anchor-icon="#"></a></h1>
+<h2 id="toc_1">講解<a class="vnote-anchor" href="#toc_1" data-anchor-icon="#"></a></h2>
+<ul>
+<li>
+<h3 id="toc_2">狀態模式 就是製作每份狀態，透過狀態更換來，來進行解耦合，在遊戲中最典型的就是<strong>狀態機AI</strong><a class="vnote-anchor" href="#toc_2" data-anchor-icon="#"></a></h3>
+</li>
+<li>優點 在於可以減少因為改變，而修改大量現有程式碼，因為現有的程式碼已經寫入該狀態機，新的狀態機只需新增並更改少量部分即可新增狀態</li>
+<li><em>在書中介紹<strong>狀態模式</strong>是使用切換場景來當範例</em></li>
+</ul>
+<h3 id="toc_3">以下是基本類圖<a class="vnote-anchor" href="#toc_3" data-anchor-icon="#"></a></h3>
+<p>Context是宣告State變數，<br>
+而ConcreteStateA_B_C繼承State<br>
+Context就能執行ConcreteStateA_B_C裡的Handle()函式</p>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="409.5px" preserveAspectRatio="none" style="width:693px;height:409px;" version="1.1" viewBox="0 0 693 409" width="693px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="f9qt3nesl7m55" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><!--MD5=[6754354365917abf8f1a56af1b7e344c]
+class Context--><rect fill="#FEFECE" filter="url(#f9qt3nesl7m55)" height="142.5037" id="Context" style="stroke: #A80036; stroke-width: 2.25;" width="204" x="9" y="12"></rect><ellipse cx="74.025" cy="36" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M80.2125,41.9297 Q79.6734,42.8672 78.4078,43.8281 Q76.2984,45.3516 72.1969,45.3516 Q68.9156,45.3516 66.7125,43.1484 Q64.1578,40.5938 64.1578,35.8125 Q64.1578,31.4063 66.6891,28.7109 Q69.0094,26.2734 72.3375,26.2734 Q75.15,26.2734 76.6266,26.7188 Q78.1031,27.1641 78.1031,27.1641 Q78.1031,27.1641 78.1031,26.3203 L79.6266,26.1797 L79.8609,32.2734 L77.8688,32.4609 Q76.65,27.0703 72.5484,27.0703 Q72.5484,27.0703 71.6578,27.4922 Q70.2984,28.0078 69.525,28.8281 Q67.4625,31.1484 67.4391,35.8594 Q67.4156,40.0313 69.7125,42.375 Q71.6578,44.3672 72.9,44.3672 Q75.9469,44.3672 79.2281,40.5234 L80.2125,41.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="61.5" x="104.475" y="44.8638">Context</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="211.5" y1="60" y2="60"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="103.5" x="18" y="85.8757">變數含有State</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="186" x="18" y="109.377">用以執行State裡的Handle</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="211.5" y1="119.0024" y2="119.0024"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="102" x="18" y="144.8782">state.Handle()</text><!--MD5=[60d6b92408f98aed8df94d5c6e04aa63]
+class State--><rect fill="#FEFECE" filter="url(#f9qt3nesl7m55)" height="119.0024" id="State" style="stroke: #A80036; stroke-width: 2.25;" width="100.5" x="306.75" y="24"></rect><ellipse cx="333.975" cy="48" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M340.1625,53.9297 Q339.6234,54.8672 338.3578,55.8281 Q336.2484,57.3516 332.1469,57.3516 Q328.8656,57.3516 326.6625,55.1484 Q324.1078,52.5938 324.1078,47.8125 Q324.1078,43.4063 326.6391,40.7109 Q328.9594,38.2734 332.2875,38.2734 Q335.1,38.2734 336.5766,38.7188 Q338.0531,39.1641 338.0531,39.1641 Q338.0531,39.1641 338.0531,38.3203 L339.5766,38.1797 L339.8109,44.2734 L337.8188,44.4609 Q336.6,39.0703 332.4984,39.0703 Q332.4984,39.0703 331.6078,39.4922 Q330.2484,40.0078 329.475,40.8281 Q327.4125,43.1484 327.3891,47.8594 Q327.3656,52.0313 329.6625,54.375 Q331.6078,56.3672 332.85,56.3672 Q335.8969,56.3672 339.1781,52.5234 L340.1625,53.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="42" x="356.025" y="56.8638">State</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="308.25" x2="405.75" y1="72" y2="72"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="315.75" y="97.8757">狀態機父類</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="308.25" x2="405.75" y1="107.5012" y2="107.5012"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="61.5" x="315.75" y="133.377">Handle()</text><!--MD5=[8ce8754eae416e99ceeb172ff1b4777a]
+class ConcreteStateA--><rect fill="#FEFECE" filter="url(#f9qt3nesl7m55)" height="119.0024" id="ConcreteStateA" style="stroke: #A80036; stroke-width: 2.25;" width="175.5" x="39.75" y="274.5"></rect><ellipse cx="62.25" cy="298.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M68.4375,304.4297 Q67.8984,305.3672 66.6328,306.3281 Q64.5234,307.8516 60.4219,307.8516 Q57.1406,307.8516 54.9375,305.6484 Q52.3828,303.0938 52.3828,298.3125 Q52.3828,293.9063 54.9141,291.2109 Q57.2344,288.7734 60.5625,288.7734 Q63.375,288.7734 64.8516,289.2188 Q66.3281,289.6641 66.3281,289.6641 Q66.3281,289.6641 66.3281,288.8203 L67.8516,288.6797 L68.0859,294.7734 L66.0938,294.9609 Q64.875,289.5703 60.7734,289.5703 Q60.7734,289.5703 59.8828,289.9922 Q58.5234,290.5078 57.75,291.3281 Q55.6875,293.6484 55.6641,298.3594 Q55.6406,302.5313 57.9375,304.875 Q59.8828,306.8672 61.125,306.8672 Q64.1719,306.8672 67.4531,303.0234 L68.4375,304.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="127.5" x="83.25" y="307.3638">ConcreteStateA</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="41.25" x2="213.75" y1="322.5" y2="322.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="61.5" x="48.75" y="348.3757">狀態機A</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="41.25" x2="213.75" y1="358.0012" y2="358.0012"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="61.5" x="48.75" y="383.877">Handle()</text><!--MD5=[2a56818668b9fdbbaba8565da0ccac7d]
+class ConcreteStateB--><rect fill="#FEFECE" filter="url(#f9qt3nesl7m55)" height="119.0024" id="ConcreteStateB" style="stroke: #A80036; stroke-width: 2.25;" width="177" x="268.5" y="274.5"></rect><ellipse cx="291" cy="298.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M297.1875,304.4297 Q296.6484,305.3672 295.3828,306.3281 Q293.2734,307.8516 289.1719,307.8516 Q285.8906,307.8516 283.6875,305.6484 Q281.1328,303.0938 281.1328,298.3125 Q281.1328,293.9063 283.6641,291.2109 Q285.9844,288.7734 289.3125,288.7734 Q292.125,288.7734 293.6016,289.2188 Q295.0781,289.6641 295.0781,289.6641 Q295.0781,289.6641 295.0781,288.8203 L296.6016,288.6797 L296.8359,294.7734 L294.8438,294.9609 Q293.625,289.5703 289.5234,289.5703 Q289.5234,289.5703 288.6328,289.9922 Q287.2734,290.5078 286.5,291.3281 Q284.4375,293.6484 284.4141,298.3594 Q284.3906,302.5313 286.6875,304.875 Q288.6328,306.8672 289.875,306.8672 Q292.9219,306.8672 296.2031,303.0234 L297.1875,304.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="129" x="312" y="307.3638">ConcreteStateB</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="270" x2="444" y1="322.5" y2="322.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="60" x="277.5" y="348.3757">狀態機B</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="270" x2="444" y1="358.0012" y2="358.0012"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="61.5" x="277.5" y="383.877">Handle()</text><!--MD5=[04a09d9b78be1c11fb64a8389306e2b6]
+class ConcreteStateC--><rect fill="#FEFECE" filter="url(#f9qt3nesl7m55)" height="119.0024" id="ConcreteStateC" style="stroke: #A80036; stroke-width: 2.25;" width="178.5" x="498.75" y="274.5"></rect><ellipse cx="521.25" cy="298.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M527.4375,304.4297 Q526.8984,305.3672 525.6328,306.3281 Q523.5234,307.8516 519.4219,307.8516 Q516.1406,307.8516 513.9375,305.6484 Q511.3828,303.0938 511.3828,298.3125 Q511.3828,293.9063 513.9141,291.2109 Q516.2344,288.7734 519.5625,288.7734 Q522.375,288.7734 523.8516,289.2188 Q525.3281,289.6641 525.3281,289.6641 Q525.3281,289.6641 525.3281,288.8203 L526.8516,288.6797 L527.0859,294.7734 L525.0938,294.9609 Q523.875,289.5703 519.7734,289.5703 Q519.7734,289.5703 518.8828,289.9922 Q517.5234,290.5078 516.75,291.3281 Q514.6875,293.6484 514.6641,298.3594 Q514.6406,302.5313 516.9375,304.875 Q518.8828,306.8672 520.125,306.8672 Q523.1719,306.8672 526.4531,303.0234 L527.4375,304.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="130.5" x="542.25" y="307.3638">ConcreteStateC</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="500.25" x2="675.75" y1="322.5" y2="322.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="60" x="507.75" y="348.3757">狀態機C</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="500.25" x2="675.75" y1="358.0012" y2="358.0012"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="61.5" x="507.75" y="383.877">Handle()</text><!--MD5=[45f7b271079f8dd0ef6e5ff8e16b9c6c]
+reverse link Context to State--><path d="M232.983,83.25 C258.9825,83.25 285.0435,83.25 306.5175,83.25 " fill="none" id="Context<-State" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#FFFFFF" points="213.189,83.25,222.189,89.25,231.189,83.25,222.189,77.25,213.189,83.25" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="39" x="240.375" y="73.7395">引用</text><!--MD5=[84aa1ab688926a3061fa5ce935c50cce]
+reverse link State to ConcreteStateA--><path d="M285.993,161.3265 C252.246,197.7195 212.5635,240.5145 181.347,274.1795 " fill="none" id="State<-ConcreteStateA" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="278.538,153.924,306.636,139.065,293.937,168.2025,278.538,153.924" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="39" x="252" y="224.4895">繼承</text><!--MD5=[6c5de783058e39e318d63f080b303e10]
+reverse link State to ConcreteStateB--><path d="M357,172.8795 C357,206.52 357,244.0004 357,274.1576 " fill="none" id="State<-ConcreteStateB" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="346.5,172.7775,357,142.7775,367.5,172.7775,346.5,172.7775" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="39" x="358.5" y="224.4895">繼承</text><!--MD5=[acf3e3e646deb39c1d1091886a468985]
+reverse link State to ConcreteStateC--><path d="M428.4705,161.3265 C462.438,197.7195 502.38,240.5145 533.8005,274.1795 " fill="none" id="State<-ConcreteStateC" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="420.4875,168.1605,407.694,139.065,435.84,153.8325,420.4875,168.1605" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="39" x="487.5" y="224.4895">繼承</text><!--MD5=[fb267d5e2beb583bc6de61fa89c02463]
+@startuml
+scale 1.5
+skinparam classAttributeIconSize 0
+
+class Context{
+變數含有State
+用以執行State裡的Handle
+__
+state.Handle()
+}
+class State{
+狀態機父類
+__
+Handle()
+}
+class ConcreteStateA{
+狀態機A
+__
+Handle()
+}
+class ConcreteStateB{
+狀態機B
+__
+Handle()
+}
+class ConcreteStateC{
+狀態機C
+__
+Handle()
+}
+
+Context o- State :引用
+State <|- - ConcreteStateA :繼承
+State <|- - ConcreteStateB :繼承
+State <|- - ConcreteStateC :繼承
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+<h3 id="toc_4">以下是書中類圖(Unity切換場景)<a class="vnote-anchor" href="#toc_4" data-anchor-icon="#"></a></h3>
+<h4 id="toc_5">1. IScenceState裡面有<a class="vnote-anchor" href="#toc_5" data-anchor-icon="#"></a></h4>
+<ul>
+<li>變數
+<ul>
+<li>ScenceStateControllor</li>
+</ul>
+</li>
+<li>函數
+<ul>
+<li>StateBegin() State剛開始要執行的，例:遊戲數據載入.....</li>
+<li>StateEnd()    State要結束要執行的，例:釋放GC的</li>
+<li>StateUpdate() State每禎要執行的，例:遊戲進程</li>
+</ul>
+</li>
+</ul>
+<h4 id="toc_6">2. ScenceStateControllor 裡面<a class="vnote-anchor" href="#toc_6" data-anchor-icon="#"></a></h4>
+<ul>
+<li>函式
+<ul>
+<li>SetState     在這個例子就是轉場，但實際上是設定狀態</li>
+<li>SetUpdate 執行狀態裡的Update</li>
+</ul>
+</li>
+</ul>
+<h4 id="toc_7">3. Gameloop<a class="vnote-anchor" href="#toc_7" data-anchor-icon="#"></a></h4>
+<ul>
+<li>變數
+<ul>
+<li>ScenceStateControllor 這個變數是放在Untiy Update裡，讓ScenceStateControllor執行每禎Update也就是StateUpdate</li>
+</ul>
+</li>
+</ul>
+<h4 id="toc_8">總結下<a class="vnote-anchor" href="#toc_8" data-anchor-icon="#"></a></h4>
+<ol>
+<li>
+<p>Gameloop是讓Unity與State分離開來，透過ScenceStateControllor變數讓State可以使用Update</p>
+</li>
+<li>
+<p>ScenceStateControllor裡面則是負責對接State，讓State能使用Update</p>
+</li>
+<li>
+<p>IScenceState 裡面最重要的是SceneStateController變數這段，能讓State自己決定轉換State，<br>
+例:StartState==&gt;MainMenuState  ，StartState執行完後自己跳到MainMenuState</p>
+</li>
+</ol>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="789px" preserveAspectRatio="none" style="width:1189px;height:789px;" version="1.1" viewBox="0 0 1189 789" width="1189.5px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="f1uhlqly55xsih" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><!--MD5=[c76c24f0d4b1436f816c250bb1432361]
+class Gameloop--><rect fill="#FEFECE" filter="url(#f1uhlqly55xsih)" height="119.0024" id="Gameloop" style="stroke: #A80036; stroke-width: 2.25;" width="423" x="21.75" y="12"></rect><ellipse cx="183.375" cy="36" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M189.5625,41.9297 Q189.0234,42.8672 187.7578,43.8281 Q185.6484,45.3516 181.5469,45.3516 Q178.2656,45.3516 176.0625,43.1484 Q173.5078,40.5938 173.5078,35.8125 Q173.5078,31.4063 176.0391,28.7109 Q178.3594,26.2734 181.6875,26.2734 Q184.5,26.2734 185.9766,26.7188 Q187.4531,27.1641 187.4531,27.1641 Q187.4531,27.1641 187.4531,26.3203 L188.9766,26.1797 L189.2109,32.2734 L187.2188,32.4609 Q186,27.0703 181.8984,27.0703 Q181.8984,27.0703 181.0078,27.4922 Q179.6484,28.0078 178.875,28.8281 Q176.8125,31.1484 176.7891,35.8594 Q176.7656,40.0313 179.0625,42.375 Q181.0078,44.3672 182.25,44.3672 Q185.2969,44.3672 188.5781,40.5234 L189.5625,41.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="87" x="214.125" y="44.8638">Gameloop</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="23.25" x2="443.25" y1="60" y2="60"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="405" x="30.75" y="85.8757">負責Unity(MonoBehaviour)與ScenceStateControllor溝通</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="23.25" x2="443.25" y1="95.5012" y2="95.5012"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="216" x="30.75" y="121.377">private ScenceStateControllor</text><!--MD5=[911ce34c3f741ef04ab3a09ae36f44cd]
+class ScenceStateControllor--><rect fill="#FEFECE" filter="url(#f1uhlqly55xsih)" height="189.5061" id="ScenceStateControllor" style="stroke: #A80036; stroke-width: 2.25;" width="448.5" x="9" y="250.5"></rect><ellipse cx="134.625" cy="274.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M140.8125,280.4297 Q140.2734,281.3672 139.0078,282.3281 Q136.8984,283.8516 132.7969,283.8516 Q129.5156,283.8516 127.3125,281.6484 Q124.7578,279.0938 124.7578,274.3125 Q124.7578,269.9063 127.2891,267.2109 Q129.6094,264.7734 132.9375,264.7734 Q135.75,264.7734 137.2266,265.2188 Q138.7031,265.6641 138.7031,265.6641 Q138.7031,265.6641 138.7031,264.8203 L140.2266,264.6797 L140.4609,270.7734 L138.4688,270.9609 Q137.25,265.5703 133.1484,265.5703 Q133.1484,265.5703 132.2578,265.9922 Q130.8984,266.5078 130.125,267.3281 Q128.0625,269.6484 128.0391,274.3594 Q128.0156,278.5313 130.3125,280.875 Q132.2578,282.8672 133.5,282.8672 Q136.5469,282.8672 139.8281,279.0234 L140.8125,280.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="184.5" x="165.375" y="283.3638">ScenceStateControllor</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="456" y1="298.5" y2="298.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="363" x="18" y="324.3757">狀態機控管，但這案例狀態機切換，放在狀態機裡</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="430.5" x="18" y="347.877">所以這ScenceStateControllor只是負責執行State的函式而已</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="456" y1="357.5024" y2="357.5024"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="213" x="18" y="383.3782">private IScenceState m_State</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="120" x="18" y="406.8794">public SetState()</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="133.5" x="18" y="430.3806">public SetUpdate()</text><!--MD5=[46bfb0fd59ebca50014f17906de5c870]
+class IScenceState--><rect fill="#FEFECE" filter="url(#f1uhlqly55xsih)" height="189.5061" id="IScenceState" style="stroke: #A80036; stroke-width: 2.25;" width="339" x="551.25" y="250.5"></rect><ellipse cx="660.375" cy="274.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M666.5625,280.4297 Q666.0234,281.3672 664.7578,282.3281 Q662.6484,283.8516 658.5469,283.8516 Q655.2656,283.8516 653.0625,281.6484 Q650.5078,279.0938 650.5078,274.3125 Q650.5078,269.9063 653.0391,267.2109 Q655.3594,264.7734 658.6875,264.7734 Q661.5,264.7734 662.9766,265.2188 Q664.4531,265.6641 664.4531,265.6641 Q664.4531,265.6641 664.4531,264.8203 L665.9766,264.6797 L666.2109,270.7734 L664.2188,270.9609 Q663,265.5703 658.8984,265.5703 Q658.8984,265.5703 658.0078,265.9922 Q656.6484,266.5078 655.875,267.3281 Q653.8125,269.6484 653.7891,274.3594 Q653.7656,278.5313 656.0625,280.875 Q658.0078,282.8672 659.25,282.8672 Q662.2969,282.8672 665.5781,279.0234 L666.5625,280.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="108" x="691.125" y="283.3638">IScenceState</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="552.75" x2="888.75" y1="298.5" y2="298.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="560.25" y="324.3757">狀態機父類</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="552.75" x2="888.75" y1="334.0012" y2="334.0012"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="321" x="560.25" y="359.877">protected SceneStateController m_Controller</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="189" x="560.25" y="383.3782">public virtual  StateBegin()</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="175.5" x="560.25" y="406.8794">public virtual  StateEnd()</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="199.5" x="560.25" y="430.3806">public virtual  StateUpdate()</text><!--MD5=[c16a79a16e6a08d1801cf646972c823e]
+class StartState--><rect fill="#FEFECE" filter="url(#f1uhlqly55xsih)" height="213.0073" id="StartState" style="stroke: #A80036; stroke-width: 2.25;" width="234" x="267.75" y="559.5"></rect><ellipse cx="338.625" cy="583.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M344.8125,589.4297 Q344.2734,590.3672 343.0078,591.3281 Q340.8984,592.8516 336.7969,592.8516 Q333.5156,592.8516 331.3125,590.6484 Q328.7578,588.0938 328.7578,583.3125 Q328.7578,578.9063 331.2891,576.2109 Q333.6094,573.7734 336.9375,573.7734 Q339.75,573.7734 341.2266,574.2188 Q342.7031,574.6641 342.7031,574.6641 Q342.7031,574.6641 342.7031,573.8203 L344.2266,573.6797 L344.4609,579.7734 L342.4688,579.9609 Q341.25,574.5703 337.1484,574.5703 Q337.1484,574.5703 336.2578,574.9922 Q334.8984,575.5078 334.125,576.3281 Q332.0625,578.6484 332.0391,583.3594 Q332.0156,587.5313 334.3125,589.875 Q336.2578,591.8672 337.5,591.8672 Q340.5469,591.8672 343.8281,588.0234 L344.8125,589.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="79.5" x="369.375" y="592.3638">StartState</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="269.25" x2="500.25" y1="607.5" y2="607.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="127.5" x="276.75" y="633.3757">(遊戲開始狀態機)</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="214.5" x="276.75" y="656.877">用來載入遊戲一開始的數據，</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="198" x="276.75" y="680.3782">導入完就進入主介面狀態機</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="269.25" x2="500.25" y1="690.0037" y2="690.0037"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="205.5" x="276.75" y="715.8794">public override  StateBegin()</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="192" x="276.75" y="739.3806">public override  StateEnd()</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="216" x="276.75" y="762.8818">public override  StateUpdate()</text><!--MD5=[1e10e77f72bad4ff6dba06a69e8c12f1]
+class MainMenuState--><rect fill="#FEFECE" filter="url(#f1uhlqly55xsih)" height="189.5061" id="MainMenuState" style="stroke: #A80036; stroke-width: 2.25;" width="331.5" x="555" y="571.5"></rect><ellipse cx="651.375" cy="595.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M657.5625,601.4297 Q657.0234,602.3672 655.7578,603.3281 Q653.6484,604.8516 649.5469,604.8516 Q646.2656,604.8516 644.0625,602.6484 Q641.5078,600.0938 641.5078,595.3125 Q641.5078,590.9063 644.0391,588.2109 Q646.3594,585.7734 649.6875,585.7734 Q652.5,585.7734 653.9766,586.2188 Q655.4531,586.6641 655.4531,586.6641 Q655.4531,586.6641 655.4531,585.8203 L656.9766,585.6797 L657.2109,591.7734 L655.2188,591.9609 Q654,586.5703 649.8984,586.5703 Q649.8984,586.5703 649.0078,586.9922 Q647.6484,587.5078 646.875,588.3281 Q644.8125,590.6484 644.7891,595.3594 Q644.7656,599.5313 647.0625,601.875 Q649.0078,603.8672 650.25,603.8672 Q653.2969,603.8672 656.5781,600.0234 L657.5625,601.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="126" x="682.125" y="604.3638">MainMenuState</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="556.5" x2="885" y1="619.5" y2="619.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="111" x="564" y="645.3757">(主介面狀態機)</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="313.5" x="564" y="668.877">負責主介面，這個案例主介面只有一個按鈕</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="556.5" x2="885" y1="678.5024" y2="678.5024"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="205.5" x="564" y="704.3782">public override  StateBegin()</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="192" x="564" y="727.8794">public override  StateEnd()</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="216" x="564" y="751.3806">public override  StateUpdate()</text><!--MD5=[dc4994b61921cc0ba900b8b8f2fc6d4d]
+class BattleState--><rect fill="#FEFECE" filter="url(#f1uhlqly55xsih)" height="189.5061" id="BattleState" style="stroke: #A80036; stroke-width: 2.25;" width="234" x="939.75" y="571.5"></rect><ellipse cx="1006.125" cy="595.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M1012.3125,601.4297 Q1011.7734,602.3672 1010.5078,603.3281 Q1008.3984,604.8516 1004.2969,604.8516 Q1001.0156,604.8516 998.8125,602.6484 Q996.2578,600.0938 996.2578,595.3125 Q996.2578,590.9063 998.7891,588.2109 Q1001.1094,585.7734 1004.4375,585.7734 Q1007.25,585.7734 1008.7266,586.2188 Q1010.2031,586.6641 1010.2031,586.6641 Q1010.2031,586.6641 1010.2031,585.8203 L1011.7266,585.6797 L1011.9609,591.7734 L1009.9688,591.9609 Q1008.75,586.5703 1004.6484,586.5703 Q1004.6484,586.5703 1003.7578,586.9922 Q1002.3984,587.5078 1001.625,588.3281 Q999.5625,590.6484 999.5391,595.3594 Q999.5156,599.5313 1001.8125,601.875 Q1003.7578,603.8672 1005,603.8672 Q1008.0469,603.8672 1011.3281,600.0234 L1012.3125,601.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="88.5" x="1036.875" y="604.3638">BattleState</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="941.25" x2="1172.25" y1="619.5" y2="619.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="94.5" x="948.75" y="645.3757">(遊戲狀態機)</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="115.5" x="948.75" y="668.877">負責遊戲主進行</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="941.25" x2="1172.25" y1="678.5024" y2="678.5024"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="205.5" x="948.75" y="704.3782">public override  StateBegin()</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="192" x="948.75" y="727.8794">public override  StateEnd()</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="216" x="948.75" y="751.3806">public override  StateUpdate()</text><!--MD5=[f586d1ef86773534446784ad46a2aa6e]
+reverse link Gameloop to ScenceStateControllor--><path d="M233.25,150.4965 C233.25,181.656 233.25,217.824 233.25,250.371 " fill="none" id="Gameloop<-ScenceStateControllor" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="233.25,130.833,227.25,139.833,233.25,148.833,239.25,139.833,233.25,130.833" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="39" x="234.75" y="200.4895">組合</text><!--MD5=[e687c02e2dd22e35f92b648b69f7b1f4]
+reverse link ScenceStateControllor to IScenceState--><path d="M477.5415,345 C502.257,345 526.9665,345 550.6515,345 " fill="none" id="ScenceStateControllor<-IScenceState" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#FFFFFF" points="457.737,345,466.737,351,475.737,345,466.737,339,457.737,345" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="39" x="484.875" y="335.4895">引用</text><!--MD5=[ea191bdd84daf7f71b87eff9d36cc6ee]
+reverse link IScenceState to StartState--><path d="M600.378,460.4235 C566.4375,492.546 529.6695,527.3445 496.272,558.9525 " fill="none" id="IScenceState<-StartState" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="593.2035,452.757,622.209,439.7625,607.638,468.009,593.2035,452.757" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="39" x="573.75" y="509.4895">繼承</text><!--MD5=[7f51e4629f291b1970918d7bded0195e]
+reverse link IScenceState to MainMenuState--><path d="M720.75,469.8885 C720.75,503.5845 720.75,539.529 720.75,571.2405 " fill="none" id="IScenceState<-MainMenuState" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="710.25,469.7625,720.75,439.7625,731.25,469.7625,710.25,469.7625" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="39" x="722.25" y="509.4895">繼承</text><!--MD5=[ebc7f013eb9c207c84019e234026b8d1]
+reverse link IScenceState to BattleState--><path d="M841.3785,460.6665 C879.7125,496.9455 921.6285,536.6175 958.2105,571.2405 " fill="none" id="IScenceState<-BattleState" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="833.862,468.009,819.291,439.7625,848.2965,452.757,833.862,468.009" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="39" x="890.25" y="509.4895">繼承</text><!--MD5=[b9ea1845db1c01577e1f4067130eb835]
+@startuml
+skinparam classAttributeIconSize 0
+scale 1.5
+class Gameloop{
+負責Unity(MonoBehaviour)與ScenceStateControllor溝通
+__
+  private ScenceStateControllor
+}
+
+class ScenceStateControllor{
+狀態機控管，但這案例狀態機切換，放在狀態機裡
+所以這ScenceStateControllor只是負責執行State的函式而已
+__
+private IScenceState m_State
+public SetState()
+public SetUpdate()
+}
+class IScenceState{
+狀態機父類
+__
+protected SceneStateController m_Controller
+public virtual  StateBegin()
+public virtual  StateEnd()
+public virtual  StateUpdate()
+}
+class StartState{
+(遊戲開始狀態機)
+用來載入遊戲一開始的數據，
+導入完就進入主介面狀態機
+__
+public override  StateBegin()
+public override  StateEnd()
+public override  StateUpdate()
+}
+class MainMenuState{
+(主介面狀態機)
+負責主介面，這個案例主介面只有一個按鈕
+__
+public override  StateBegin()
+public override  StateEnd()
+public override  StateUpdate()
+}
+class BattleState{
+(遊戲狀態機)
+負責遊戲主進行
+__
+public override  StateBegin()
+public override  StateEnd()
+public override  StateUpdate()
+}
+
+Gameloop *- - ScenceStateControllor :組合
+ScenceStateControllor o- IScenceState : 引用
+IScenceState <|- - StartState :繼承
+IScenceState <|- - MainMenuState :繼承
+IScenceState <|- - BattleState :繼承
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+<h4 id="toc_9">案例中時序圖<a class="vnote-anchor" href="#toc_9" data-anchor-icon="#"></a></h4>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="2215.5px" preserveAspectRatio="none" style="width:1434px;height:2215px;" version="1.1" viewBox="0 0 1434 2215" width="1434px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="f1jzcvxzeh865w" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><rect fill="#FFFFFF" filter="url(#f1jzcvxzeh865w)" height="204.8708" style="stroke: #000000; stroke-width: 3.0;" width="1027.5" x="19.5" y="160.4106"></rect><rect fill="#FFFFFF" filter="url(#f1jzcvxzeh865w)" height="253.645" style="stroke: #000000; stroke-width: 3.0;" width="1027.5" x="19.5" y="386.2815"></rect><rect fill="#FFFFFF" filter="url(#f1jzcvxzeh865w)" height="377.4675" style="stroke: #000000; stroke-width: 3.0;" width="1216.5" x="19.5" y="660.9265"></rect><rect fill="#FFFFFF" filter="url(#f1jzcvxzeh865w)" height="253.645" style="stroke: #000000; stroke-width: 3.0;" width="1216.5" x="19.5" y="1059.394"></rect><rect fill="#FFFFFF" filter="url(#f1jzcvxzeh865w)" height="445.7417" style="stroke: #000000; stroke-width: 3.0;" width="1398.75" x="19.5" y="1334.0391"></rect><rect fill="#FFFFFF" filter="url(#f1jzcvxzeh865w)" height="253.645" style="stroke: #000000; stroke-width: 3.0;" width="1398.75" x="19.5" y="1800.7808"></rect><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="61.5" x2="61.5" y1="134.9106" y2="2079.9258"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="303" x2="303" y1="134.9106" y2="2079.9258"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="621.75" x2="621.75" y1="134.9106" y2="2079.9258"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="970.5" x2="970.5" y1="134.9106" y2="2079.9258"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="1134" x2="1134" y1="134.9106" y2="2079.9258"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="1337.25" x2="1337.25" y1="134.9106" y2="2079.9258"></line><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="46.5" x="34.5" y="130.2964">Unity</text><ellipse cx="62.25" cy="19.5" fill="#FEFECE" filter="url(#f1jzcvxzeh865w)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 3.0;"></ellipse><path d="M62.25,31.5 L62.25,72 M42.75,43.5 L81.75,43.5 M62.25,72 L42.75,94.5 M62.25,72 L81.75,94.5 " fill="none" filter="url(#f1jzcvxzeh865w)" style="stroke: #A80036; stroke-width: 3.0;"></path><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="46.5" x="34.5" y="2103.7222">Unity</text><ellipse cx="62.25" cy="2123.3364" fill="#FEFECE" filter="url(#f1jzcvxzeh865w)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 3.0;"></ellipse><path d="M62.25,2135.3364 L62.25,2175.8364 M42.75,2147.3364 L81.75,2147.3364 M62.25,2175.8364 L42.75,2198.3364 M62.25,2175.8364 L81.75,2198.3364 " fill="none" filter="url(#f1jzcvxzeh865w)" style="stroke: #A80036; stroke-width: 3.0;"></path><rect fill="#FEFECE" filter="url(#f1jzcvxzeh865w)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="118.5" x="241.5" y="76.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="97.5" x="252" y="112.2964">Gameloop</text><rect fill="#FEFECE" filter="url(#f1jzcvxzeh865w)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="118.5" x="241.5" y="2078.4258"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="97.5" x="252" y="2114.2222">Gameloop</text><rect fill="#FEFECE" filter="url(#f1jzcvxzeh865w)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="234" x="501.75" y="76.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="213" x="512.25" y="112.2964">ScenceStateControllor</text><rect fill="#FEFECE" filter="url(#f1jzcvxzeh865w)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="234" x="501.75" y="2078.4258"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="213" x="512.25" y="2114.2222">ScenceStateControllor</text><rect fill="#FEFECE" filter="url(#f1jzcvxzeh865w)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="115.5" x="910.5" y="76.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="94.5" x="921" y="112.2964">StartState</text><rect fill="#FEFECE" filter="url(#f1jzcvxzeh865w)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="115.5" x="910.5" y="2078.4258"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="94.5" x="921" y="2114.2222">StartState</text><rect fill="#FEFECE" filter="url(#f1jzcvxzeh865w)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="168" x="1047" y="76.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="147" x="1057.5" y="112.2964">MainMenuState</text><rect fill="#FEFECE" filter="url(#f1jzcvxzeh865w)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="168" x="1047" y="2078.4258"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="147" x="1057.5" y="2114.2222">MainMenuState</text><rect fill="#FEFECE" filter="url(#f1jzcvxzeh865w)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="124.5" x="1272.75" y="76.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="103.5" x="1283.25" y="112.2964">BattleState</text><rect fill="#FEFECE" filter="url(#f1jzcvxzeh865w)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="124.5" x="1272.75" y="2078.4258"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="103.5" x="1283.25" y="2114.2222">BattleState</text><path d="M19.5,160.4106 L268.5,160.4106 L268.5,175.4106 L253.5,190.4106 L19.5,190.4106 L19.5,160.4106 " fill="#EEEEEE" style="stroke: #000000; stroke-width: 1.5;"></path><rect fill="none" height="204.8708" style="stroke: #000000; stroke-width: 3.0;" width="1027.5" x="19.5" y="160.4106"></rect><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="181.5" x="42" y="185.4001">無狀態--&gt;StartState</text><polygon fill="#A80036" points="285.75,221.959,300.75,227.959,285.75,233.959,291.75,227.959" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="62.25" x2="294.75" y1="227.959" y2="227.959"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="72.75" y="220.6743">1</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="93" x="89.25" y="220.6743">Unity Start</text><polygon fill="#A80036" points="603.75,298.5073,618.75,304.5073,603.75,310.5073,609.75,304.5073" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="303.75" x2="612.75" y1="304.5073" y2="304.5073"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="314.25" y="283.3356">2</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="234" x="330.75" y="269.4485">命令ScenceStateControllor</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="211.5" x="336.75" y="297.2227">到切換狀態到 StartState</text><polygon fill="#A80036" points="953.25,347.2815,968.25,353.2815,953.25,359.2815,959.25,353.2815" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 2.0,2.0;" x1="621.75" x2="962.25" y1="353.2815" y2="353.2815"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="632.25" y="345.9968">3</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="186" x="648.75" y="345.9968">變數設定到StartState</text><path d="M19.5,386.2815 L181.5,386.2815 L181.5,401.2815 L166.5,416.2815 L19.5,416.2815 L19.5,386.2815 " fill="#EEEEEE" style="stroke: #000000; stroke-width: 1.5;"></path><rect fill="none" height="253.645" style="stroke: #000000; stroke-width: 3.0;" width="1027.5" x="19.5" y="386.2815"></rect><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="94.5" x="42" y="411.271">StartState</text><polygon fill="#A80036" points="285.75,447.8298,300.75,453.8298,285.75,459.8298,291.75,453.8298" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="62.25" x2="294.75" y1="453.8298" y2="453.8298"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="72.75" y="446.5452">4</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="151.5" x="89.25" y="446.5452">Unity Update執行</text><polygon fill="#A80036" points="603.75,524.3782,618.75,530.3782,603.75,536.3782,609.75,530.3782" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="303.75" x2="612.75" y1="530.3782" y2="530.3782"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="314.25" y="509.2064">5</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="234" x="330.75" y="495.3193">命令ScenceStateControllor</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="201" x="336.75" y="523.0935">執行 StartState Update</text><polygon fill="#A80036" points="953.25,573.1523,968.25,579.1523,953.25,585.1523,959.25,579.1523" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="621.75" x2="962.25" y1="579.1523" y2="579.1523"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="632.25" y="571.8677">6</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="235.5" x="648.75" y="571.8677">執行 StartState StateBegin</text><polygon fill="#A80036" points="953.25,621.9265,968.25,627.9265,953.25,633.9265,959.25,627.9265" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="621.75" x2="962.25" y1="627.9265" y2="627.9265"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="632.25" y="620.6418">7</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="201" x="648.75" y="620.6418">執行 StartState Update</text><path d="M19.5,660.9265 L366,660.9265 L366,675.9265 L351,690.9265 L19.5,690.9265 L19.5,660.9265 " fill="#EEEEEE" style="stroke: #000000; stroke-width: 1.5;"></path><rect fill="none" height="377.4675" style="stroke: #000000; stroke-width: 3.0;" width="1216.5" x="19.5" y="660.9265"></rect><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="279" x="42" y="685.916">StartState --&gt; MainMenuState</text><polygon fill="#A80036" points="638.25,750.249,623.25,756.249,638.25,762.249,632.25,756.249" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="629.25" x2="969.75" y1="756.249" y2="756.249"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="647.25" y="735.0773">8</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="234" x="663.75" y="721.1902">命令ScenceStateControllor</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="240" x="669.75" y="748.9644">切換狀態到 MainMenuState</text><polygon fill="#A80036" points="1116,799.0232,1131,805.0232,1116,811.0232,1122,805.0232" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 2.0,2.0;" x1="621.75" x2="1125" y1="805.0232" y2="805.0232"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="10.5" x="632.25" y="797.7385">9</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="421.5" x="648.75" y="797.7385">ScenceStateControllor 變數設定 MainMenuState</text><polygon fill="#A80036" points="78.75,847.7974,63.75,853.7974,78.75,859.7974,72.75,853.7974" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="69.75" x2="620.25" y1="853.7974" y2="853.7974"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="87.75" y="846.5127">10</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="265.5" x="114.75" y="846.5127">呼叫 Unity LoadLevel 切換場景</text><polygon fill="#A80036" points="953.25,896.5715,968.25,902.5715,953.25,908.5715,959.25,902.5715" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="621.75" x2="962.25" y1="902.5715" y2="902.5715"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="632.25" y="895.2869">11</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="286.5" x="659.25" y="895.2869">呼叫StartState裡的StateEnd函式</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="62.25" x2="125.25" y1="1006.894" y2="1006.894"></line><line style="stroke: #A80036; stroke-width: 1.5;" x1="125.25" x2="125.25" y1="1006.894" y2="1026.394"></line><line style="stroke: #A80036; stroke-width: 1.5;" x1="63.75" x2="125.25" y1="1026.394" y2="1026.394"></line><polygon fill="#A80036" points="78.75,1020.394,63.75,1026.394,78.75,1032.394,72.75,1026.394" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="72.75" y="971.8352">12</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="97.5" x="99.75" y="944.061">切換場景到</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="181.5" x="105.75" y="971.8352">MainMenuState 狀態</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="97.5" x="105.75" y="999.6094">設定的場景</text><path d="M19.5,1059.394 L235.5,1059.394 L235.5,1074.394 L220.5,1089.394 L19.5,1089.394 L19.5,1059.394 " fill="#EEEEEE" style="stroke: #000000; stroke-width: 1.5;"></path><rect fill="none" height="253.645" style="stroke: #000000; stroke-width: 3.0;" width="1216.5" x="19.5" y="1059.394"></rect><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="148.5" x="42" y="1084.3835">MainMenuState</text><polygon fill="#A80036" points="285.75,1120.9424,300.75,1126.9424,285.75,1132.9424,291.75,1126.9424" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="62.25" x2="294.75" y1="1126.9424" y2="1126.9424"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="72.75" y="1119.6577">13</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="151.5" x="99.75" y="1119.6577">Unity Update執行</text><polygon fill="#A80036" points="603.75,1197.4907,618.75,1203.4907,603.75,1209.4907,609.75,1203.4907" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="303.75" x2="612.75" y1="1203.4907" y2="1203.4907"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="314.25" y="1182.319">14</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="234" x="341.25" y="1168.4319">命令ScenceStateControllor</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="249" x="347.25" y="1196.2061">執行 MainMenuState Update</text><polygon fill="#A80036" points="1116,1246.2649,1131,1252.2649,1116,1258.2649,1122,1252.2649" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="621.75" x2="1125" y1="1252.2649" y2="1252.2649"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="632.25" y="1244.9802">15</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="283.5" x="659.25" y="1244.9802">執行 MainMenuState StateBegin</text><polygon fill="#A80036" points="1116,1295.0391,1131,1301.0391,1116,1307.0391,1122,1301.0391" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="621.75" x2="1125" y1="1301.0391" y2="1301.0391"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="632.25" y="1293.7544">16</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="249" x="659.25" y="1293.7544">執行 MainMenuState Update</text><path d="M19.5,1334.0391 L364.5,1334.0391 L364.5,1349.0391 L349.5,1364.0391 L19.5,1364.0391 L19.5,1334.0391 " fill="#EEEEEE" style="stroke: #000000; stroke-width: 1.5;"></path><rect fill="none" height="445.7417" style="stroke: #000000; stroke-width: 3.0;" width="1398.75" x="19.5" y="1334.0391"></rect><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="277.5" x="42" y="1359.0286">MainMenuState--&gt;BattleState</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1134" x2="1197" y1="1401.5874" y2="1401.5874"></line><line style="stroke: #A80036; stroke-width: 1.5;" x1="1197" x2="1197" y1="1401.5874" y2="1421.0874"></line><line style="stroke: #A80036; stroke-width: 1.5;" x1="1135.5" x2="1197" y1="1421.0874" y2="1421.0874"></line><polygon fill="#A80036" points="1150.5,1415.0874,1135.5,1421.0874,1150.5,1427.0874,1144.5,1421.0874" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="1144.5" y="1394.3027">17</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="156" x="1171.5" y="1394.3027">按下按鈕執行遊戲</text><polygon fill="#A80036" points="638.25,1491.6357,623.25,1497.6357,638.25,1503.6357,632.25,1497.6357" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="629.25" x2="1132.5" y1="1497.6357" y2="1497.6357"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="647.25" y="1476.464">18</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="234" x="674.25" y="1462.5769">命令ScenceStateControllor</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="201" x="680.25" y="1490.3511">切換狀態到 BattleState</text><polygon fill="#A80036" points="1320,1540.4099,1335,1546.4099,1320,1552.4099,1326,1546.4099" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 2.0,2.0;" x1="621.75" x2="1329" y1="1546.4099" y2="1546.4099"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="632.25" y="1539.1252">19</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="195" x="659.25" y="1539.1252">變數設定到BattleState</text><polygon fill="#A80036" points="78.75,1589.1841,63.75,1595.1841,78.75,1601.1841,72.75,1595.1841" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="69.75" x2="620.25" y1="1595.1841" y2="1595.1841"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="87.75" y="1587.8994">20</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="265.5" x="114.75" y="1587.8994">呼叫 Unity LoadLevel 切換場景</text><polygon fill="#A80036" points="1116,1637.9583,1131,1643.9583,1116,1649.9583,1122,1643.9583" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="621.75" x2="1125" y1="1643.9583" y2="1643.9583"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="632.25" y="1636.6736">21</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="334.5" x="659.25" y="1636.6736">呼叫MainMenuState裡的StateEnd函式</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="62.25" x2="125.25" y1="1748.2808" y2="1748.2808"></line><line style="stroke: #A80036; stroke-width: 1.5;" x1="125.25" x2="125.25" y1="1748.2808" y2="1767.7808"></line><line style="stroke: #A80036; stroke-width: 1.5;" x1="63.75" x2="125.25" y1="1767.7808" y2="1767.7808"></line><polygon fill="#A80036" points="78.75,1761.7808,63.75,1767.7808,78.75,1773.7808,72.75,1767.7808" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="72.75" y="1713.2219">22</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="97.5" x="99.75" y="1685.4478">切換場景到</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="142.5" x="105.75" y="1713.2219">BattleState 狀態</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="97.5" x="105.75" y="1740.9961">設定的場景</text><path d="M19.5,1800.7808 L192,1800.7808 L192,1815.7808 L177,1830.7808 L19.5,1830.7808 L19.5,1800.7808 " fill="#EEEEEE" style="stroke: #000000; stroke-width: 1.5;"></path><rect fill="none" height="253.645" style="stroke: #000000; stroke-width: 3.0;" width="1398.75" x="19.5" y="1800.7808"></rect><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="105" x="42" y="1825.7703">BattleState</text><polygon fill="#A80036" points="285.75,1862.3291,300.75,1868.3291,285.75,1874.3291,291.75,1868.3291" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="62.25" x2="294.75" y1="1868.3291" y2="1868.3291"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="72.75" y="1861.0444">23</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="151.5" x="99.75" y="1861.0444">Unity Update執行</text><polygon fill="#A80036" points="603.75,1938.8774,618.75,1944.8774,603.75,1950.8774,609.75,1944.8774" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="303.75" x2="612.75" y1="1944.8774" y2="1944.8774"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="314.25" y="1923.7057">24</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="234" x="341.25" y="1909.8186">命令ScenceStateControllor</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="210" x="347.25" y="1937.5928">執行 BattleState Update</text><polygon fill="#A80036" points="1320,1987.6516,1335,1993.6516,1320,1999.6516,1326,1993.6516" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="621.75" x2="1329" y1="1993.6516" y2="1993.6516"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="632.25" y="1986.3669">25</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="244.5" x="659.25" y="1986.3669">執行 BattleState StateBegin</text><polygon fill="#A80036" points="1320,2036.4258,1335,2042.4258,1320,2048.4258,1326,2042.4258" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="621.75" x2="1329" y1="2042.4258" y2="2042.4258"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="21" x="632.25" y="2035.1411">26</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="210" x="659.25" y="2035.1411">執行 BattleState Update</text><!--MD5=[6e8da6a29b335d48cd4dce7adabe95dc]
+@startuml
+autonumber
+scale 1.5
+actor Unity
+participant Gameloop
+participant ScenceStateControllor
+participant StartState
+participant MainMenuState
+participant BattleState
+
+
+group 無狀態- ->StartState
+Unity -> Gameloop :Unity Start 
+Gameloop -> ScenceStateControllor :命令ScenceStateControllor \n 到切換狀態到 StartState
+ScenceStateControllor - -> StartState : 變數設定到StartState
+end
+
+
+group StartState
+Unity -> Gameloop : Unity Update執行
+Gameloop -> ScenceStateControllor :命令ScenceStateControllor \n 執行 StartState Update
+ScenceStateControllor -> StartState : 執行 StartState StateBegin
+ScenceStateControllor -> StartState : 執行 StartState Update
+end
+
+group StartState - -> MainMenuState
+StartState -> ScenceStateControllor : 命令ScenceStateControllor \n 切換狀態到 MainMenuState
+ScenceStateControllor - -> MainMenuState : ScenceStateControllor 變數設定 MainMenuState
+ScenceStateControllor -> Unity  :呼叫 Unity LoadLevel 切換場景
+ScenceStateControllor->StartState : 呼叫StartState裡的StateEnd函式
+Unity -> Unity : 切換場景到 \n MainMenuState 狀態 \n 設定的場景
+end
+
+group MainMenuState
+Unity -> Gameloop : Unity Update執行
+Gameloop -> ScenceStateControllor :命令ScenceStateControllor \n 執行 MainMenuState Update
+ScenceStateControllor -> MainMenuState : 執行 MainMenuState StateBegin
+ScenceStateControllor -> MainMenuState : 執行 MainMenuState Update
+end
+
+group MainMenuState- ->BattleState
+MainMenuState -> MainMenuState : 按下按鈕執行遊戲
+MainMenuState ->ScenceStateControllor : 命令ScenceStateControllor \n 切換狀態到 BattleState
+ScenceStateControllor - -> BattleState : 變數設定到BattleState
+ScenceStateControllor -> Unity  :呼叫 Unity LoadLevel 切換場景
+ScenceStateControllor->MainMenuState : 呼叫MainMenuState裡的StateEnd函式
+Unity -> Unity : 切換場景到 \n BattleState 狀態 \n 設定的場景
+end
+
+group BattleState
+Unity -> Gameloop : Unity Update執行
+Gameloop -> ScenceStateControllor :命令ScenceStateControllor \n 執行 BattleState Update
+ScenceStateControllor -> BattleState : 執行 BattleState StateBegin
+ScenceStateControllor -> BattleState : 執行 BattleState Update
+end
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+
+    </div>
+</div>
+</div>
+
+<div id="container-floating" style="display:none;" class="d-none d-md-block d-xl-block">
+    <div id="floating-button" onclick="toggleMore()">
+        <p id="floating-more" class="more">&gt;</p>
+    </div>
+</div>
+
+<!--
+<div class="footer" id="vnote-footer">
+    <p>Generated by <em><a href="https://tamlok.github.io/vnote/">VNote</a></em>.</p>
+</div>
+-->
+</body>
+</html>

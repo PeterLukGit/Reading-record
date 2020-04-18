@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="VNote">
+
+    <title>03.單例模式 Singleton</title>
+    <link rel="icon" href="https://github.com/tamlok/vnote/raw/master/src/resources/icons/vnote.ico">
+
+    <style type="text/css">
+    /* STYLE_GLOBAL_PLACE_HOLDER */
+    </style>
+
+    <style type="text/css">
+    *,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.container-fluid {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.col-12 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+@media (min-width: 768px) {
+    .col-md-3 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 25%;
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+}
+
+@media (min-width: 768px) {
+    .col-md-9 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 75%;
+        flex: 0 0 75%;
+        max-width: 75%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-xl-2 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 16.666667%;
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-xl-10 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 83.333333%;
+        flex: 0 0 83.333333%;
+        max-width: 83.333333%;
+    }
+}
+
+@media (min-width: 768px) {
+    .pt-md-3, .py-md-3 {
+        padding-top: 1rem!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .pb-md-3, .py-md-3 {
+        padding-bottom: 1rem!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .pl-md-5, .px-md-5 {
+        padding-left: 3rem!important;
+    }
+}
+
+.d-none {
+    display: none!important;
+}
+
+@media (min-width: 1200px) {
+    .d-xl-block {
+        display: block!important;
+    }
+}
+
+@media (min-width: 768px) {
+    .d-md-block {
+        display: block!important;
+    }
+}
+
+.bd-content {
+    -webkit-box-ordinal-group: 1;
+    -ms-flex-order: 0;
+    order: 0;
+}
+
+.bd-toc {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 4rem;
+    height: calc(100vh - 10rem);
+    overflow-y: auto;
+}
+
+.bd-toc {
+    -webkit-box-ordinal-group: 2;
+    -ms-flex-order: 1;
+    order: 1;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    font-size: .875rem;
+}
+
+.section-nav {
+    padding-left: 0;
+}
+
+.section-nav ul {
+    font-size: .875rem;
+    list-style-type: none;
+}
+
+.section-nav li {
+    font-size: .875rem;
+}
+
+.section-nav a {
+    color: inherit !important;
+}
+
+.row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+@media (min-width: 1200px) {
+    .flex-xl-nowrap {
+        flex-wrap: nowrap !important;
+    }
+}
+
+#floating-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: #00897B;
+    position: fixed;
+    top: .5rem;
+    right: .5rem;
+    cursor: pointer;
+    box-shadow: 0px 2px 5px #666;
+}
+
+#floating-button .more {
+    color: #F5F5F5;
+    position: absolute;
+    top: 0;
+    display: block;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    line-height: 2.5rem;
+    font-size: 2rem;
+    font-family: 'monospace';
+    font-weight: 300;
+}
+
+.hide-none {
+    display: none !important;
+}
+
+.col-expand {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    padding-right: 3rem !important;
+}
+
+.outline-bold {
+    font-weight: bolder !important;
+}
+
+@media print {
+    #floating-button {
+        display: none !important;
+    }
+}
+
+    @keyframes flash { 
+  0% { color: rgb(128, 203, 196); }
+  10% { color: rgb(0, 137, 123); }
+  40% { color: rgb(0, 137, 123); }
+  50% { color: rgb(128, 203, 196); }
+  60% { color: rgb(0, 137, 123); }
+  90% { color: rgb(0, 137, 123); }
+}
+.highlighted-anchor { animation: flash 1s; }
+div.mark-rect { background: transparent; border: 5px solid rgb(87, 104, 196); border-radius: 2px; position: absolute; }
+#vnote-footer { width: 100%; text-align: center; opacity: 0.2; margin-top: 3rem; }
+#vnote-footer p { font-size: 0.8rem; }
+#vnote-footer a { color: inherit !important; }
+x-eqs { display: flex; flex-direction: row; align-content: space-between; align-items: center; }
+x-eqs > x-eqn { width: 100%; margin-left: 3rem; }
+x-eqs > span { text-align: right; }
+.view-image, .view-svg { transition: 0.3s; }
+.modal-box { display: none; position: fixed; z-index: 1000; padding-top: 50px; left: 0px; top: 0px; width: 100%; height: 100%; overflow: hidden; background-color: rgba(68, 68, 68, 0.952941); }
+.modal-content { margin: auto; display: block; width: auto; height: auto; cursor: move; }
+.modal-content { animation-name: zoom; animation-duration: 0.6s; }
+@-webkit-keyframes zoom { 
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+@keyframes zoom { 
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+span.modal-close { position: absolute; z-index: 1000; top: 15px; right: 35px; color: rgb(218, 218, 218); font-size: 40px; font-weight: bold; transition: 0.3s; }
+span.modal-close:hover, span.modal-close:focus { color: rgb(238, 238, 238); text-decoration: none; cursor: pointer; }
+@media print {
+  pre, pre code, td.hljs-ln-code { white-space: pre-wrap !important; word-break: break-all !important; }
+  code, a { word-break: break-all !important; }
+  div.flowchart-diagram, div.mermaid-diagram, div.plantuml-diagram { overflow: hidden !important; }
+  img { max-width: 100% !important; height: auto !important; }
+  #vnote-footer { display: none !important; }
+}
+.alert { position: relative; padding: 0.75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: 0.25rem; }
+.alert-primary { color: rgb(0, 64, 133); background-color: rgb(204, 229, 255); border-color: rgb(184, 218, 255); }
+.alert-secondary { color: rgb(56, 61, 65); background-color: rgb(226, 227, 229); border-color: rgb(214, 216, 219); }
+.alert-success { color: rgb(21, 87, 36); background-color: rgb(212, 237, 218); border-color: rgb(195, 230, 203); }
+.alert-info { color: rgb(12, 84, 96); background-color: rgb(209, 236, 241); border-color: rgb(190, 229, 235); }
+.alert-warning { color: rgb(133, 100, 4); background-color: rgb(255, 243, 205); border-color: rgb(255, 238, 186); }
+.alert-danger { color: rgb(114, 28, 36); background-color: rgb(248, 215, 218); border-color: rgb(245, 198, 203); }
+.alert-light { color: rgb(129, 129, 130); background-color: rgb(254, 254, 254); border-color: rgb(253, 253, 254); }
+.alert-dark { color: rgb(27, 30, 33); background-color: rgb(214, 216, 217); border-color: rgb(198, 200, 202); }
+.vnote-anchor { font-weight: 400; color: rgba(0, 123, 255, 0.498039); transition: color 0.16s linear; padding-left: 0.375em; -webkit-font-smoothing: antialiased; text-decoration: none; opacity: 0; }
+.vnote-anchor:hover { color: rgb(0, 123, 255); text-decoration: none; opacity: 1; }
+.vnote-anchor::after { content: attr(data-anchor-icon); }
+.vnote-btn { position: relative; display: inline-block; padding: 6px 12px; font-size: 13px; font-weight: 700; line-height: 20px; white-space: nowrap; vertical-align: middle; cursor: pointer; border: none; user-select: none; -webkit-appearance: none; }
+.vnote-copy-clipboard-btn { transition: opacity 0.3s ease-in-out; opacity: 0; padding: 2px 6px; position: absolute; top: 5px; right: 5px; }
+pre:hover .vnote-copy-clipboard-btn { opacity: 1; }
+pre.vnote-snippet { position: relative; }
+body { margin: 0px auto; font-family: "Segoe UI", Helvetica, sans-serif, Tahoma, Arial, Geneva, Georgia, Palatino, "Times New Roman", "Hiragino Sans GB", 冬青黑体, "Microsoft YaHei", 微软雅黑, "Microsoft YaHei UI", "WenQuanYi Micro Hei", 文泉驿雅黑, Dengxian, 等线体, STXihei, 华文细黑, "Liberation Sans", "Droid Sans", NSimSun, 新宋体, SimSun, 宋体; color: rgb(34, 34, 34); line-height: 1.5; padding: 15px; background: rgb(238, 238, 238); font-size: 16px; }
+h1, h2, h3, h4, h5, h6 { color: rgb(34, 34, 34); font-weight: bold; margin-top: 20px; margin-bottom: 10px; padding: 0px; }
+p { padding: 0px; margin-top: 16px; margin-bottom: 16px; }
+h1 { font-size: 26px; }
+h2 { font-size: 24px; }
+h3 { font-size: 22px; }
+h4 { font-size: 20px; }
+h5 { font-size: 19px; }
+h6 { font-size: 18px; }
+a { color: rgb(0, 153, 255); margin: 0px; padding: 0px; vertical-align: baseline; text-decoration: none; word-break: break-word; }
+a:hover { text-decoration: underline; color: rgb(255, 102, 0); }
+a:visited { color: purple; }
+ul, ol { padding: 0px 0px 0px 24px; }
+li { line-height: 24px; }
+li ul, li ol { margin-left: 16px; }
+p, ul, ol { font-size: 16px; line-height: 24px; }
+pre { display: block; overflow-y: hidden; overflow-x: auto; tab-size: 4; }
+code { font-family: Consolas, Monaco, monospace, Courier; color: rgb(142, 36, 170); word-break: break-word; }
+pre code { display: block; overflow-x: auto; padding: 0.5em; color: rgb(34, 34, 34); background-color: rgb(224, 224, 224); border-left: 0.5em solid rgb(0, 137, 123); line-height: 1.5; font-family: Consolas, Monaco, monospace, Courier; white-space: pre; tab-size: 4; }
+pre code.markdown-metadata { border-left: 0.5em solid rgb(128, 203, 196); }
+aside { display: block; float: right; width: 390px; }
+blockquote { color: rgb(102, 102, 102); border-left: 0.5em solid rgb(122, 122, 122); padding: 0px 1em; margin-left: 0px; }
+blockquote p { color: rgb(102, 102, 102); }
+hr { display: block; text-align: left; margin: 1em 0px; border: none; height: 2px; background: rgb(153, 153, 153); }
+table { padding: 0px; margin: 1rem 0.5rem; border-collapse: collapse; }
+table tr { border-top: 2px solid rgb(204, 204, 204); background-color: white; margin: 0px; padding: 0px; }
+table tr:nth-child(2n) { background-color: rgb(248, 248, 248); }
+table tr th { font-weight: bold; border: 2px solid rgb(204, 204, 204); margin: 0px; padding: 6px 13px; }
+table tr td { border: 2px solid rgb(204, 204, 204); margin: 0px; padding: 6px 13px; }
+table tr th :first-child, table tr td :first-child { margin-top: 0px; }
+table tr th :last-child, table tr td :last-child { margin-bottom: 0px; }
+div.mermaid-diagram { margin: 16px 0px; overflow-y: hidden; }
+div.flowchart-diagram { padding: 0px 5px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+div.wavedrom-diagram { padding: 0px 5px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+div.plantuml-diagram { padding: 5px 5px 0px; margin: 16px 0px; width: fit-content; overflow: hidden; }
+.img-package { text-align: center; }
+img.img-center { display: block; margin-left: auto; margin-right: auto; }
+span.img-caption { min-width: 20%; max-width: 80%; display: inline-block; padding: 10px; margin: 0px auto; border-bottom: 1px solid rgb(192, 192, 192); color: rgb(108, 108, 108); text-align: center; line-height: 1.5; }
+.emoji_zero, .emoji_one, .emoji_two, .emoji_three, .emoji_four, .emoji_five, .emoji_six, .emoji_seven, .emoji_eight, .emoji_nine { margin-left: 5px; margin-right: 8px; }
+div.preview-hint { opacity: 0.5; margin-top: 30%; margin-bottom: 30%; align-items: center; display: flex; flex-direction: column; justify-content: center; }
+table.hljs-ln tr { border: none; background-color: transparent; }
+table.hljs-ln tr td { border: none; background-color: transparent; }
+table.hljs-ln tr td.hljs-ln-numbers { user-select: none; text-align: center; color: rgb(170, 170, 170); border-right: 1px solid rgb(204, 204, 204); vertical-align: top; padding-right: 5px; white-space: nowrap; }
+table.hljs-ln tr td.hljs-ln-code { padding-left: 10px; }
+::-webkit-scrollbar { background-color: rgb(234, 234, 234); width: 14px; height: 14px; border: none; }
+::-webkit-scrollbar-corner { background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-button { height: 14px; width: 14px; background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-button:hover { background-color: rgb(208, 208, 208); }
+::-webkit-scrollbar-button:active { background-color: rgb(178, 178, 178); }
+::-webkit-scrollbar-track { background-color: rgb(234, 234, 234); }
+::-webkit-scrollbar-thumb { border: none; background-color: rgb(218, 218, 218); }
+::-webkit-scrollbar-thumb:hover { background-color: rgb(208, 208, 208); }
+::-webkit-scrollbar-thumb:active { background-color: rgb(178, 178, 178); }
+::-webkit-scrollbar-button:horizontal:increment { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(-90 256.00000000000006,256) " id="svg_1">   <polygon fill="%23333333" id="svg_2" points="128,192 256,320 384,192  "/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:horizontal:decrement { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(90 255.99999999999997,256.00000000000006) " id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:vertical:increment { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="null" id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::-webkit-scrollbar-button:vertical:decrement { background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"> <g>    <g transform="rotate(180 255.99999999999997,256) " id="svg_1">   <polygon points="128,192 256,320 384,192  " id="svg_2" fill="%23333333"/>  </g> </g></svg>'); background-repeat: no-repeat; background-size: contain; }
+::selection { background: rgb(25, 118, 210); color: rgb(238, 238, 238); }
+.modal-box { background-color: rgba(234, 234, 234, 0.952941); }
+span.modal-close { color: rgb(102, 102, 102); }
+span.modal-close:hover, span.modal-close:focus { color: rgb(34, 34, 34); }
+.hljs { display: block; overflow-x: auto; padding: 0.5em; background: rgb(224, 224, 224); }
+.hljs, .hljs-subst { color: rgb(54, 54, 54); }
+.hljs-comment { color: rgb(118, 118, 118); }
+.hljs-keyword, .hljs-attribute, .hljs-selector-tag, .hljs-meta-keyword, .hljs-doctag, .hljs-name { color: rgb(0, 0, 238); }
+.hljs-type, .hljs-string, .hljs-number, .hljs-selector-id, .hljs-selector-class, .hljs-quote, .hljs-template-tag, .hljs-deletion { color: rgb(136, 0, 0); }
+.hljs-title, .hljs-section { color: rgb(136, 0, 0); font-weight: bold; }
+.hljs-regexp, .hljs-symbol, .hljs-variable, .hljs-template-variable, .hljs-link, .hljs-selector-attr, .hljs-selector-pseudo { color: rgb(188, 96, 96); }
+.hljs-literal { color: rgb(175, 0, 215); }
+.hljs-built_in, .hljs-bullet, .hljs-code, .hljs-addition { color: rgb(0, 135, 0); }
+.hljs-meta { color: rgb(31, 113, 153); }
+.hljs-meta-string { color: rgb(77, 153, 191); }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: bold; }
+.mermaid-diagram .mermaid .label { color: rgb(51, 51, 51); }
+.mermaid-diagram .node rect, .mermaid-diagram .node circle, .mermaid-diagram .node ellipse, .mermaid-diagram .node polygon { fill: rgb(236, 236, 255); stroke: rgb(204, 204, 255); stroke-width: 1px; }
+.mermaid-diagram .edgePath .path { stroke: rgb(51, 51, 51); }
+.mermaid-diagram .edgeLabel { background-color: rgb(232, 232, 232); }
+.mermaid-diagram .cluster rect { fill: rgb(255, 255, 222) !important; rx: 4 !important; stroke: rgb(170, 170, 51) !important; stroke-width: 1px !important; }
+.mermaid-diagram .cluster text { fill: rgb(51, 51, 51); }
+.mermaid-diagram .actor { stroke: rgb(204, 204, 255); fill: rgb(236, 236, 255); }
+.mermaid-diagram text.actor { fill: black; stroke: none; }
+.mermaid-diagram .actor-line { stroke: grey; }
+.mermaid-diagram .messageLine0 { stroke-width: 1.5; stroke: rgb(51, 51, 51); }
+.mermaid-diagram .messageLine1 { stroke-width: 1.5; stroke: rgb(51, 51, 51); }
+.mermaid-diagram #arrowhead { fill: rgb(51, 51, 51); }
+.mermaid-diagram #crosshead path { fill: rgb(51, 51, 51) !important; stroke: rgb(51, 51, 51) !important; }
+.mermaid-diagram .messageText { fill: rgb(51, 51, 51); stroke: none; }
+.mermaid-diagram .labelBox { stroke: rgb(204, 204, 255); fill: rgb(236, 236, 255); }
+.mermaid-diagram .labelText { fill: black; stroke: none; }
+.mermaid-diagram .loopText { fill: black; stroke: none; }
+.mermaid-diagram .loopLine { stroke-width: 2; stroke: rgb(204, 204, 255); }
+.mermaid-diagram .note { stroke: rgb(170, 170, 51); fill: rgb(255, 245, 173); }
+.mermaid-diagram .noteText { fill: black; stroke: none; font-family: "trebuchet ms", verdana, arial; font-size: 14px; }
+.mermaid-diagram .section { stroke: none; opacity: 0.2; }
+.mermaid-diagram .section0 { fill: rgba(102, 102, 255, 0.490196); }
+.mermaid-diagram .section2 { fill: rgb(255, 244, 0); }
+.mermaid-diagram .section1, .mermaid-diagram .section3 { fill: white; opacity: 0.2; }
+.mermaid-diagram .sectionTitle0 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle1 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle2 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle3 { fill: rgb(51, 51, 51); }
+.mermaid-diagram .sectionTitle { text-anchor: start; font-size: 11px; }
+.mermaid-diagram .grid .tick { stroke: lightgrey; opacity: 0.3; shape-rendering: crispEdges; }
+.mermaid-diagram .grid path { stroke-width: 0; }
+.mermaid-diagram .today { fill: none; stroke: red; stroke-width: 2px; }
+.mermaid-diagram .task { stroke-width: 2; }
+.mermaid-diagram .taskText { text-anchor: middle; font-size: 11px; }
+.mermaid-diagram .taskTextOutsideRight { fill: black; text-anchor: start; font-size: 11px; }
+.mermaid-diagram .taskTextOutsideLeft { fill: black; text-anchor: end; font-size: 11px; }
+.mermaid-diagram .taskText0, .mermaid-diagram .taskText1, .mermaid-diagram .taskText2, .mermaid-diagram .taskText3 { fill: white; }
+.mermaid-diagram .task0, .mermaid-diagram .task1, .mermaid-diagram .task2, .mermaid-diagram .task3 { fill: rgb(138, 144, 221); stroke: rgb(83, 79, 188); }
+.mermaid-diagram .taskTextOutside0, .mermaid-diagram .taskTextOutside2 { fill: black; }
+.mermaid-diagram .taskTextOutside1, .mermaid-diagram .taskTextOutside3 { fill: black; }
+.mermaid-diagram .active0, .mermaid-diagram .active1, .mermaid-diagram .active2, .mermaid-diagram .active3 { fill: rgb(191, 199, 255); stroke: rgb(83, 79, 188); }
+.mermaid-diagram .activeText0, .mermaid-diagram .activeText1, .mermaid-diagram .activeText2, .mermaid-diagram .activeText3 { fill: black !important; }
+.mermaid-diagram .done0, .mermaid-diagram .done1, .mermaid-diagram .done2, .mermaid-diagram .done3 { stroke: grey; fill: lightgrey; stroke-width: 2; }
+.mermaid-diagram .doneText0, .mermaid-diagram .doneText1, .mermaid-diagram .doneText2, .mermaid-diagram .doneText3 { fill: black !important; }
+.mermaid-diagram .crit0, .mermaid-diagram .crit1, .mermaid-diagram .crit2, .mermaid-diagram .crit3 { stroke: rgb(255, 136, 136); fill: red; stroke-width: 2; }
+.mermaid-diagram .activeCrit0, .mermaid-diagram .activeCrit1, .mermaid-diagram .activeCrit2, .mermaid-diagram .activeCrit3 { stroke: rgb(255, 136, 136); fill: rgb(191, 199, 255); stroke-width: 2; }
+.mermaid-diagram .doneCrit0, .mermaid-diagram .doneCrit1, .mermaid-diagram .doneCrit2, .mermaid-diagram .doneCrit3 { stroke: rgb(255, 136, 136); fill: lightgrey; stroke-width: 2; cursor: pointer; shape-rendering: crispEdges; }
+.mermaid-diagram .doneCritText0, .mermaid-diagram .doneCritText1, .mermaid-diagram .doneCritText2, .mermaid-diagram .doneCritText3 { fill: black !important; }
+.mermaid-diagram .activeCritText0, .mermaid-diagram .activeCritText1, .mermaid-diagram .activeCritText2, .mermaid-diagram .activeCritText3 { fill: black !important; }
+.mermaid-diagram .titleText { text-anchor: middle; font-size: 18px; fill: black; }
+.mermaid-diagram .node text { font-family: "trebuchet ms", verdana, arial; font-size: 14px; }
+.mermaid-diagram div.mermaidTooltip { position: absolute; text-align: center; max-width: 200px; padding: 2px; font-family: "trebuchet ms", verdana, arial; font-size: 12px; background: rgb(255, 255, 222); border: 1px solid rgb(170, 170, 51); border-radius: 2px; pointer-events: none; z-index: 100; }
+.hljs-ln { border-collapse: collapse; }
+.hljs-ln td { padding: 0px; }
+.hljs-ln-n::before { content: attr(data-line-number); }
+.MathJax_Hover_Frame { border-radius: 0.25em; box-shadow: rgb(136, 51, 170) 0px 0px 15px; display: inline-block; position: absolute; border: 1px solid rgb(170, 102, 221) !important; }
+.MathJax_Menu_Button .MathJax_Hover_Arrow { position: absolute; cursor: pointer; display: inline-block; border: 2px solid rgb(170, 170, 170); border-radius: 4px; font-family: "Courier New", Courier; font-size: 9px; color: rgb(240, 240, 240); }
+.MathJax_Menu_Button .MathJax_Hover_Arrow span { display: block; background-color: rgb(170, 170, 170); border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px; }
+.MathJax_Hover_Arrow:hover { color: white !important; border: 2px solid rgb(204, 204, 204) !important; }
+.MathJax_Hover_Arrow:hover span { background-color: rgb(204, 204, 204) !important; }
+#MathJax_About { position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: rgb(221, 221, 221); color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; box-shadow: rgb(128, 128, 128) 0px 10px 20px; }
+#MathJax_About.MathJax_MousePost { outline: none; }
+.MathJax_Menu { position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid rgb(204, 204, 204); margin: 0px; cursor: default; font-style: normal; font-weight: normal; font-size: 15px; font-family: "Microsoft JhengHei UI"; font-stretch: normal; font-variant: normal; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: rgb(128, 128, 128) 0px 10px 20px; }
+.MathJax_MenuItem { padding: 2px 2em; background: transparent; }
+.MathJax_MenuArrow { position: absolute; right: 0.5em; padding-top: 0.25em; color: rgb(102, 102, 102); font-size: 0.75em; }
+.MathJax_MenuActive .MathJax_MenuArrow { color: white; }
+.MathJax_MenuArrow.RTL { left: 0.5em; right: auto; }
+.MathJax_MenuCheck { position: absolute; left: 0.7em; }
+.MathJax_MenuCheck.RTL { right: 0.7em; left: auto; }
+.MathJax_MenuRadioCheck { position: absolute; left: 1em; }
+.MathJax_MenuRadioCheck.RTL { right: 1em; left: auto; }
+.MathJax_MenuLabel { padding: 2px 2em 4px 1.33em; font-style: italic; }
+.MathJax_MenuRule { border-top: 1px solid rgb(204, 204, 204); margin: 4px 1px 0px; }
+.MathJax_MenuDisabled { color: graytext; }
+.MathJax_MenuActive { background-color: highlight; color: highlighttext; }
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus { background-color: rgb(232, 232, 232); }
+.MathJax_ContextMenu:focus { outline: none; }
+.MathJax_ContextMenu .MathJax_MenuItem:focus { outline: none; }
+#MathJax_AboutClose { top: 0.2em; right: 0.2em; }
+.MathJax_Menu .MathJax_MenuClose { top: -10px; left: -10px; }
+.MathJax_MenuClose { position: absolute; cursor: pointer; display: inline-block; border: 2px solid rgb(170, 170, 170); border-radius: 18px; font-family: "Courier New", Courier; font-size: 24px; color: rgb(240, 240, 240); }
+.MathJax_MenuClose span { display: block; background-color: rgb(170, 170, 170); border: 1.5px solid; border-radius: 18px; line-height: 0; padding: 8px 0px 6px; }
+.MathJax_MenuClose:hover { color: white !important; border: 2px solid rgb(204, 204, 204) !important; }
+.MathJax_MenuClose:hover span { background-color: rgb(204, 204, 204) !important; }
+.MathJax_MenuClose:hover:focus { outline: none; }
+.MathJax_Preview .MJXf-math { color: inherit !important; }
+.MJX_Assistive_MathML { top: 0px; left: 0px; clip: rect(1px 1px 1px 1px); user-select: none; position: absolute !important; padding: 1px 0px 0px !important; border: 0px !important; height: 1px !important; width: 1px !important; overflow: hidden !important; display: block !important; }
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block { width: 100% !important; }
+#MathJax_Zoom { position: absolute; background-color: rgb(240, 240, 240); overflow: auto; display: block; z-index: 301; padding: 0.5em; border: 1px solid black; margin: 0px; font-weight: normal; font-style: normal; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; box-sizing: content-box; box-shadow: rgb(170, 170, 170) 5px 5px 15px; }
+#MathJax_ZoomOverlay { position: absolute; left: 0px; top: 0px; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0px; padding: 0px; margin: 0px; background-color: white; opacity: 0; }
+#MathJax_ZoomFrame { position: relative; display: inline-block; height: 0px; width: 0px; }
+#MathJax_ZoomEventTrap { position: absolute; left: 0px; top: 0px; z-index: 302; display: inline-block; border: 0px; padding: 0px; margin: 0px; background-color: white; opacity: 0; }
+.MathJax_Preview { color: rgb(136, 136, 136); }
+#MathJax_Message { position: fixed; left: 1px; bottom: 2px; background-color: rgb(230, 230, 230); border: 1px solid rgb(149, 149, 149); margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap; }
+#MathJax_MSIE_Frame { position: absolute; top: 0px; left: 0px; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px; }
+.MathJax_Error { color: rgb(204, 0, 0); font-style: italic; }
+.MJXp-script { font-size: 0.8em; }
+.MJXp-right { transform-origin: right center 0px; }
+.MJXp-bold { font-weight: bold; }
+.MJXp-italic { font-style: italic; }
+.MJXp-scr { font-family: MathJax_Script, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-frak { font-family: MathJax_Fraktur, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-sf { font-family: MathJax_SansSerif, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-cal { font-family: MathJax_Caligraphic, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-mono { font-family: MathJax_Typewriter, "Times New Roman", Times, STIXGeneral, serif; }
+.MJXp-largeop { font-size: 150%; }
+.MJXp-largeop.MJXp-int { vertical-align: -0.2em; }
+.MJXp-math { display: inline-block; line-height: 1.2; text-indent: 0px; font-family: "Times New Roman", Times, STIXGeneral, serif; white-space: nowrap; border-collapse: collapse; }
+.MJXp-display { display: block; text-align: center; margin: 1em 0px; }
+.MJXp-math span { display: inline-block; }
+.MJXp-box { text-align: center; display: block !important; }
+.MJXp-box::after { content: " "; }
+.MJXp-rule { margin-top: 0.1em; display: block !important; }
+.MJXp-char { display: block !important; }
+.MJXp-mo { margin: 0px 0.15em; }
+.MJXp-mfrac { margin: 0px 0.125em; vertical-align: 0.25em; }
+.MJXp-denom { width: 100%; display: inline-table !important; }
+.MJXp-denom > * { display: table-row !important; }
+.MJXp-surd { vertical-align: top; }
+.MJXp-surd > * { display: block !important; }
+.MJXp-script-box > * { height: 50%; display: table !important; }
+.MJXp-script-box > * > * { vertical-align: top; display: table-cell !important; }
+.MJXp-script-box > :last-child > * { vertical-align: bottom; }
+.MJXp-script-box > * > * > * { display: block !important; }
+.MJXp-mphantom { visibility: hidden; }
+.MJXp-munderover { display: inline-table !important; }
+.MJXp-over { text-align: center; display: inline-block !important; }
+.MJXp-over > * { display: block !important; }
+.MJXp-munderover > * { display: table-row !important; }
+.MJXp-mtable { vertical-align: 0.25em; margin: 0px 0.125em; }
+.MJXp-mtable > * { vertical-align: middle; display: inline-table !important; }
+.MJXp-mtr { display: table-row !important; }
+.MJXp-mtd { text-align: center; padding: 0.5em 0px 0px 0.5em; display: table-cell !important; }
+.MJXp-mtr > .MJXp-mtd:first-child { padding-left: 0px; }
+.MJXp-mtr:first-child > .MJXp-mtd { padding-top: 0px; }
+.MJXp-mlabeledtr { display: table-row !important; }
+.MJXp-mlabeledtr > .MJXp-mtd:first-child { padding-left: 0px; }
+.MJXp-mlabeledtr:first-child > .MJXp-mtd { padding-top: 0px; }
+.MJXp-merror { background-color: rgb(255, 255, 136); color: rgb(204, 0, 0); border: 1px solid rgb(204, 0, 0); padding: 1px 3px; font-style: normal; font-size: 90%; }
+.MJXp-scale0 { transform: scaleX(0); }
+.MJXp-scale1 { transform: scaleX(0.1); }
+.MJXp-scale2 { transform: scaleX(0.2); }
+.MJXp-scale3 { transform: scaleX(0.3); }
+.MJXp-scale4 { transform: scaleX(0.4); }
+.MJXp-scale5 { transform: scaleX(0.5); }
+.MJXp-scale6 { transform: scaleX(0.6); }
+.MJXp-scale7 { transform: scaleX(0.7); }
+.MJXp-scale8 { transform: scaleX(0.8); }
+.MJXp-scale9 { transform: scaleX(0.9); }
+.MathJax_PHTML .noError { font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid; }
+
+    </style>
+
+    <script type="text/javascript">
+var toc = [];
+
+var setVisible = function(node, visible) {
+    var cl = 'hide-none';
+    if (visible) {
+        node.classList.remove(cl);
+    } else {
+        node.classList.add(cl);
+    }
+};
+
+var isVisible = function(node) {
+    var cl = 'hide-none';
+    return !node.classList.contains(cl);
+};
+
+var setPostContentExpanded = function(node, expanded) {
+    var cl = 'col-expand';
+    if (expanded) {
+        node.classList.add(cl);
+    } else {
+        node.classList.remove(cl);
+    }
+};
+
+var setOutlinePanelVisible = function(visible) {
+    var outlinePanel = document.getElementById('outline-panel');
+    var postContent = document.getElementById('post-content');
+
+    setVisible(outlinePanel, visible);
+    setPostContentExpanded(postContent, !visible);
+};
+
+var isOutlinePanelVisible = function() {
+    var outlinePanel = document.getElementById('outline-panel');
+    return isVisible(outlinePanel);
+};
+
+window.addEventListener('load', function() {
+    var outlinePanel = document.getElementById('outline-panel');
+    outlinePanel.style.display = 'initial';
+
+    var floatingContainer = document.getElementById('container-floating');
+    floatingContainer.style.display = 'initial';
+
+    var outlineContent = document.getElementById('outline-content');
+    var postContent = document.getElementById('post-content');
+
+    // Escape @text to Html.
+    var escapeHtml = function(text) {
+        var map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    // Fetch the outline.
+    var headers = postContent.querySelectorAll("h1, h2, h3, h4, h5, h6");
+    toc = [];
+    for (var i = 0; i < headers.length; ++i) {
+        var header = headers[i];
+
+        toc.push({
+            level: parseInt(header.tagName.substr(1)),
+            anchor: header.id,
+            title: escapeHtml(header.textContent)
+        });
+    }
+
+    if (toc.length == 0) {
+        setOutlinePanelVisible(false);
+        setVisible(floatingContainer, false);
+        return;
+    }
+
+    var baseLevel = baseLevelOfToc(toc);
+    var tocTree = tocToTree(toPerfectToc(toc, baseLevel), baseLevel);
+
+    outlineContent.innerHTML = tocTree;
+    setOutlinePanelVisible(true);
+    setVisible(floatingContainer, true);
+});
+
+// Return the topest level of @toc, starting from 1.
+var baseLevelOfToc = function(p_toc) {
+    var level = -1;
+    for (i in p_toc) {
+        if (level == -1) {
+            level = p_toc[i].level;
+        } else if (level > p_toc[i].level) {
+            level = p_toc[i].level;
+        }
+    }
+
+    if (level == -1) {
+        level = 1;
+    }
+
+    return level;
+};
+
+// Handle wrong title levels, such as '#' followed by '###'
+var toPerfectToc = function(p_toc, p_baseLevel) {
+    var i;
+    var curLevel = p_baseLevel - 1;
+    var perfToc = [];
+    for (i in p_toc) {
+        var item = p_toc[i];
+
+        // Insert empty header.
+        while (item.level > curLevel + 1) {
+            curLevel += 1;
+            var tmp = { level: curLevel,
+                        anchor: '',
+                        title: '[EMPTY]'
+                      };
+            perfToc.push(tmp);
+        }
+
+        perfToc.push(item);
+        curLevel = item.level;
+    }
+
+    return perfToc;
+};
+
+var itemToHtml = function(item) {
+    return '<a href="#' + item.anchor + '" data="' + item.anchor + '">' + item.title + '</a>';
+};
+
+// Turn a perfect toc to a tree using <ul>
+var tocToTree = function(p_toc, p_baseLevel) {
+    var i;
+    var front = '<li>';
+    var ending = ['</li>'];
+    var curLevel = p_baseLevel;
+    for (i in p_toc) {
+        var item = p_toc[i];
+        if (item.level == curLevel) {
+            front += '</li>';
+            front += '<li>';
+            front += itemToHtml(item);
+        } else if (item.level > curLevel) {
+            // assert(item.level - curLevel == 1)
+            front += '<ul>';
+            ending.push('</ul>');
+            front += '<li>';
+            front += itemToHtml(item);
+            ending.push('</li>');
+            curLevel = item.level;
+        } else {
+            while (item.level < curLevel) {
+                var ele = ending.pop();
+                front += ele;
+                if (ele == '</ul>') {
+                    curLevel--;
+                }
+            }
+            front += '</li>';
+            front += '<li>';
+            front += itemToHtml(item);
+        }
+    }
+    while (ending.length > 0) {
+        front += ending.pop();
+    }
+    front = front.replace("<li></li>", "");
+    front = '<ul>' + front + '</ul>';
+    return front;
+};
+
+var toggleMore = function() {
+    if (toc.length == 0) {
+        return;
+    }
+
+    var p = document.getElementById('floating-more');
+    if (isOutlinePanelVisible()) {
+        p.textContent = '<';
+        setOutlinePanelVisible(false);
+    } else {
+        p.textContent = '>';
+        setOutlinePanelVisible(true);
+    }
+};
+
+window.addEventListener('scroll', function() {
+    if (toc.length == 0 || !isOutlinePanelVisible()) {
+        return;
+    }
+
+    var postContent = document.getElementById('post-content');
+    var scrollTop = document.documentElement.scrollTop
+                    || document.body.scrollTop
+                    || window.pageYOffset;
+    var eles = postContent.querySelectorAll("h1, h2, h3, h4, h5, h6");
+
+    if (eles.length == 0) {
+        return;
+    }
+
+    var idx = -1;
+    var biaScrollTop = scrollTop + 50;
+    for (var i = 0; i < eles.length; ++i) {
+        if (biaScrollTop >= eles[i].offsetTop) {
+            idx = i;
+        } else {
+            break;
+        }
+    }
+
+    var header = '';
+    if (idx != -1) {
+        header = eles[idx].id;
+    }
+
+    highlightItemOnlyInOutline(header);
+});
+
+var highlightItemOnlyInOutline = function(id) {
+    var cl = 'outline-bold';
+    var outlineContent = document.getElementById('outline-content');
+    var eles = outlineContent.querySelectorAll("a");
+    var target = null;
+    for (var i = 0; i < eles.length; ++i) {
+        var ele = eles[i];
+        if (ele.getAttribute('data') == id) {
+            target = ele;
+            ele.classList.add(cl);
+        } else {
+            ele.classList.remove(cl);
+        }
+    }
+
+    // TODO: scroll target into view within the outline panel scroll area.
+};
+
+</script>
+
+
+<!-- HEAD_PLACE_HOLDER -->
+</head>
+<body>
+<div class="container-fluid">
+<div class="row flex-xl-nowrap">
+    <div id="outline-panel" style="display:none;" class="d-none d-md-block d-xl-block col-md-3 col-xl-2 bd-toc">
+        <div id="outline-content" class="section-nav"></div>
+    </div>
+    <div id="post-content" class="col-12 col-md-9 col-xl-10 py-md-3 pl-md-5 bd-content">
+    <h1 id="toc_0">單例模式 Singleton<a class="vnote-anchor" href="#toc_0" data-anchor-icon="#"></a></h1>
+<h2 id="toc_1">講解<a class="vnote-anchor" href="#toc_1" data-anchor-icon="#"></a></h2>
+<ul>
+<li>
+<h3 id="toc_2">單例模式 就是讓某個類，對外公開且某類只會存在一個實例<a class="vnote-anchor" href="#toc_2" data-anchor-icon="#"></a></h3>
+<ul>
+<li>優點 不會那麼麻煩，為各個類搞那麼多事情</li>
+<li>缺點 容易搞得整個專案都是單例模式</li>
+</ul>
+</li>
+<li>
+<h4 id="toc_3">要區分是使用 "類的單例模式" 還是使用 "Static的函式(例:SetAI)"<a class="vnote-anchor" href="#toc_3" data-anchor-icon="#"></a></h4>
+</li>
+<li>
+<h3 id="toc_4">單例模式 分類<a class="vnote-anchor" href="#toc_4" data-anchor-icon="#"></a></h3>
+<ol>
+<li>懶漢式 :要用時才實例化</li>
+<li>餓漢式 :一開始就實例化</li>
+<li>登記式(可忽略): 就是多個列表，把Class存起來</li>
+</ol>
+</li>
+</ul>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="286.5px" preserveAspectRatio="none" style="width:463px;height:286px;" version="1.1" viewBox="0 0 463 286" width="463.5px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="ffi93q2lhpfrq" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><!--MD5=[2f4e497837a991172d40b04b7a7d0ca2]
+class Singleton--><rect fill="#FEFECE" filter="url(#ffi93q2lhpfrq)" height="260.0098" id="Singleton" style="stroke: #A80036; stroke-width: 2.25;" width="436.5" x="10.5" y="10.5"></rect><ellipse cx="183.375" cy="34.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M189.5625,40.4297 Q189.0234,41.3672 187.7578,42.3281 Q185.6484,43.8516 181.5469,43.8516 Q178.2656,43.8516 176.0625,41.6484 Q173.5078,39.0938 173.5078,34.3125 Q173.5078,29.9063 176.0391,27.2109 Q178.3594,24.7734 181.6875,24.7734 Q184.5,24.7734 185.9766,25.2188 Q187.4531,25.6641 187.4531,25.6641 Q187.4531,25.6641 187.4531,24.8203 L188.9766,24.6797 L189.2109,30.7734 L187.2188,30.9609 Q186,25.5703 181.8984,25.5703 Q181.8984,25.5703 181.0078,25.9922 Q179.6484,26.5078 178.875,27.3281 Q176.8125,29.6484 176.7891,34.3594 Q176.7656,38.5313 179.0625,40.875 Q181.0078,42.8672 182.25,42.8672 Q185.2969,42.8672 188.5781,39.0234 L189.5625,40.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="78" x="214.125" y="43.3638">Singleton</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="12" x2="445.5" y1="58.5" y2="58.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="418.5" x="19.5" y="84.3757">static變數是讓記憶體裡有變數名，並且弄成唯一一個變數</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="276" x="19.5" y="107.877">private Singleton(){}再把建構子鎖住，</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="352.5" x="19.5" y="131.3782">這樣static變數就成為一一個可訪問這個類的方法</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="12" x2="445.5" y1="141.0037" y2="141.0037"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="243" x="19.5" y="166.8794">private static Singleton _instance;</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="268.5" x="19.5" y="190.3806">public static Singleton Instance{get{}}</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="0" x="24" y="213.8818"></text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="144" x="19.5" y="237.3831">private Singleton(){}</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="0" x="24" y="260.8843"></text><!--MD5=[f7320027e2acb4b0dccae5828d47e8e3]
+@startuml
+skinparam classAttributeIconSize 0
+scale 1.5
+
+class Singleton{
+static變數是讓記憶體裡有變數名，並且弄成唯一一個變數
+private Singleton(){}再把建構子鎖住，
+這樣static變數就成為一一個可訪問這個類的方法
+__
+private static Singleton _instance;
+public static Singleton Instance{get{}}
+
+private Singleton(){}
+
+}
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+<ul>
+<li>
+<h1 id="toc_5">以上只是普通單例模式<a class="vnote-anchor" href="#toc_5" data-anchor-icon="#"></a></h1>
+</li>
+</ul>
+<h2 id="toc_6">書中單例有例外一種表達方法<a class="vnote-anchor" href="#toc_6" data-anchor-icon="#"></a></h2>
+<!--
+### 第一種 (這是中介者模式，只是在中介者上多套上單例) 
+書中單例模式的Class有兼具外觀模式，
+所以System都繼承一個abstract Class
+而這Class裡面的建構子，強制綁定單例模式Class的變數
+這樣的話就不用在每個System裡打入PBaseDefenseGame.Instance之類的
+並且其他的System也能透過單例模式Class的變數來運用
+以下是書中的UML
+
+```puml
+@startuml
+skinparam classAttributeIconSize 0
+
+abstract class IGameSystem{
+因為IGameSystem 內含有 
+IGameSystem( PBaseDefenseGame PBDGame )這行
+讓其他System繼承後，在PBaseDefenseGame實例化其他System時
+就會自動帶入PBaseDefenseGame變數進去
+這時其他System就會有PBaseDefenseGame變數
+就不用在其他System一直打入PBaseDefenseGame.Instance之類的
+直接在變數裡設定好。
+__
+protected PBaseDefenseGame 
+__
+public IGameSystem( PBaseDefenseGame PBDGame )
+public virtual void Initialize(){}
+public virtual void Release(){}
+public virtual void Update(){}
+}
+
+package Facade外觀模式 <<Rect>> {
+class PBaseDefenseGame
+class SystemA
+class SystemB
+class SystemC
+}
+
+class SystemA{
+}
+
+class SystemB{
+}
+
+class SystemC{
+}
+
+class Client{
+客戶端
+客戶端只需要跟Facade打交到就好
+__
+}
+
+
+class PBaseDefenseGame{
+外觀模式的出口
+統合下面的Class既使後面需要增加減少，
+也只需修改Facade就好
+__
+}
+
+
+Client ..> PBaseDefenseGame :使用Facade腳本來控制
+PBaseDefenseGame ..> SystemA:控制
+PBaseDefenseGame ..> SystemB:控制
+PBaseDefenseGame ..> SystemC:控制
+
+IGameSystem <|-- SystemA : 繼承
+IGameSystem <|-- SystemB : 繼承
+IGameSystem <|-- SystemC : 繼承
+
+@enduml
+```
+-->
+<!--
+### 第二種
+第二種叫做Static函式
+-->
+<h3 id="toc_7">Static函式<a class="vnote-anchor" href="#toc_7" data-anchor-icon="#"></a></h3>
+<p>叫做Static函式<br>
+在書中有個叫"EnemyAI"的Class需要個"StageSystem"的Class<br>
+所以"EnemyAI"裡面多個</p>
+<blockquote>
+<p>private static StageSystem	m_StageSystem = null;<br>
+public static void SetStageSystem(StageSystem StageSystem)</p>
+</blockquote>
+<p>這樣的不必將"EnemyAI"單例模式化而是指讓"變數static化"<br>
+這樣不用冒未來維護的麻煩</p>
+<p>而且EnemyAI在書中是怪物生成就要加入倒怪物變數裡<br>
+在書中StageSystem是不會變動的所以才一開始導入<br>
+而EnemyAI不是單例模式，所以可以更動變數裡的數據，<br>
+就不會像是單例模式那樣綁手綁腳</p>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="942px" preserveAspectRatio="none" style="width:1485px;height:942px;" version="1.1" viewBox="0 0 1485 942" width="1485px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="fke48qvyufulb" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><!--MD5=[49367f88d513d90021b802ee0a6b77d5]
+cluster Facade外觀模式--><polygon fill="#FFFFFF" filter="url(#fke48qvyufulb)" points="544.5,275.25,720,275.25,730.5,314.1606,916.5,314.1606,916.5,891,544.5,891,544.5,275.25" style="stroke: #000000; stroke-width: 2.25;"></polygon><line style="stroke: #000000; stroke-width: 2.25;" x1="544.5" x2="730.5" y1="314.1606" y2="314.1606"></line><text fill="#000000" font-family="sans-serif" font-size="21" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="166.5" x="550.5" y="303.5464">Facade外觀模式</text><text fill="#000000" font-family="sans-serif" font-size="21" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="67.5" x="702.75" y="342.457">«Rect»</text><!--MD5=[d6e7d65f18a88d4a5988beef91fa8368]
+class PBaseDefenseGame--><rect fill="#FEFECE" filter="url(#fke48qvyufulb)" height="142.5037" id="PBaseDefenseGame" style="stroke: #A80036; stroke-width: 2.25;" width="322.5" x="569.25" y="362.25"></rect><ellipse cx="635.625" cy="386.25" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M641.8125,392.1797 Q641.2734,393.1172 640.0078,394.0781 Q637.8984,395.6016 633.7969,395.6016 Q630.5156,395.6016 628.3125,393.3984 Q625.7578,390.8438 625.7578,386.0625 Q625.7578,381.6563 628.2891,378.9609 Q630.6094,376.5234 633.9375,376.5234 Q636.75,376.5234 638.2266,376.9688 Q639.7031,377.4141 639.7031,377.4141 Q639.7031,377.4141 639.7031,376.5703 L641.2266,376.4297 L641.4609,382.5234 L639.4688,382.7109 Q638.25,377.3203 634.1484,377.3203 Q634.1484,377.3203 633.2578,377.7422 Q631.8984,378.2578 631.125,379.0781 Q629.0625,381.3984 629.0391,386.1094 Q629.0156,390.2813 631.3125,392.625 Q633.2578,394.6172 634.5,394.6172 Q637.5469,394.6172 640.8281,390.7734 L641.8125,392.1797 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="177" x="666.375" y="395.1138">PBaseDefenseGame</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="570.75" x2="890.25" y1="410.25" y2="410.25"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="115.5" x="578.25" y="436.1257">外觀模式的出口</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="304.5" x="578.25" y="459.627">統合下面的Class既使後面需要增加減少，</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="169.5" x="578.25" y="483.1282">也只需修改Facade就好</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="570.75" x2="890.25" y1="492.7537" y2="492.7537"></line><!--MD5=[f566b80d40311f14ab198dc2b324ce3f]
+class StageSystem--><rect fill="#FEFECE" filter="url(#fke48qvyufulb)" height="72" id="StageSystem" style="stroke: #A80036; stroke-width: 2.25;" width="157.5" x="590.25" y="795"></rect><ellipse cx="612.75" cy="819" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M618.9375,824.9297 Q618.3984,825.8672 617.1328,826.8281 Q615.0234,828.3516 610.9219,828.3516 Q607.6406,828.3516 605.4375,826.1484 Q602.8828,823.5938 602.8828,818.8125 Q602.8828,814.4063 605.4141,811.7109 Q607.7344,809.2734 611.0625,809.2734 Q613.875,809.2734 615.3516,809.7188 Q616.8281,810.1641 616.8281,810.1641 Q616.8281,810.1641 616.8281,809.3203 L618.3516,809.1797 L618.5859,815.2734 L616.5938,815.4609 Q615.375,810.0703 611.2734,810.0703 Q611.2734,810.0703 610.3828,810.4922 Q609.0234,811.0078 608.25,811.8281 Q606.1875,814.1484 606.1641,818.8594 Q606.1406,823.0313 608.4375,825.375 Q610.3828,827.3672 611.625,827.3672 Q614.6719,827.3672 617.9531,823.5234 L618.9375,824.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="109.5" x="633.75" y="827.8638">StageSystem</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="591.75" x2="746.25" y1="843" y2="843"></line><line style="stroke: #A80036; stroke-width: 2.25;" x1="591.75" x2="746.25" y1="855" y2="855"></line><!--MD5=[a2095706ef28f253aad9920435f870b6]
+class IGameSystem--><rect fill="#FEFECE" filter="url(#fke48qvyufulb)" height="366.0146" id="IGameSystem" style="stroke: #A80036; stroke-width: 2.25;" width="507" x="9" y="250.5"></rect><ellipse cx="196.875" cy="274.5" fill="#A9DCDF" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M206.2266,281.6484 L198.8438,281.6484 L198.8438,281.1563 Q199.8047,281.0859 200.2031,280.9453 Q200.8359,280.6641 200.8359,279.8906 Q200.8359,279.2813 200.3906,278.1094 L199.5,275.6484 L194.0391,275.6484 L192.7969,278.8125 Q192.5859,279.3047 192.5859,279.8906 Q192.5859,280.6875 193.1953,280.9453 Q193.4531,281.0859 194.2266,281.1563 L194.2266,281.6484 L188.1797,281.6484 L188.1797,281.1563 Q188.5078,281.0859 188.8125,281.0156 Q189.1172,280.9453 189.3984,280.5938 Q190.1016,279.7031 191.2031,276.6563 L196.2422,262.9922 L197.8359,262.9922 L203.7422,278.6953 Q204.2813,280.1953 204.9375,280.7344 Q205.3125,281.0156 206.2266,281.1563 L206.2266,281.6484 Z M199.1719,274.7109 L196.5,266.8594 L194.25,274.7109 L199.1719,274.7109 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="118.5" x="227.625" y="283.3638">IGameSystem</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="514.5" y1="298.5" y2="298.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="186" x="18" y="324.3757">因為IGameSystem 內含有</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="379.5" x="18" y="347.877">IGameSystem( PBaseDefenseGame PBDGame )這行</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="489" x="18" y="371.3782">讓其他System繼承後，在PBaseDefenseGame實例化其他System時</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="315" x="18" y="394.8794">就會自動帶入PBaseDefenseGame變數進去</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="352.5" x="18" y="418.3806">這時其他System就會有PBaseDefenseGame變數</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="484.5" x="18" y="441.8818">就不用在其他System一直打入PBaseDefenseGame.Instance之類的</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="165" x="18" y="465.3831">直接在變數裡設定好。</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="514.5" y1="475.0085" y2="475.0085"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="223.5" x="18" y="500.8843">protected PBaseDefenseGame</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="10.5" x2="514.5" y1="510.5098" y2="510.5098"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="393" x="18" y="536.3855">public IGameSystem( PBaseDefenseGame PBDGame )</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="208.5" x="18" y="559.8867">public virtual void Initialize(){}</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="211.5" x="18" y="583.3879">public virtual void Release(){}</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="204" x="18" y="606.8892">public virtual void Update(){}</text><!--MD5=[381c2ca960471440e576478cdcaea944]
+class EnemyAI--><rect fill="#FEFECE" filter="url(#fke48qvyufulb)" height="189.5061" id="EnemyAI" style="stroke: #A80036; stroke-width: 2.25;" width="528" x="940.5" y="736.5"></rect><ellipse cx="1162.125" cy="760.5" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M1168.3125,766.4297 Q1167.7734,767.3672 1166.5078,768.3281 Q1164.3984,769.8516 1160.2969,769.8516 Q1157.0156,769.8516 1154.8125,767.6484 Q1152.2578,765.0938 1152.2578,760.3125 Q1152.2578,755.9063 1154.7891,753.2109 Q1157.1094,750.7734 1160.4375,750.7734 Q1163.25,750.7734 1164.7266,751.2188 Q1166.2031,751.6641 1166.2031,751.6641 Q1166.2031,751.6641 1166.2031,750.8203 L1167.7266,750.6797 L1167.9609,756.7734 L1165.9688,756.9609 Q1164.75,751.5703 1160.6484,751.5703 Q1160.6484,751.5703 1159.7578,751.9922 Q1158.3984,752.5078 1157.625,753.3281 Q1155.5625,755.6484 1155.5391,760.3594 Q1155.5156,764.5313 1157.8125,766.875 Q1159.7578,768.8672 1161,768.8672 Q1164.0469,768.8672 1167.3281,765.0234 L1168.3125,766.4297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="72" x="1192.875" y="769.3638">EnemyAI</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="942" x2="1467" y1="784.5" y2="784.5"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="328.5" x="949.5" y="810.3757">EnemyAI在這邊實際上跟PBaseDefenseGame</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="510" x="949.5" y="833.877">並無任何關係，唯一有關的是透過PBaseDefenseGame將StageSystem</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="300" x="949.5" y="857.3782">放到EnemyAI的void SetStageSystem裡面</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="942" x2="1467" y1="867.0037" y2="867.0037"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="193.5" x="949.5" y="892.8794">private static StageSystem</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="453" x="949.5" y="916.3806">public static void SetStageSystem(StageSystem StageSystem)</text><!--MD5=[ed6624c6556d5e7b1bd23032162d20b7]
+class Client--><rect fill="#FEFECE" filter="url(#fke48qvyufulb)" height="119.0024" id="Client" style="stroke: #A80036; stroke-width: 2.25;" width="270" x="595.5" y="12"></rect><ellipse cx="700.125" cy="36" fill="#ADD1B2" rx="16.5" ry="16.5" style="stroke: #A80036; stroke-width: 1.5;"></ellipse><path d="M706.3125,41.9297 Q705.7734,42.8672 704.5078,43.8281 Q702.3984,45.3516 698.2969,45.3516 Q695.0156,45.3516 692.8125,43.1484 Q690.2578,40.5938 690.2578,35.8125 Q690.2578,31.4063 692.7891,28.7109 Q695.1094,26.2734 698.4375,26.2734 Q701.25,26.2734 702.7266,26.7188 Q704.2031,27.1641 704.2031,27.1641 Q704.2031,27.1641 704.2031,26.3203 L705.7266,26.1797 L705.9609,32.2734 L703.9688,32.4609 Q702.75,27.0703 698.6484,27.0703 Q698.6484,27.0703 697.7578,27.4922 Q696.3984,28.0078 695.625,28.8281 Q693.5625,31.1484 693.5391,35.8594 Q693.5156,40.0313 695.8125,42.375 Q697.7578,44.3672 699,44.3672 Q702.0469,44.3672 705.3281,40.5234 L706.3125,41.9297 Z "></path><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="48" x="730.875" y="44.8638">Client</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="597" x2="864" y1="60" y2="60"></line><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="49.5" x="604.5" y="85.8757">客戶端</text><text fill="#000000" font-family="sans-serif" font-size="16.5" lengthAdjust="spacingAndGlyphs" textLength="252" x="604.5" y="109.377">客戶端只需要跟Facade打交到就好</text><line style="stroke: #A80036; stroke-width: 2.25;" x1="597" x2="864" y1="119.0024" y2="119.0024"></line><!--MD5=[5cd3428bb9cbd9105178c3ba70b2e08b]
+link Client to PBaseDefenseGame--><path d="M730.5,130.869 C730.5,191.484 730.5,286.8525 730.5,353.9925 " fill="none" id="Client->PBaseDefenseGame" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="730.5,361.626,736.5,348.126,730.5,354.126,724.5,348.126,730.5,361.626" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="201" x="732" y="200.4895">使用Facade腳本來控制</text><!--MD5=[9ce140857a29fa69cce189f2ae43d720]
+link PBaseDefenseGame to EnemyAI--><path d="M814.695,505.074 C890.2965,567.9945 1002.0615,661.014 1086.5535,731.3355 " fill="none" id="PBaseDefenseGame->EnemyAI" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="1092.5895,736.359,1086.0519,723.111,1086.825,731.561,1078.375,732.3342,1092.5895,736.359" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="138" x="1038" y="686.4895">初始化EnemyAI</text><!--MD5=[bb5744f3215570990750cdd5b8816a7e]
+link PBaseDefenseGame to StageSystem--><path d="M719.5755,505.074 C706.8135,586.941 686.1075,719.7615 675.5865,787.2456 " fill="none" id="PBaseDefenseGame->StageSystem" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="#A80036" points="674.418,794.7502,682.4259,782.3356,675.5733,787.3398,670.5691,780.4871,674.418,794.7502" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="39" x="696" y="686.4895">控制</text><!--MD5=[7ba3445755c34b56a1d3ad0da27e632a]
+reverse link IGameSystem to StageSystem--><path d="M471.345,637.68 C533.8905,698.379 595.728,758.391 633.144,794.703 " fill="none" id="IGameSystem<-StageSystem" style="stroke: #A80036; stroke-width: 1.5;"></path><polygon fill="none" points="463.9035,645.09,449.688,616.662,478.5285,630.0195,463.9035,645.09" style="stroke: #A80036; stroke-width: 1.5;"></polygon><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="39" x="528" y="686.4895">繼承</text><!--MD5=[532bbda89dd7298548b9e0faa0092b77]
+@startuml
+skinparam classAttributeIconSize 0
+scale 1.5
+
+abstract class IGameSystem{
+因為IGameSystem 內含有 
+IGameSystem( PBaseDefenseGame PBDGame )這行
+讓其他System繼承後，在PBaseDefenseGame實例化其他System時
+就會自動帶入PBaseDefenseGame變數進去
+這時其他System就會有PBaseDefenseGame變數
+就不用在其他System一直打入PBaseDefenseGame.Instance之類的
+直接在變數裡設定好。
+__
+protected PBaseDefenseGame 
+__
+public IGameSystem( PBaseDefenseGame PBDGame )
+public virtual void Initialize(){}
+public virtual void Release(){}
+public virtual void Update(){}
+}
+
+package Facade外觀模式 <<Rect>> {
+class PBaseDefenseGame
+class StageSystem
+
+}
+
+class EnemyAI{
+EnemyAI在這邊實際上跟PBaseDefenseGame
+並無任何關係，唯一有關的是透過PBaseDefenseGame將StageSystem
+放到EnemyAI的void SetStageSystem裡面
+__
+private static StageSystem
+public static void SetStageSystem(StageSystem StageSystem)
+}
+
+class StageSystem{
+}
+
+
+
+class Client{
+客戶端
+客戶端只需要跟Facade打交到就好
+__
+}
+
+
+class PBaseDefenseGame{
+外觀模式的出口
+統合下面的Class既使後面需要增加減少，
+也只需修改Facade就好
+__
+}
+
+
+Client - -> PBaseDefenseGame :使用Facade腳本來控制
+PBaseDefenseGame - -> EnemyAI: 初始化EnemyAI
+PBaseDefenseGame - -> StageSystem:控制
+
+
+IGameSystem <|- - StageSystem : 繼承
+
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+<h3 id="toc_8">案例中時序圖<a class="vnote-anchor" href="#toc_8" data-anchor-icon="#"></a></h3>
+<!--
+#### 第一種
+程式執行時優先順序，以及注意事項
+
+```puml
+@startuml
+
+
+participant PBaseDefenseGame
+collections AnotherSystem
+collections AnotherSystem_2
+
+PBaseDefenseGame ->AnotherSystem : 剛開始PBaseDefenseGame設定AnotherSystem
+PBaseDefenseGame ->AnotherSystem_2 : 剛開始PBaseDefenseGame設定AnotherSystem_2
+
+PBaseDefenseGame <- AnotherSystem : AnotherSystem必要時透過變數控制PBaseDefenseGame裡的函式
+
+AnotherSystem x-x AnotherSystem_2 : 但是AnotherSystem跟AnotherSystem_2不能透過 \n PBaseDefenseGame溝通，這樣違反"最少知識原則"
+
+
+@enduml
+```
+
+#### 第二種
+-->
+<p>程式執行時順序</p>
+<div class="plantuml-diagram"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="343.5px" preserveAspectRatio="none" style="width:775px;height:343px;" version="1.1" viewBox="0 0 775 343" width="775.5px" zoomAndPan="magnify" class="view-svg"><defs><filter height="300%" id="f63x6f5l4m9fo" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.0"></feGaussianBlur><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></feColorMatrix><feOffset dx="6.0" dy="6.0" in="blurOut2" result="blurOut3"></feOffset><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"></feBlend></filter></defs><g><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="124.5" x2="124.5" y1="68.9106" y2="273.0073"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="330" x2="330" y1="68.9106" y2="273.0073"></line><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 5.0,5.0;" x1="706.5" x2="706.5" y1="68.9106" y2="273.0073"></line><rect fill="#FEFECE" filter="url(#f63x6f5l4m9fo)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="219" x="12" y="10.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="198" x="22.5" y="46.2964">PBaseDefenseGame</text><rect fill="#FEFECE" filter="url(#f63x6f5l4m9fo)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="219" x="12" y="271.5073"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="198" x="22.5" y="307.3037">PBaseDefenseGame</text><rect fill="#FEFECE" filter="url(#f63x6f5l4m9fo)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="145.5" x="258" y="4.5"></rect><rect fill="#FEFECE" filter="url(#f63x6f5l4m9fo)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="145.5" x="252" y="10.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="124.5" x="262.5" y="46.2964">StageSystem</text><rect fill="#FEFECE" filter="url(#f63x6f5l4m9fo)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="145.5" x="258" y="271.5073"></rect><rect fill="#FEFECE" filter="url(#f63x6f5l4m9fo)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="145.5" x="252" y="277.5073"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="124.5" x="262.5" y="313.3037">StageSystem</text><rect fill="#FEFECE" filter="url(#f63x6f5l4m9fo)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="103.5" x="655.5" y="4.5"></rect><rect fill="#FEFECE" filter="url(#f63x6f5l4m9fo)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="103.5" x="649.5" y="10.5"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="660" y="46.2964">EnemyAI</text><rect fill="#FEFECE" filter="url(#f63x6f5l4m9fo)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="103.5" x="655.5" y="271.5073"></rect><rect fill="#FEFECE" filter="url(#f63x6f5l4m9fo)" height="50.9106" style="stroke: #A80036; stroke-width: 2.25;" width="103.5" x="649.5" y="277.5073"></rect><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="82.5" x="660" y="313.3037">EnemyAI</text><polygon fill="#A80036" points="312.75,114.6848,327.75,120.6848,312.75,126.6848,318.75,120.6848" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5;" x1="124.5" x2="321.75" y1="120.6848" y2="120.6848"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="58.5" x="135" y="113.4001">初始化</text><polygon fill="#A80036" points="689.25,163.459,704.25,169.459,689.25,175.459,695.25,169.459" style="stroke: #A80036; stroke-width: 1.5;"></polygon><line style="stroke: #A80036; stroke-width: 1.5; stroke-dasharray: 2.0,2.0;" x1="124.5" x2="698.25" y1="169.459" y2="169.459"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="469.5" x="135" y="162.1743">呼叫static void SetStageSystem  把StageSystem放入</text><line style="stroke: #A80036; stroke-width: 3.0;" x1="339.75" x2="354.75" y1="238.5073" y2="253.5073"></line><line style="stroke: #A80036; stroke-width: 3.0;" x1="339.75" x2="354.75" y1="253.5073" y2="238.5073"></line><line style="stroke: #A80036; stroke-width: 3.0;" x1="680.25" x2="695.25" y1="238.5073" y2="253.5073"></line><line style="stroke: #A80036; stroke-width: 3.0;" x1="680.25" x2="695.25" y1="253.5073" y2="238.5073"></line><line style="stroke: #A80036; stroke-width: 1.5;" x1="348.75" x2="687.75" y1="246.0073" y2="246.0073"></line><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="334.5" x="356.25" y="210.9485">這樣StageSystem跟EnemyAI就能遵守</text><text fill="#000000" font-family="sans-serif" font-size="19.5" lengthAdjust="spacingAndGlyphs" textLength="333" x="362.25" y="238.7227">"最少知識原則" 因為他們沒有任何溝通</text><!--MD5=[c72faf891589a575ab1af455ee930cea]
+@startuml
+scale 1.5
+
+participant PBaseDefenseGame
+collections StageSystem
+collections EnemyAI
+
+
+PBaseDefenseGame ->StageSystem : 初始化
+
+PBaseDefenseGame - -> EnemyAI : 呼叫static void SetStageSystem  把StageSystem放入
+
+StageSystem x-x EnemyAI : 這樣StageSystem跟EnemyAI就能遵守 \n "最少知識原則" 因為他們沒有任何溝通
+
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 20:30:53 CST 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Java Version: 1.8.0_231-b11
+Operating System: Windows 10
+Default Encoding: MS950
+Language: zh
+Country: TW
+--></g></svg></div>
+
+    </div>
+</div>
+</div>
+
+<div id="container-floating" style="display:none;" class="d-none d-md-block d-xl-block">
+    <div id="floating-button" onclick="toggleMore()">
+        <p id="floating-more" class="more">&gt;</p>
+    </div>
+</div>
+
+<!--
+<div class="footer" id="vnote-footer">
+    <p>Generated by <em><a href="https://tamlok.github.io/vnote/">VNote</a></em>.</p>
+</div>
+-->
+</body>
+</html>
